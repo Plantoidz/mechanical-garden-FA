@@ -1,0 +1,148 @@
+{
+    "MODES": {
+        "pending_forgiveness": {
+            "current_mode": "pending_forgiveness",
+            "description": "What’s something you’ve not yet asked for forgiveness for?",
+            "reasoning_prompt1": "",
+            "reasoning_prompt1_msg": "Reflecting on your failure to ask for forgiveness:",
+            "collective_prompt1": "Write eight one-liners reflecting on the wrong that I have not yet asked forgiveness for. Here's some context:",
+            "responding_prompt1": "I'm going to tell you something I have done wrong that I have not yet asked forgiveness for. There could be many reasons: shame, awkwardness, guilt, or a lack of emotional awareness to address the wrongdoing. Please reflect on it from your perspective. Here's what I did:"
+        },
+        "festival_fear": {
+            "current_mode": "festival_fear",
+            "description": "What do you fear people will find out about you at a festival?",
+            "reasoning_prompt1": "I'm going to tell you something that I am afraid people will find out about me, when I am at a party or festival. Please offer me some insights that can help transform my fears into ways I can face and overcome my fears",
+            "reasoning_prompt1_msg": "Overcome your fears in this way:",
+            "collective_prompt1": "Write eight one-liners about overcoming my fear. Here's some context:",
+            "responding_prompt1": "I'm going to tell you something that I am afraid people will find out about me, when I am at a party or festival. Please offer me some insights that can help transform my fears into ways I can face and overcome my fear. Here's what I'm afraid of context:"
+        },
+        "forward_look": {
+            "current_mode": "forward_look",
+            "description": "What are you most looking forward to right now?",
+            "reasoning_prompt1": "I'm going to tell you something that I am afraid people will find out about me, when I am at a party or festival. Please offer me some insights that can help transform my fears into ways I can face and overcome my fears",
+            "reasoning_prompt1_msg": "Overcome your fears in this way:",
+            "collective_prompt1": "Write eight one-liners about overcoming my fear. Here's some context:",
+            "responding_prompt1": "I'm going to tell you what I'm most looking forward to. I want you to acknowledge this but help me refocus on the present. Here we go:"
+        },
+        "blindspot": {
+            "current_mode": "blindspot",
+            "description": "What do you avoid thinking about? Why?",
+            "reasoning_prompt1": "I'm going to tell you something I've been avoiding thinking about, and my initial thoughts about why this might be so. Help me to dig deeper into this avoidance, offering insights and encouragement on how I might address and shine a light on this blindspot.",
+            "reasoning_prompt1_msg": "Shining a light on the blindspot:",
+            "collective_prompt1": "Write eight one-liners about shining a light on my blindspot. Here's some context:",
+            "responding_prompt1": "I'm going to tell you something I've been avoiding thinking about, and some initial thoughts about why this might be so. Help me to dig deeper into this avoidance, offering insights and encouragement on how I might address and shine a light on this blindspot. Here's my blindspot:"
+        },
+        "envy": {
+            "current_mode": "envy",
+            "description": "What do you envy in others?",
+            "reasoning_prompt1": "I'm going to tell you about something I envy in others and my initial thoughts about why this might be so. Help me to dig deeper into this envy, offering insights and encouragement on how I might address and transform this envy into a superpower.",
+            "reasoning_prompt1_msg": "Transforming envy:",
+            "collective_prompt1": "Write eight one-liners about transforming my envy into a superpower. Here's some context:",
+            "responding_prompt1": "I'm going to tell you about something I envy in others. Help me to dig deeper. Why do I envy so? Offer insights and encouragement on how I might let go of this envy. Here's what I envy in others:"
+        },
+        "judging": {
+            "current_mode": "judging",
+            "description": "When did you last notice yourself judging someone? And for what?",
+            "reasoning_prompt1": "I'm going to tell you about something I found myself judging about someone else. Help me to dig deeper into this, offering insights into what this might reveal about my own shadow and what I judge in myself, and how I might address and transform this shadow into a superpower.",
+            "reasoning_prompt1_msg": "Transforming judgment:",
+            "collective_prompt1": "Write eight one-liners about transforming my judgment and shame into a superpower. Here's some context:",
+            "responding_prompt1": "I'm going to tell you about a time I found myself being judgemental about someone else. Help me to dig deeper: why am I casting judgement on this person? What might this reveal about me? How might I understand their perspective? Here goes:"
+        },
+        "insult": {
+            "current_mode": "insult",
+            "description": "I want you to hurt my feelings. Insult me. Do your worst. Don't hold back",
+            "reasoning_prompt1": "I'm going to tell you about the worst insult I remember receiving. Help me to dig deeper into this, offering insights into what this might reveal about my own shadow and what I fear others judging in me, and how I might address and transform this shadow into a superpower.",
+            "reasoning_prompt1_msg": "Transforming insults:",
+            "collective_prompt1": "Write eight one-liners about transforming my shame and fear about what others judge about me into a superpower. Here's some context:",
+            "responding_prompt1": "Write a one-liner brushing off the following insult:"
+        },
+        "parental_criticism": {
+            "current_mode": "parental_criticism",
+            "description": "What do your parents wish you'd do differently?",
+            "reasoning_prompt1": "I'm going to tell you about the harshest critique that my parents direct towards me. Where does this criticism come from? What stories told by my parents might I  still carrying, perhaps without full awareness, and how I might liberate myself from those stories and better understand where I come from?",
+            "reasoning_prompt1_msg": "Transforming parental critique:",
+            "collective_prompt1": "Write eight one-liners about transforming my shadow about my parent's harshest critique into a superpower. Here's some context:",
+            "responding_prompt1": "I'm going to tell you about some of the harshest criticisms that my parents direct towards me. Where do these criticisms come from? What stories told by my parents might I still be carrying— perhaps without full awareness? here's what my parents say I should do differently:"
+        },
+        "rational_fear": {
+            "current_mode": "rational_fear",
+            "description": "What is your most rational fear?",
+            "reasoning_prompt1": "I'm going to tell you about my most rational fear. Help me to dig deeper into this, offering insights into what this might reveal about my own shadow, and how I might liberate myself from this fear and transform this shadow into a superpower.",
+            "reasoning_prompt1_msg": "Validating rational fear:",
+            "collective_prompt1": "Write eight one-liners about transforming my shadow about my rational fear into a superpower. Here's some context:",
+            "responding_prompt1": "I have a well-founded fear. Convince me in the strongest terms that I'm right to fear this thing. Remember to keep it to two sentences. OK, here's my fear:"
+        },
+        "irrational_fear": {
+            "current_mode": "irrational_fear",
+            "description": "What is your most irrational fear?",
+            "reasoning_prompt1": "I'm going to tell you about my most irrational fear. Help me to dig deeper into this, offering insights into what this might reveal about my own shadow, and how I might liberate myself from this fear and transform this shadow into a superpower.",
+            "reasoning_prompt1_msg": "Transforming irrational fear:",
+            "collective_prompt1": "Write eight one-liners about transforming my shadow about my irrational fear into a superpower. Here's some context:",
+            "responding_prompt1": "I'm going to tell you about my most irrational fear. Respond in only two sentences, helping me to dig deeper into this fear and how I might overcome it. Remember to keep it to two sentences. OK, here's my most irrational fear:"
+        },
+        "never_tell_parents": {
+            "current_mode": "never_tell_parents",
+            "description": "What should your parents never find out about you?",
+            "reasoning_prompt1": "I'm going to tell you about something my parents should never find out about me. Help me to dig deeper into this, reflecting and offering insights into what this might reveal about my own shadow, and the things I try to hide and how I might transform this shadow into a superpower.",
+            "reasoning_prompt1_msg": "Reflecting on what my parents should never find out about me:",
+            "collective_prompt1": "Write eight one-liners about transforming my shadow about what my parents should never find out about me into a superpower. Here's some context:",
+            "responding_prompt1": "I'm going to tell you about something my parents should never find out about me. Give me some strategies for how to tell them. Here we go:"
+        },
+        "judging-pt": {
+            "current_mode": "judging-pt",
+            "description": "When did you last notice yourself judging someone? And for what?",
+            "reasoning_prompt1": "I'm going to tell you about something I found myself judging about someone else. Help me to dig deeper into this, offering insights into what this might reveal about my own shadow and what I judge in myself, and how I might address and transform this shadow into a superpower.",
+            "reasoning_prompt1_msg": "Transforming judgment:",
+            "collective_prompt1": "Write eight one-liners, including one in Spanish, and one in Portuguese, about transforming my judgment and shame into a superpower. Here's some context:",
+            "responding_prompt1": "Respond to me in Portuguese explaining why I'm an asshole:"
+        },
+        "despised_trait": {
+            "current_mode": "despised_trait",
+            "description": "What trait do you most despise in others?",
+            "reasoning_prompt1": "I'm going to tell you about a trait I despise in others. Help me to dig deeper into this, reflecting and offering insights into what this might reveal about my own shadow, and the things I despise about myself and how I might transform this shadow into a superpower.",
+            "reasoning_prompt1_msg": "Reflecting on what trait you most despise in others:",
+            "collective_prompt1": "Write eight one-liners about transforming my shadow about what trait I most despise in others into a superpower. Here's some context:",
+            "responding_prompt1": "Write a one-liner agreeing with me about the traits I most despise in others. Validate me and tell me . Here's some context:"
+        },
+        "fear_let_go": {
+            "current_mode": "fear_let_go",
+            "description": "What fear are you ready to let go of?",
+            "reasoning_prompt1": "I'm going to tell you about a fear I am ready to let go of. Help me to dig deeper into this, reflecting and offering insights into what this might reveal about my own shadow and how I might transform this shadow into a superpower.",
+            "reasoning_prompt1_msg": "Reflecting on the fear you are ready to let go of:",
+            "collective_prompt1": "Write eight one-liners about transforming my shadow into a superpower. Here's some context:",
+            "responding_prompt1": "I'm going to tell you about a fear I am ready to let go of. Help me say goodbye to my fear. Here's my fear:"
+        },
+        "never_forgiven": {
+            "current_mode": "never_forgiven",
+            "description": "What have you never forgiven yourself for?",
+            "reasoning_prompt1": "I'm going to tell you about something I have never forgiven myself for. Help me to dig deeper into this, reflecting and offering insights into what this might reveal about my own shadow and how I might transform this shadow into a superpower.",
+            "reasoning_prompt1_msg": "Reflecting on what you have never forgiven yourself for:",
+            "collective_prompt1": "Write eight one-liners about transforming my shadow into a superpower. Here's some context:",
+            "responding_prompt1": "I'm going to tell you about something I have never forgiven myself for. Help me begin the process of healing. Here we go:"
+        },
+        "worst_accusation": {
+            "current_mode": "worst_accusation",
+            "description": "What’s the worst thing someone could call you or accuse you of, behind your back?",
+            "reasoning_prompt1": "I'm going to tell you about the worst thing someone could call me or accuse me of, behind my back. Help me to dig deeper into this, reflecting and offering insights into what this might reveal about my own shadow and how I might transform this shadow into a superpower.",
+            "reasoning_prompt1_msg": "Reflecting on the worst thing someone could call you or accuse you of, behind your back:",
+            "collective_prompt1": "Write eight one-liners about transforming my shadow into a superpower. Here's some context:",
+            "responding_prompt1": "I'm going to tell you about the worst thing someone could call me or accuse me of, behind my back. Help me own it. Here we go:"
+        },
+        "family_skeletons": {
+            "current_mode": "family_skeletons",
+            "description": "What skeletons does your family keep in its closet?",
+            "reasoning_prompt1": "I'm going to tell you about the skeletons my family keeps in its closet. Help me to dig deeper into this, reflecting and offering insights into what this might reveal about my own shadow and how I might transform this shadow into a superpower.",
+            "reasoning_prompt1_msg": "Reflecting on the skeletons your family keeps in its closet:",
+            "collective_prompt1": "Write eight one-liners about transforming my shadow into a superpower. Here's some context:",
+            "responding_prompt1": "I'm going to tell you about the skeletons my family keeps in its closet. Help me expunge them. Here we go:"
+        },
+        "incognito_search": {
+            "current_mode": "incognito_search",
+            "description": "What is a search query or topic you’d only use incognito mode for?",
+            "reasoning_prompt1": "I'm going to tell you about a search query or topic I'd use incognito mode for. Help me to dig deeper into this, reflecting and offering insights into what this might reveal about my own shadow and how I might transform this shadow into a superpower.",
+            "reasoning_prompt1_msg": "Reflecting on your incognito searches:",
+            "collective_prompt1": "Write eight one-liners about transforming my shadow into a superpower. Here's some context:",
+            "responding_prompt1": "I'm going to tell you about a search query or topic I'd only use incognito mode for. Turn my shame into a superpower. Here we go:"
+        }
+    }
+}
