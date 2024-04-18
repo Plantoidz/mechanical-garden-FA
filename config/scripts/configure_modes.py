@@ -7,9 +7,9 @@ class ModeConfigurator:
         self.working_directory = working_directory
         self.modes = self.load_modes_from_file()
 
-    def load_modes_from_file(self):
+    def load_modes_from_file(self, key="interaction_modes"):
         with open(self.modes_file, 'r') as file:
-            return json.load(file)["MODES"]
+            return json.load(file)[key]
 
     def create_mode_directory(self, mode_data):
         modes_directory = os.path.dirname(self.modes_file)
@@ -36,27 +36,31 @@ class ModeConfigurator:
         print(f"Mode {mode} has been set!")
 
     def configure_mode(self):
-        print("Select a mode:")
-        mode_names = list(self.modes.keys())
-        for idx, mode in enumerate(mode_names, start=1):
-            description = self.modes[mode]["description"]
-            print(f"{idx}: {mode} - {description}")
+        try:
+            print("Select a mode:")
+            mode_names = list(self.modes.keys())
+            for idx, mode in enumerate(mode_names, start=1):
+                description = self.modes[mode]["description"]
+                print(f"{idx}: {mode} - {description}")
 
-        total_modes = len(self.modes)
-        selection = int(input(f"Enter the mode number (1-{total_modes}): "))
+            total_modes = len(self.modes)
+            selection = int(input(f"Enter the mode number (1-{total_modes}): "))
 
-        if 1 <= selection <= total_modes:
-            mode = mode_names[selection-1]  # adjust index for 0-based list
-            mode_data = self.modes[mode]
-            mode_directory = self.create_mode_directory(mode_data)
-            self.set_mode_data(mode)
-            print(f"Data for mode {mode} has been set in directory {mode_directory}.")
-        else:
-            print("Invalid selection!")
+            if 1 <= selection <= total_modes:
+                mode = mode_names[selection-1]  # adjust index for 0-based list
+                mode_data = self.modes[mode]
+                mode_directory = self.create_mode_directory(mode_data)
+                self.set_mode_data(mode)
+                print(f"Data for mode {mode} has been set in directory {mode_directory}.")
+            else:
+                print("Invalid selection!")
+
+        except KeyboardInterrupt:
+            print("\nExiting...")
 
 def main():
-    modes_path = '../modes/modes.json'
-    working_directory = '../working'
+    modes_path = os.getcwd()+'/config/files/interaction_modes.json'
+    working_directory = os.getcwd()+'/config/files/working'
     configurator = ModeConfigurator(modes_path, working_directory)
     configurator.configure_mode()
 

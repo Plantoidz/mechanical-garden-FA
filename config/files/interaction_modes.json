@@ -1,0 +1,59 @@
+{
+    "interaction_modes": {
+        "conversation": {
+            "current_mode": "conversation",
+            "agent_type": "debate",
+            "selection_function": "conversation",
+            "bidding_template": "conversation",
+            "description": "You will converse one-on-one with the human.",
+            "reasoning_prompt1": "",
+            "reasoning_prompt1_msg": "Reflecting on your failure to ask for forgiveness:",
+            "collective_prompt1": "Write eight one-liners reflecting on the wrong that I have not yet asked forgiveness for. Here's some context:",
+            "responding_prompt1": "I'm going to tell you something I have done wrong that I have not yet asked forgiveness for. There could be many reasons: shame, awkwardness, guilt, or a lack of emotional awareness to address the wrongdoing. Please reflect on it from your perspective. Here's what I did:"
+        },
+        "debate": {
+            "current_mode": "debate",
+            "agent_type": "debate",
+            "selection_function": "debate",
+            "bidding_template": "debate",
+            "description": "You will debate.",
+            "reasoning_prompt1": "I'm going to tell you something that I am afraid people will find out about me, when I am at a party or festival. Please offer me some insights that can help transform my fears into ways I can face and overcome my fears",
+            "reasoning_prompt1_msg": "Overcome your fears in this way:",
+            "collective_prompt1": "Write eight one-liners about overcoming my fear. Here's some context:",
+            "responding_prompt1": "I'm going to tell you something that I am afraid people will find out about me, when I am at a party or festival. Please offer me some insights that can help transform my fears into ways I can face and overcome my fear. Here's what I'm afraid of context:"
+        },
+        "chatter": {
+            "current_mode": "chatter",
+            "agent_type": "dialogue",
+            "selection_function": "chatter",
+            "bidding_template": "chatter",
+            "description": "You will all talk at once.",
+            "reasoning_prompt1": "I'm going to tell you something that I am afraid people will find out about me, when I am at a party or festival. Please offer me some insights that can help transform my fears into ways I can face and overcome my fears",
+            "reasoning_prompt1_msg": "Overcome your fears in this way:",
+            "collective_prompt1": "Write eight one-liners about overcoming my fear. Here's some context:",
+            "responding_prompt1": "I'm going to tell you something that I am afraid people will find out about me, when I am at a party or festival. Please offer me some insights that can help transform my fears into ways I can face and overcome my fear. Here's what I'm afraid of context:"
+        },
+        "roast": {
+            "current_mode": "roast",
+            "agent_type": "dialogue",
+            "selection_function": "roast",
+            "bidding_template": "roast",
+            "description": "You will not be nice.",
+            "reasoning_prompt1": "I'm going to tell you something that I am afraid people will find out about me, when I am at a party or festival. Please offer me some insights that can help transform my fears into ways I can face and overcome my fears",
+            "reasoning_prompt1_msg": "Overcome your fears in this way:",
+            "collective_prompt1": "Write eight one-liners about overcoming my fear. Here's some context:",
+            "responding_prompt1": "I'm going to tell you something that I am afraid people will find out about me, when I am at a party or festival. Please offer me some insights that can help transform my fears into ways I can face and overcome my fear. Here's what I'm afraid of context:"
+        },
+        "clone": {
+            "current_mode": "clone",
+            "agent_type": "dialogue",
+            "selection_function": "clone",
+            "bidding_template": "clone",
+            "description": "You will be me.",
+            "reasoning_prompt1": "I'm going to tell you something that I am afraid people will find out about me, when I am at a party or festival. Please offer me some insights that can help transform my fears into ways I can face and overcome my fears",
+            "reasoning_prompt1_msg": "Overcome your fears in this way:",
+            "collective_prompt1": "Write eight one-liners about overcoming my fear. Here's some context:",
+            "responding_prompt1": "I'm going to tell you what I'm most looking forward to. I want you to acknowledge this but help me refocus on the present. Here we go:"
+        }
+    }
+}

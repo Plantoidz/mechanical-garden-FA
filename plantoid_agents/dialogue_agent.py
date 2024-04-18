@@ -10,8 +10,8 @@ from langchain.schema import (
     SystemMessage,
 )
 
-from lib.text_content import *
-import lib.speech as PlantoidSpeech
+import plantoid_agents.lib.speech as PlantoidSpeech
+from plantoid_agents.lib.text_content import *
 
 class PlantoidDialogueAgent:
     def __init__(
@@ -101,8 +101,8 @@ class PlantoidDialogueAgent:
             ]
         )
 
-        print(self.name, 'says:')
-        print(message.content)
+        # print(self.name, 'says:')
+        # print(message.content)
 
         # stream audio response
         PlantoidSpeech.stream_audio_response(

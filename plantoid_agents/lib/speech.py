@@ -75,8 +75,8 @@ THRESHOLD = 150
 # Load environment variables from .env file
 load_dotenv()
 
-OPENAI_API_KEY = os.environ.get("OPENAI")
-ELEVENLABS_API_KEY = os.environ.get("ELEVEN")
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+ELEVENLABS_API_KEY = os.environ.get("ELEVENLABS_API_KEY")
 
 set_api_key(ELEVENLABS_API_KEY)
 
@@ -429,7 +429,7 @@ def listen_for_speech_whisper():
         utterance = mic.listen()
         # print(f"I heard: {utterance}")
 
-        return utterance
+    return utterance
     
 def get_chat_response(chat_personality, utterance):
 

@@ -6,6 +6,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain_community.chat_models.huggingface import ChatHuggingFace
 from langchain_community.llms import HuggingFaceTextGenInference, HuggingFaceEndpoint, HuggingFaceHub
 from dotenv import load_dotenv
+from utils.util import load_config
 
 load_dotenv()
 
@@ -14,7 +15,7 @@ OPENAI_API_KEY = os.environ.get("OPENAI")
 LLM_ENDPOINT_URL = "https://hh1j4c263kruj77c.eu-west-1.aws.endpoints.huggingface.cloud"
 HF_TOKEN = os.environ.get("HUGGINGFACEHUB_API_TOKEN")
 
-print(HF_TOKEN)
+print("HUGGINGFACEHUB_API_TOKEN", HF_TOKEN)
 
 # TODO: look Into
 # python -c "from huggingface_hub.hf_api import HfFolder; HfFolder.save_token('YOUR_TOKEN_HERE')"
@@ -77,3 +78,13 @@ def select_llm(interface: str ="openai") -> Union[ChatOpenAI, ChatHuggingFace]:
         )
 
     return chat_model
+
+def get_llm() -> Union[ChatOpenAI, ChatHuggingFace]:
+
+    config = load_config()
+
+    # instantiate the LLM to use
+    use_interface = config['general']['use_llm']
+    llm = select_llm(interface=use_interface)
+
+    return llm

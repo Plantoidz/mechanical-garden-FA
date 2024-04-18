@@ -1,4 +1,5 @@
 import json
+import os
 
 class CharacterConfigurator:
     def __init__(self, source_file, destination_file):
@@ -50,8 +51,8 @@ class CharacterConfigurator:
         print(f"\nConfig saved to {self.destination_file} with the {num_of_characters} selected characters only.")
 
 def main():
-    source_path = '../characters/characters.json'
-    destination_path = '../working/current_characters.json'
+    source_path = os.getcwd()+'/config/files/characters.json'
+    destination_path = os.getcwd()+'/config/files/working/current_characters.json'
     configurator = CharacterConfigurator(source_path, destination_path)
     configurator.configure_characters()
 
