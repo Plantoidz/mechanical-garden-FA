@@ -101,8 +101,8 @@ class PlantoidDialogueAgent:
             ]
         )
 
-        # print(self.name, 'says:')
-        # print(message.content)
+        print(self.name, 'says:')
+        print(message.content)
 
         # stream audio response
         PlantoidSpeech.stream_audio_response(

@@ -137,7 +137,7 @@ class InteractionManager:
         print('Running interaction mode...')
         while n < max_iters:
             name, message = simulator.step()
-            print(f"({name}): {message}")
+            # print(f"({name}): {message}")
             n += 1
 
     def run_interaction(self):
