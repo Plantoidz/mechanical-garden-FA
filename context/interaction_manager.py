@@ -8,10 +8,6 @@ from interaction_modes.debate import PlantoidDebate
 from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
 from plantoid_agents.debate_agent import PlantoidDebateAgent
 
-from events.listen import Listen
-from events.speak import Speak
-from events.think import Think
-
 from utils.config_util import read_character_config, read_interaction_mode_config
 import context.character_setup as character_setup # TODO: roll this into context config
 import context.speaker_selection as speaker_selection # TODO: roll this into context config
@@ -30,6 +26,16 @@ class InteractionManager:
         
         if selection_function == 'debate':
             return speaker_selection.select_next_speaker_with_human_debate
+        
+    def get_bidding_function(self, selection_function: str) -> any:
+        """
+        Retrieves the selection function based on the provided string.
+        """
+        if selection_function == 'conversation':
+            return speaker_selection.generate_character_bidding_template_conversation
+        
+        if selection_function == 'debate':
+            return speaker_selection.generate_character_bidding_template_debate
         
     def get_plantoid_agent(self, agent_type: str) -> Type:
         """
@@ -73,12 +79,13 @@ class InteractionManager:
         interaction_mode = self.get_interaction_mode(use_interaction_mode)
         plantoid_agent = self.get_plantoid_agent(use_agent_type)
         selection_function = self.get_selection_function(use_selection_function)
+        bidding_function = self.get_bidding_function(use_bidding_template)
 
         return {
             "interaction_mode": interaction_mode,
             "plantoid_agent": plantoid_agent,
             "characters": use_characters,
-            "bidding_template_mode": use_bidding_template,
+            "bidding_function": bidding_function,
             "selection_function": selection_function,
         }
 
@@ -86,7 +93,7 @@ class InteractionManager:
         self,
         characters: Dict[str, List[Dict[str, Any]]],
         plantoid_agent: Type,
-        bidding_template_mode: any,
+        bidding_function: any,
     ) -> List[Any]:
         """
         Generates context for each character based on the configurations.
@@ -101,7 +108,7 @@ class InteractionManager:
             character_voice_id = character['eleven_voice_id']
 
             # TODO: move to character setup
-            bidding_template = speaker_selection.generate_character_bidding_template(character_system_message, bidding_template_mode)
+            bidding_template = bidding_function(character_system_message)
             system_message = character_setup.get_raw_system_message(character_system_message) # TODO: generalize
 
             character_object = plantoid_agent(
@@ -121,8 +128,8 @@ class InteractionManager:
         interaction_mode: Type,
         characters: List[Any],
         selection_function: any,
-        max_iters = 10
-    ):
+        max_iters: int = 10
+    ) -> None:
         """
         Starts the interaction simulation using the provided interaction mode and characters.
         """
@@ -140,7 +147,7 @@ class InteractionManager:
             # print(f"({name}): {message}")
             n += 1
 
-    def run_interaction(self):
+    def run_interaction(self) -> None:
         """
         Main method to setup and run the interaction based on the retrieved context.
         """
@@ -150,8 +157,8 @@ class InteractionManager:
         interaction_mode = interaction_context['interaction_mode']
         plantoid_agent = interaction_context['plantoid_agent']
         characters = interaction_context['characters']
-        bidding_template_mode = interaction_context['bidding_template_mode']
+        bidding_function = interaction_context['bidding_function']
         selection_function = interaction_context['selection_function']
 
-        character_context = self.generate_character_context(characters, plantoid_agent, bidding_template_mode)
+        character_context = self.generate_character_context(characters, plantoid_agent, bidding_function)
         self.start_interaction(interaction_mode, character_context, selection_function)

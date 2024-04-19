@@ -51,50 +51,48 @@ def get_bid_parser() -> BidOutputParser:
 
     return bid_parser
 
-def generate_character_bidding_template(
-    character_header,
-    bidding_mode,
-):
+def generate_character_bidding_template_conversation(character_header):
+
     bid_parser = get_bid_parser()
-    bidding_template = ""
 
-    if bidding_mode == "conversation":
+    bidding_template = f"""Here is your character description: {character_header}
 
-        bidding_template = f"""Here is your character description: {character_header}
+        ```
+        {{message_history}}
+        ```
 
-            ```
-            {{message_history}}
-            ```
+        On the scale of 1 to 10, where 1 is "strongly agree" and 10 is "strongly disagree", rate your response to this argument:
 
-            On the scale of 1 to 10, where 1 is "strongly agree" and 10 is "strongly disagree", rate your response to this argument:
+        ```
+        {{recent_message}}
+        ```
 
-            ```
-            {{recent_message}}
-            ```
+        {bid_parser.get_format_instructions()}
+        Do nothing else.
+    """
 
-            {bid_parser.get_format_instructions()}
-            Do nothing else.
-        """
-        
-    if bidding_mode == "debate":
-    
-        bidding_template = f"""Here is your character description: {character_header}
+    return bidding_template
 
-            ```
-            {{message_history}}
-            ```
 
-            On the scale of 1 to 10, where 1 is "strongly agree" and 10 is "strongly disagree", rate your response to this argument:
+def generate_character_bidding_template_debate(character_header):
+            
+    bid_parser = get_bid_parser()
 
-            ```
-            {{recent_message}}
-            ```
+    bidding_template = f"""Here is your character description: {character_header}
 
-            {bid_parser.get_format_instructions()}
-            Do nothing else.
-        """
+        ```
+        {{message_history}}
+        ```
 
-    # print("Bidding template is:", bidding_template)
+        On the scale of 1 to 10, where 1 is "strongly agree" and 10 is "strongly disagree", rate your response to this argument:
+
+        ```
+        {{recent_message}}
+        ```
+
+        {bid_parser.get_format_instructions()}
+        Do nothing else.
+    """
 
     return bidding_template
 
