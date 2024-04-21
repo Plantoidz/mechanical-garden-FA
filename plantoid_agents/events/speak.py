@@ -13,7 +13,9 @@ import pygame
 
 
 from dotenv import load_dotenv
-from elevenlabs import clone, stream, generate, play, set_api_key, Voice, VoiceSettings
+from elevenlabs.client import ElevenLabs
+from elevenlabs import stream, Voice, VoiceSettings
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -21,7 +23,12 @@ load_dotenv()
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 ELEVENLABS_API_KEY = os.environ.get("ELEVENLABS_API_KEY")
 
-set_api_key(ELEVENLABS_API_KEY)
+client = ElevenLabs(
+  api_key=ELEVENLABS_API_KEY
+)
+
+
+# set_api_key(ELEVENLABS_API_KEY)
 
 class Speak:
     """
@@ -84,7 +91,7 @@ class Speak:
     def stream_audio_response(self, response: str, voice_id: str, callback: Any = None) -> None:
 
         # generate audio stream   
-        audio_stream = generate(
+        audio_stream = client.generate(
             text=f"{response}",
             model="eleven_turbo_v2",
             voice=voice_id,
@@ -123,7 +130,7 @@ class Speak:
         voice_files = [os.getcwd()+"/media/user_audio/temp_reco.wav"]
 
         if create_clone:
-            voice = clone(
+            voice = client.clone(
                 # api_key=os.getenv("ELEVENLABS_API_KEY"),
                 name="You",
                 description="A clone of the user's voice", # Optional

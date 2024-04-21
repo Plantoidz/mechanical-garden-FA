@@ -1,0 +1,3 @@
+1. Create "kiosk" mode where a prompt is given to human and all plantoids address the question
+2. Within event classes, create a function which can disambiguate arduino communication modes (USB, serial, etc... for Led lighting) ie: communicate_with_arduino()
+3. Integrate Ben output on streaming, litellm etc

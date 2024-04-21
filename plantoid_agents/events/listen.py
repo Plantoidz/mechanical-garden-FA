@@ -16,7 +16,7 @@ import whisper
 import torch
 
 from dotenv import load_dotenv
-from elevenlabs import generate, stream, set_api_key
+from elevenlabs import stream
 from utils.util import load_config, str_to_bool
 from ctypes import *
 from contextlib import contextmanager
@@ -30,7 +30,11 @@ load_dotenv()
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 ELEVENLABS_API_KEY = os.environ.get("ELEVENLABS_API_KEY")
 
-set_api_key(ELEVENLABS_API_KEY)
+# client = ElevenLabs(
+#   api_key=ELEVENLABS_API_KEY
+# )
+
+# set_api_key(ELEVENLABS_API_KEY)
 
 @contextmanager
 def ignoreStderr():

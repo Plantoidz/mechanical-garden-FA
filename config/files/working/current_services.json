@@ -1,5 +1,5 @@
 {
-    "selected_language_model": "gpt-4-turbo",
+    "selected_language_model": "ollama_chat/llama2",
     "selected_speech_recognition_model": "DeepgramTranscription",
     "selected_speech_synthesis_model": "ElevenLabsStreaming"
 }

@@ -34,3 +34,6 @@ numexpr
 langchainhub
 sentencepiece
 jinja2
+litellm
+ollama
+deepgram-sdk

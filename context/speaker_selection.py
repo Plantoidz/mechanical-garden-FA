@@ -34,6 +34,8 @@ use_narrator_voice_id = config['general']['use_narrator_voice_id']
 #TODO: make class and have this as param
 llm = get_llm()
 
+client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
+
 class BidOutputParser(RegexParser):
     
     def get_format_instructions(self) -> str:
@@ -129,7 +131,7 @@ def select_next_speaker(step: int, agents: List[DialogueAgent]) -> int:
             selected_name = agent.name
     print(f"Selected: {selected_name}")
 
-    audio_stream = generate(
+    audio_stream = client.generate(
             text=f"{selected_name}?",
             model="eleven_turbo_v2",
             voice=use_narrator_voice_id,
@@ -298,7 +300,7 @@ def select_next_speaker_with_human_debate(
                 
                 if will_participate == True:
 
-                    audio_stream = generate(
+                    audio_stream = client.generate(
                         text=f"Prepare to weigh in.",
                         model="eleven_turbo_v2",
                         voice=use_narrator_voice_id,
@@ -343,7 +345,7 @@ def select_next_speaker_with_human_debate(
     print(f"Selected: {selected_name}")
 
     #TODO: if statement in case it's a human, tee up a moderator question
-    audio_stream = generate(
+    audio_stream = client.generate(
             text=f"{selected_name}?",
             model="eleven_turbo_v2",
             voice=use_narrator_voice_id,

@@ -13,7 +13,7 @@ import logging
 load_dotenv()
 tts = ElevenLabs(api_key="")
 llm_config = "ollama_chat/llama3"
-personality = open("personality.txt").read().strip()
+personality = open(os.getcwd()+"/utils/experiments/personality.txt").read().strip()
 ai = AIChat(system=personality, api_key="", model="gpt-4-turbo")
 
 #Deepgram
