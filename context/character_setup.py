@@ -13,7 +13,8 @@ from langchain.schema import (
 
 from plantoid_agents.dialogue_agent import PlantoidDialogueAgent as DialogueAgent
 from dotenv import load_dotenv
-from elevenlabs import generate, stream, set_api_key
+from elevenlabs import play, stream, save
+from elevenlabs.client import ElevenLabs
 
 from config.scripts.select_llm import get_llm
 from utils.util import load_config

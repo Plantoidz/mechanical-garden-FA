@@ -11,7 +11,8 @@ import struct
 
 from simpleaichat import AIChat
 from whisper_mic.whisper_mic import WhisperMic
-from elevenlabs import generate, stream, set_api_key
+from elevenlabs import play, stream, save
+from elevenlabs.client import ElevenLabs
 
 import numpy as np
 
@@ -57,8 +58,6 @@ load_dotenv()
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 ELEVENLABS_API_KEY = os.environ.get("ELEVENLABS_API_KEY")
-
-set_api_key(ELEVENLABS_API_KEY)
 
 
 def get_chat_response(chat_personality, utterance):
