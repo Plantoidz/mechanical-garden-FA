@@ -46,7 +46,7 @@
         },
         "clone": {
             "current_mode": "clone",
-            "agent_type": "dialogue",
+            "agent_type": "clone",
             "selection_function": "clone",
             "bidding_template": "clone",
             "description": "You will be me.",

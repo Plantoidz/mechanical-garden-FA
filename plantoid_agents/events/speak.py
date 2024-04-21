@@ -13,7 +13,7 @@ import pygame
 
 
 from dotenv import load_dotenv
-from elevenlabs import generate, stream, set_api_key
+from elevenlabs import clone, stream, generate, play, set_api_key, Voice, VoiceSettings
 
 # Load environment variables from .env file
 load_dotenv()
@@ -113,10 +113,66 @@ class Speak:
         print('stop background music')
         pygame.mixer.music.stop()
 
-    def speak(self, response: str, voice_id: str, callback: Any = None) -> None:
+    def clone_voice(
+        self,
+        voice_set_callback: Any,
+        cloned_voice_id: str = None,
+        create_clone: bool = False
+    ):
 
-        self.stream_audio_response(
-            response,
-            voice_id,
-            callback=callback,
-        )
+        voice_files = [os.getcwd()+"/media/user_audio/temp_reco.wav"]
+
+        if create_clone:
+            voice = clone(
+                # api_key=os.getenv("ELEVENLABS_API_KEY"),
+                name="You",
+                description="A clone of the user's voice", # Optional
+                files=voice_files,
+            )
+
+            voice_set_callback(voice.voice_id)
+        
+        else:
+            voice = Voice(
+                voice_id=cloned_voice_id, #'NE1ZIqHDl04rAu3fkYQH',
+                settings=VoiceSettings(
+                    stability=0.61,
+                    similarity_boost=0.85,
+                    style=0.0,
+                    use_speaker_boost=True,
+                )
+            )
+
+        return voice
+
+    def speak(
+        self,
+        response: str,
+        voice_id: str,
+        callback: Any = None,
+        voice_set_callback: Any = None,
+        clone_voice: bool = False,
+        create_clone: bool = False,
+
+    ) -> None:
+
+        if clone_voice:
+
+            voice = self.clone_voice(
+                create_clone=create_clone,
+                cloned_voice_id=voice_id,
+                voice_set_callback=voice_set_callback,
+            )
+
+            self.stream_audio_response(
+                response,
+                voice,
+                callback=callback,
+            )
+
+        else:
+            self.stream_audio_response(
+                response,
+                voice_id,
+                callback=callback,
+            )

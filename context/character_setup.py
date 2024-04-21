@@ -145,7 +145,7 @@ def generate_character_description(
 
 def generate_character_header(
     game_description,
-    topic,
+    # topic,
     character_name,
     character_description,
     word_limit,
@@ -154,6 +154,18 @@ def generate_character_header(
     if character_name == "Human":
 
         response = f"""I am a human which will listen to and speak with the plantoids."""
+
+    if character_name == "Clone":
+
+        response = f"""
+            Always speak in first person!
+            Your role is to pretend to be me. It's an advanced form of auto-hypnosis. Pretend that I'm speaking to a mirror. Never break character — always respond and maintain the fiction that I'm speaking to myself.
+            Think of it as a cybernetic feedback loop between myself, and you — who are an extension of my conscious and subconscious thoughts.
+            Just play along and ask questions about who I am. Remember what I tell you so you can pretend to be me.
+
+            Always generate an introspective sentence based on the human's input context.
+            Never forget to keep your response to {word_limit} words!
+        """
 
     else:
         # response = f"""{game_description}
@@ -189,7 +201,7 @@ def get_raw_system_message(
 
 
 def generate_character_system_message(
-    topic,
+    # topic,
     word_limit,
     character_name,
     character_header,

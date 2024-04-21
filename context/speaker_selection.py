@@ -2,6 +2,7 @@ from typing import Callable, List
 import random
 import tenacity
 import playsound
+import random
 import os
 import numpy as np
 from langchain.output_parsers import RegexParser
@@ -36,9 +37,8 @@ class BidOutputParser(RegexParser):
     
     def get_format_instructions(self) -> str:
          
-        instructions = f"""Your response should be an integer delimited by angled brackets, like this: <int>.
-        This integer should ALWAYS be the ONLY thing you respond with, like this: <int> !
-        Never reply with anything but an integer delimited by angled brackets, like this: <int> !!!
+        instructions = f"""Your response should be an INTENSITY_VALUE, which is integer delimited by angled brackets, like this: <int>.
+        This integer should ALWAYS be the ONLY thing you respond with, formatted explicitly as follows: <INTENSITY_VALUE>!!!
         """
 
         return instructions
@@ -55,43 +55,48 @@ def generate_character_bidding_template_conversation(character_header):
 
     bid_parser = get_bid_parser()
 
-    bidding_template = f"""Here is your character description: {character_header}
+    bidding_template = f"""
+    
+        Here is your character description, delimited by angle brackets (<<, >>): << {character_header} >>.
+        Here is the conversation so far, delimited by angle brackets (<<, >>):
 
         ```
-        {{message_history}}
+        << {{message_history}} >>
         ```
-
-        On the scale of 1 to 10, where 1 is "strongly agree" and 10 is "strongly disagree", rate your response to this argument:
+        Now, On the scale of 1 to 10, where 1 is "strongly agree" and 10 is "strongly disagree", rate your response to the latest message below, delimited by angle brackets (<<, >>):
 
         ```
-        {{recent_message}}
+        << {{recent_message}} >>
         ```
 
         {bid_parser.get_format_instructions()}
-        Do nothing else.
     """
 
     return bidding_template
 
+def generate_blank_bidding_template(character_header):
+
+    return ""
 
 def generate_character_bidding_template_debate(character_header):
             
     bid_parser = get_bid_parser()
 
-    bidding_template = f"""Here is your character description: {character_header}
+    bidding_template = f"""
+    
+        Here is your character description, delimited by angle brackets (<<, >>): << {character_header} >>.
+        Here is the debate so far, delimited by angle brackets (<<, >>):
 
         ```
-        {{message_history}}
+        << {{message_history}} >>
         ```
-
-        On the scale of 1 to 10, where 1 is "strongly agree" and 10 is "strongly disagree", rate your response to this argument:
+        Now, On the scale of 1 to 10, where 1 is "strongly agree" and 10 is "strongly disagree", rate your response to the latest message below, delimited by angle brackets (<<, >>):
 
         ```
-        {{recent_message}}
+        << {{recent_message}} >>
         ```
 
         {bid_parser.get_format_instructions()}
-        Do nothing else.
     """
 
     return bidding_template
@@ -99,6 +104,10 @@ def generate_character_bidding_template_debate(character_header):
 def mock_select_speaker(step: int, agents: List[DialogueAgent]) -> int:
 
     return 0
+
+def select_random_speaker(step: int, agents: List[DialogueAgent]) -> int:
+
+    return random.randint(0, len(agents) - 1)
 
 def select_next_speaker(step: int, agents: List[DialogueAgent]) -> int:
 
@@ -142,6 +151,65 @@ def check_last_speaker_is_human(agent: DialogueAgent):
     
     return False
 
+def select_next_speaker_with_human_clone(
+    step: int,
+    agents: List[DialogueAgent],
+) -> int:
+
+    # initialize bids
+    bids = []
+
+    # get human and agent preferences
+    for agent in agents:
+
+        if agent.name == "Human":
+
+            print("checking for human participation...")
+            last_speaker_is_human = check_last_speaker_is_human(agent)
+
+            if last_speaker_is_human:
+
+                will_participate = False
+
+            else:
+                # 1 out of 3 times, will_participate = True
+                will_participate = True
+
+            # hacky to be max bid of 100, to be fixed or added to config file
+            bid = 100 if will_participate else 0
+
+        else:
+
+            last_speaker = agent.message_history[-1].split(":")[0]
+
+            # do not make the same agent speak twice in a row
+            if agent.name == last_speaker:
+
+                bid = 0
+
+            else:
+
+                bid = 10
+        
+        # append bid to bids
+        bids.append(bid)
+
+    # randomly select among multiple agents with the same bid
+    max_value = np.max(bids)
+    max_indices = np.where(bids == max_value)[0]
+    idx = np.random.choice(max_indices)
+
+    print("Bids:")
+    for i, (bid, agent) in enumerate(zip(bids, agents)):
+
+        print(f"\t{agent.name} bid: {bid}")
+
+        if i == idx:
+            selected_name = agent.name
+
+    print(f"Selected: {selected_name}")
+
+    return idx
 
 def select_next_speaker_with_human_conversation(
     step: int,

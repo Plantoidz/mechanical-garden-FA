@@ -37,12 +37,13 @@ class PlantoidDebate:
             print('Human Selected')
 
             # 2. next (human) speaker sends message
-            message = speaker.listen()
+            message = speaker.listen_for_speech()
 
         else:
 
             # 2. next speaker sends message
             message = speaker.send()
+            speaker.speak(message)
 
         # 3. everyone receives message
         for receiver in self.agents:

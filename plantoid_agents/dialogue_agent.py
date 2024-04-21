@@ -32,9 +32,12 @@ class PlantoidDialogueAgent:
         ### CUSTOM ATTRIBUTES ###
         # eleven voice id
         self.eleven_voice_id = eleven_voice_id
-        self.think = Think(model, system_message)
-        self.speak = Speak()
-        self.listen = Listen()
+        self.think_module = Think(model)
+        self.speak_module = Speak()
+        self.listen_module = Listen()
+
+        #TODO: do not hardcode!
+        self.use_model_type = "langchain"
 
     def get_voice_id(self) -> str:
 
@@ -62,9 +65,9 @@ class PlantoidDialogueAgent:
             return False
 
 
-    def listen(self) -> str:
+    def listen_for_speech(self) -> str:
 
-        user_message = self.listen.listen()
+        user_message = self.listen_module.listen()
 
         print("Human said: " + user_message)
 
@@ -77,39 +80,57 @@ class PlantoidDialogueAgent:
         """
 
         # play the background music
-        self.speak.play_background_music()
+        self.speak_module.play_background_music()
 
         # generate the message from the langchain model
         print(self.name, 'is thinking about response...')
 
+        self.message_history = self.clip_history(self.message_history, n_messages=5)
+
         use_content = "\n".join(self.message_history + [self.prefix])
         # print("use_content:", use_content)
 
-        # message = self.model(
-        #     [
-        #         self.system_message,
-        #         HumanMessage(content=use_content),
-        #     ]
-        # )
+        # print("AGENT:", self.name)
+        # print("SYSTEM MESSAGE:", self.system_message)
+        # print("MESSAGE HISTORY:", self.message_history)
 
-        message = self.think.think(use_content)
+        message = self.think_module.think(
+            self.system_message,
+            use_content,
+            self.use_model_type,
+        )
 
         print(self.name, 'says:')
         print(message)
 
-        # stream audio response
-        self.speak.speak(
+        return message
+    
+    def speak(self, message: str) -> None:
+        """
+        Speaks the message using the agent's voice
+        """
+
+        self.speak_module.stop_background_music()
+        
+        self.speak_module.speak(
             message,
             self.get_voice_id(),
-            callback=self.speak.stop_background_music,
+            callback=None, #self.speak_module.stop_background_music,
         )
-
-        return message
 
     def receive(self, name: str, message: str) -> None:
         """
         Concatenates {message} spoken by {name} into message history
         """
         self.message_history.append(f"{name}: {message}")
+
+    def clip_history(self, lst, n_messages=5):
+        """
+        Clips the history to the last n messages
+        """
+        if len(lst) == 0:
+            return []  # Return an empty list if the input list is empty
+        
+        return [lst[0]] + lst[-n_messages:] if len(lst) > n_messages else lst
 
 #TODO: do not commingle classes and functions here

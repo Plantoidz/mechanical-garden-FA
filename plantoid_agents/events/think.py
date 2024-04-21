@@ -11,11 +11,15 @@ from utils.util import load_config, str_to_bool
 
 from langchain.chat_models import ChatOpenAI
 from langchain_community.chat_models.huggingface import ChatHuggingFace
+from langchain.output_parsers import RegexParser
+from langchain.prompts import PromptTemplate
 
 from langchain.schema import (
     HumanMessage,
     SystemMessage,
 )
+
+from simpleaichat import AsyncAIChat, AIChat
 
 # Load environment variables from .env file
 load_dotenv()
@@ -30,25 +34,61 @@ class Think:
     def __init__(
         self,
         model: Union[ChatOpenAI, ChatHuggingFace],
-        system_message: SystemMessage,
+        # system_message: SystemMessage,
     ):
         """
         Initializes a new instance of the Think class.
         """
         self.model = model
-        self.system_message = system_message
 
+    def generate_bid_template(self, bidding_template, message_history) -> SystemMessage:
 
-    def think(self, use_content: str) -> str:
+        bid_system_message = PromptTemplate(
+            input_variables=["recent_message", "message_history"], 
+            template=bidding_template,
+        ).format(
+            message_history="\n".join(message_history),
+            recent_message=message_history[-1],
+        )
+
+        return SystemMessage(content=bid_system_message)
+
+    def think_simpleAIChat(self, system_message: SystemMessage, use_content: str) -> str:
+
+        # print("USE CONTENT:", use_content)
+
+        ai_chat = AIChat(
+            system=system_message.content,
+            api_key=OPENAI_API_KEY,
+            model="gpt-4-turbo",
+            console=False,
+            params = {"temperature": 0.5}#, "max_tokens": 3}
+        )
+
+        message = ai_chat(use_content)
+        
+        return message
+
+    def think_langchain(self, system_message: SystemMessage, use_content: str) -> str:
         
         message = self.model(
             [
-                self.system_message,
+                system_message,
                 HumanMessage(content=use_content),
             ]
         )
 
         return message.content
+    
+    def think(self, system_message: SystemMessage, use_content: str, use_model: str) -> str:
+            
+        if use_model == 'simpleAIChat':
+            message = self.think_simpleAIChat(system_message, use_content)
+
+        if use_model == 'langchain':
+            message = self.think_langchain(system_message, use_content)
+
+        return message
 
     def GPTmagic_manual(self, prompt, call_type='chat_completion') -> str: 
 

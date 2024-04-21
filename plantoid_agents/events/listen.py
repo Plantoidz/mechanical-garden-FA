@@ -59,10 +59,10 @@ class Listen:
         self.CHANNELS = 1
         self.RATE = 44100
         self.CHUNK = 512
-        self.SILENCE_LIMIT = 3   # seconds of silence will stop the recording
-        self.TIMEOUT = 7#15
+        self.SILENCE_LIMIT = 2   # seconds of silence will stop the recording
+        self.TIMEOUT = 5#15
         self.RECORD_SECONDS = 2 #seconds to listen for environmental noise
-        self.THRESHOLD = 150
+        self.THRESHOLD = 0
 
     def compute_average(self, fragment, sample_width=2):
         """Compute the raw average of audio samples."""
@@ -185,7 +185,7 @@ class Listen:
 
         # define the audio file path
         # TODO: pass as param
-        audio_file_path = os.getcwd() + "/tmp/temp_reco.wav"
+        audio_file_path = os.getcwd() + "/media/user_audio/temp_reco.wav"
 
         # audio = pyaudio.PyAudio()
 
@@ -199,10 +199,11 @@ class Listen:
         
         print('quiet! checking noise threshold...')
 
-        noise_value = self.adjust_sound_env(stream, device_bias=cfg['device_bias'])
-        THRESHOLD = self.return_noise_threshold(noise_value, threshold_bias=cfg['threshold_bias'])
+        # noise_value = self.adjust_sound_env(stream, device_bias=cfg['device_bias'])
+        # THRESHOLD = self.return_noise_threshold(noise_value, threshold_bias=cfg['threshold_bias'])
+        THRESHOLD = self.THRESHOLD
 
-        print("THRESHOLD:", THRESHOLD)
+        # print("THRESHOLD:", THRESHOLD)
 
         samples = []
 
@@ -327,7 +328,7 @@ class Listen:
     
     def recognize_whisper(self):
 
-        audio_file_path = os.getcwd() + "/tmp/temp_reco.wav"
+        audio_file_path = os.getcwd() + "/media/user_audio/temp_reco.wav"
 
         device=("cuda" if torch.cuda.is_available() else "cpu")
         model_root="~/.cache/whisper"

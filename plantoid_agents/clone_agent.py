@@ -12,7 +12,7 @@ from langchain.schema import (
 
 from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
 
-class PlantoidDebateAgent(PlantoidDialogueAgent):
+class PlantoidCloneAgent(PlantoidDialogueAgent):
     def __init__(
         self,
         name,
@@ -23,24 +23,28 @@ class PlantoidDebateAgent(PlantoidDialogueAgent):
     ) -> None:
         super().__init__(name, system_message, model, eleven_voice_id)
         self.bidding_template = bidding_template
+        self.clone_voice = True
+        self.create_clone = True
 
-    def bid(self) -> str:
+    def speak(self, message: str) -> None:
         """
-        Asks the chat model to output a bid to speak
+        Speaks the message using the agent's voice
         """
-        bid_system_message = self.think_module.generate_bid_template(
-            self.bidding_template,
-            self.message_history, # self.clip_history(self.message_history, n_messages=1),
+
+        self.speak_module.stop_background_music()
+
+        self.speak_module.speak(
+            message,
+            self.get_voice_id(),
+            voice_set_callback=self.set_create_clone,
+            clone_voice=self.clone_voice,
+            create_clone=self.create_clone,
         )
 
-        # print("BID SYSTEM MESSAGE:", bid_system_message)
+        # print("CREATE CLONE: ", self.create_clone)
+        # print("VOICE ID: ", self.get_voice_id())
 
-        use_content = "Your response should be an integer delimited by angled brackets, like this: <int>"
+    def set_create_clone(self, voice_id: str) -> None:
+        self.create_clone = False
+        self.eleven_voice_id = voice_id
 
-        bid_string = self.think_module.think(
-            bid_system_message,
-            use_content,
-            self.use_model_type,
-        )
-
-        return bid_string

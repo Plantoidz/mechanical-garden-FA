@@ -4,9 +4,11 @@ from typing import Any, Dict, List, Type
 
 from interaction_modes.conversation import PlantoidConversation
 from interaction_modes.debate import PlantoidDebate
+from interaction_modes.clone import PlantoidClone
 
 from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
 from plantoid_agents.debate_agent import PlantoidDebateAgent
+from plantoid_agents.clone_agent import PlantoidCloneAgent
 
 from utils.config_util import read_character_config, read_interaction_mode_config
 import context.character_setup as character_setup # TODO: roll this into context config
@@ -27,6 +29,9 @@ class InteractionManager:
         if selection_function == 'debate':
             return speaker_selection.select_next_speaker_with_human_debate
         
+        if selection_function == 'clone':
+            return speaker_selection.select_next_speaker_with_human_clone
+        
     def get_bidding_function(self, selection_function: str) -> any:
         """
         Retrieves the selection function based on the provided string.
@@ -36,6 +41,9 @@ class InteractionManager:
         
         if selection_function == 'debate':
             return speaker_selection.generate_character_bidding_template_debate
+        
+        if selection_function == 'clone':
+            return speaker_selection.generate_blank_bidding_template
         
     def get_plantoid_agent(self, agent_type: str) -> Type:
         """
@@ -47,6 +55,9 @@ class InteractionManager:
         if agent_type == 'debate':
             return PlantoidDebateAgent
         
+        if agent_type == 'clone':
+            return PlantoidCloneAgent
+        
     def get_interaction_mode(self, interaction_mode: str) -> Type:
         """
         Retrieves the interaction mode based on the provided interaction mode.
@@ -56,7 +67,23 @@ class InteractionManager:
         
         if interaction_mode == 'debate':
             return PlantoidDebate
-
+        
+        if interaction_mode == 'clone':
+            return PlantoidClone
+        
+    def get_interaction_description(self, interaction_mode: str):
+        """
+        Retrieves the interaction mode based on the provided interaction mode.
+        """
+        if interaction_mode == 'conversation':
+            return "This is a friendly conversation on exploring each other's personalities. What do you like to do for fun?"
+        
+        if interaction_mode == 'debate':
+            return "This is a heated debate on the topic of ETH vs BTC cryptocurrency. Let your hearts loose!"
+        
+        if interaction_mode == 'clone':
+            return "You are a clone of me!"
+        
     def get_interaction_context(self) -> Dict[str, Any]:
         """
         Retrieves and configures the interaction context based on predefined configurations.
@@ -77,23 +104,62 @@ class InteractionManager:
         print("Using characters:", [x["name"] for x in use_characters])
 
         interaction_mode = self.get_interaction_mode(use_interaction_mode)
+        interaction_description = self.get_interaction_description(use_interaction_mode)
         plantoid_agent = self.get_plantoid_agent(use_agent_type)
         selection_function = self.get_selection_function(use_selection_function)
         bidding_function = self.get_bidding_function(use_bidding_template)
 
         return {
             "interaction_mode": interaction_mode,
+            "interaction_description": interaction_description,
             "plantoid_agent": plantoid_agent,
             "characters": use_characters,
             "bidding_function": bidding_function,
             "selection_function": selection_function,
         }
+    
+    def get_system_message(
+        self,
+        character: any,
+        interaction_description: str,
+        use_message_type: str = 'raw',
+        word_limit: int = 25, # TODO: move to config
+    ):
+        
+        character_name = character['name']
+        character_system_message_input = character['system_message']
+        character_description = character['description']
+
+        if use_message_type == 'raw':
+
+            character_system_message = character_setup.get_raw_system_message(character_system_message_input)
+        
+        if use_message_type == 'specified':
+
+            character_header = character_setup.generate_character_header(
+                interaction_description,
+                # specified_topic,
+                character_name,
+                character_description,
+                word_limit,
+            )
+
+            character_system_message = character_setup.generate_character_system_message(
+                # specified_topic,
+                word_limit,
+                character_name,
+                character_header,
+            )
+        
+        return character_system_message
+
 
     def generate_character_context(
         self,
         characters: Dict[str, List[Dict[str, Any]]],
         plantoid_agent: Type,
         bidding_function: any,
+        interaction_description: str,
     ) -> List[Any]:
         """
         Generates context for each character based on the configurations.
@@ -104,12 +170,16 @@ class InteractionManager:
 
         for character in characters:
             character_name = character['name']
-            character_system_message = character['system_message']
+            character_description = character['description']
             character_voice_id = character['eleven_voice_id']
 
-            # TODO: move to character setup
-            bidding_template = bidding_function(character_system_message)
-            system_message = character_setup.get_raw_system_message(character_system_message) # TODO: generalize
+            system_message = self.get_system_message(
+                character,
+                interaction_description,
+                use_message_type='specified'
+            )
+
+            bidding_template = bidding_function(character_description)
 
             character_object = plantoid_agent(
                 name=character_name,
@@ -155,10 +225,21 @@ class InteractionManager:
 
         # get the context
         interaction_mode = interaction_context['interaction_mode']
+        interaction_description = interaction_context['interaction_description']
         plantoid_agent = interaction_context['plantoid_agent']
         characters = interaction_context['characters']
         bidding_function = interaction_context['bidding_function']
         selection_function = interaction_context['selection_function']
 
-        character_context = self.generate_character_context(characters, plantoid_agent, bidding_function)
-        self.start_interaction(interaction_mode, character_context, selection_function)
+        character_context = self.generate_character_context(
+            characters,
+            plantoid_agent,
+            bidding_function,
+            interaction_description,
+        )
+
+        self.start_interaction(
+            interaction_mode,
+            character_context,
+            selection_function,
+        )

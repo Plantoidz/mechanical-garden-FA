@@ -112,6 +112,8 @@ transcripts/
 videos/
 metadata/
 descriptions/
+
+media/user_audio/
 # ================================================
 # End of .gitignore
 # ================================================
