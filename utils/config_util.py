@@ -16,3 +16,11 @@ def read_interaction_mode_config():
         mode_config = json.load(file)
     
     return mode_config
+
+def read_addendum_config(interaction_mode):
+    config_path = os.getcwd()+'/config/files/working/current_addendum.json'
+
+    with open(config_path, 'r') as file:
+        mode_config = json.load(file)
+    
+    return mode_config

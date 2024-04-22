@@ -54,6 +54,10 @@ def get_bid_parser() -> BidOutputParser:
 
     return bid_parser
 
+def generate_blank_bidding_template(character_header):
+
+    return ""
+
 def generate_character_bidding_template_conversation(character_header):
 
     bid_parser = get_bid_parser()
@@ -77,9 +81,28 @@ def generate_character_bidding_template_conversation(character_header):
 
     return bidding_template
 
-def generate_blank_bidding_template(character_header):
+def generate_character_bidding_template_kiosk(character_header):
 
-    return ""
+    bid_parser = get_bid_parser()
+
+    bidding_template = f"""
+    
+        Here is your character description, delimited by angle brackets (<<, >>): << {character_header} >>.
+        Here is the conversation so far, delimited by angle brackets (<<, >>):
+
+        ```
+        << {{message_history}} >>
+        ```
+        Now, On the scale of 1 to 10, where 1 is "strongly agree" and 10 is "strongly disagree", rate your response to the latest message below, delimited by angle brackets (<<, >>):
+
+        ```
+        << {{recent_message}} >>
+        ```
+
+        {bid_parser.get_format_instructions()}
+    """
+
+    return bidding_template
 
 def generate_character_bidding_template_debate(character_header):
             
@@ -112,7 +135,11 @@ def select_random_speaker(step: int, agents: List[DialogueAgent]) -> int:
 
     return random.randint(0, len(agents) - 1)
 
-def select_next_speaker(step: int, agents: List[DialogueAgent]) -> int:
+def select_next_speaker(
+    step: int,
+    agents: List[DialogueAgent],
+    last_speaker_idx: int,
+) -> int:
 
     bids = []
     for agent in agents:
@@ -157,6 +184,7 @@ def check_last_speaker_is_human(agent: DialogueAgent):
 def select_next_speaker_with_human_clone(
     step: int,
     agents: List[DialogueAgent],
+    last_speaker_idx: int,
 ) -> int:
 
     # initialize bids
@@ -217,6 +245,7 @@ def select_next_speaker_with_human_clone(
 def select_next_speaker_with_human_conversation(
     step: int,
     agents: List[DialogueAgent],
+    last_speaker_idx: int,
 ) -> int:
 
     # initialize bids
@@ -274,9 +303,18 @@ def select_next_speaker_with_human_conversation(
 
     return idx
 
+def select_next_speaker_with_human_kiosk(
+    step: int,
+    agents: List[DialogueAgent],
+    last_speaker_idx: int,
+) -> int:
+
+    return last_speaker_idx
+
 def select_next_speaker_with_human_debate(
     step: int,
     agents: List[DialogueAgent],
+    last_speaker_idx: int,
 ) -> int:
 
     # initialize bids

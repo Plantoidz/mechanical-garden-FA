@@ -145,12 +145,16 @@ def generate_character_description(
 
 
 def generate_character_header(
-    game_description,
+    interaction_mode: str,
+    interaction_description: str,
+    interaction_addendum: List[str],
     # topic,
-    character_name,
-    character_description,
-    word_limit,
+    character_name: str,
+    character_description: str,
+    word_limit: int,
 ):
+    
+    interaction_addendum_str = "\n".join(interaction_addendum)
 
     if character_name == "Human":
 
@@ -167,6 +171,20 @@ def generate_character_header(
             Always generate an introspective sentence based on the human's input context.
             Never forget to keep your response to {word_limit} words!
         """
+    if interaction_mode == "kiosk" and character_name not in ["Human", "Clone"]:
+
+        response = f"""
+            This is your character description, in angle brackets: << {character_description} >>
+
+            You have asked the human the following introspective question, in angle brackets: << {interaction_description} >>
+            True to your character description, you must respond to the human's answer to the introspective question in the following way, in angle brackets:
+            << {interaction_addendum_str} >>
+            You may take the responses of other conversation participants into account when responding to the human.
+            The human's answer in the conversation history will be of the format, in angle brackets: << Human: HUMAN_ANSWER >>.
+            Always reply directly to the human!
+            Build upon the specific content contained in the human's answer, be specific and offer an insightful analysis.
+            You must keep all of your responses to strictly {word_limit} words!!!
+        """
 
     else:
         # response = f"""{game_description}
@@ -180,9 +198,10 @@ def generate_character_header(
         #     You must keep all of your responses {word_limit} words!
         # """
         
-        response = f"""{game_description}
-            
-            Your character description: {character_description}
+        response = f"""
+
+            This is a description of your current interaction mode, in angle brackets: << {interaction_description} >>
+            This is your character description, in angle brackets: << {character_description} >>
             Always adhere to your character description, be poignant and extreme if you must!
             You must state your true opinion, but make sure to consider what the others are thinking.
             Speak to other participants whenever possible!
@@ -229,7 +248,7 @@ def generate_character_system_message(
 
         content = f"""{character_header}
             Do not describe unspoken sounds or actions.
-            Do not use hashtags (#)!!!
+            Do not use hashtags (#) or angle brackets (<<, >>)!!!
             Do not change roles!
             Do not speak from the perspective of anyone else.
             Address other participants by name when necessary.

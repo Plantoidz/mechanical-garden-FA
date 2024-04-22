@@ -90,9 +90,9 @@ class PlantoidDialogueAgent:
         use_content = "\n".join(self.message_history + [self.prefix])
         # print("use_content:", use_content)
 
-        # print("AGENT:", self.name)
-        # print("SYSTEM MESSAGE:", self.system_message)
-        # print("MESSAGE HISTORY:", self.message_history)
+        print("AGENT:", self.name)
+        print("SYSTEM MESSAGE:", self.system_message)
+        print("MESSAGE HISTORY:", self.message_history)
 
         message = self.think_module.think(
             self.system_message,

@@ -1,9 +1,9 @@
 from typing import Callable, List
 from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
 
-class PlantoidConversation:
+class PlantoidKiosk:
 
-    mode_name = 'conversation'
+    mode_name = 'kiosk'
 
     def __init__(
         self,
@@ -21,6 +21,9 @@ class PlantoidConversation:
     def set_speaker_idx(self, idx: int):
         self.last_speaker_idx = idx
 
+    def reset_speaker_idx(self):
+        self.last_speaker_idx = 0
+
     def reset(self):
         for agent in self.agents:
             agent.reset()
@@ -37,9 +40,12 @@ class PlantoidConversation:
 
     def step(self) -> tuple[str, str]:
         # 1. choose the next speaker
-        speaker_idx = self.select_next_speaker(self._step, self.agents, self.last_speaker_idx)
-        self.set_speaker_idx(speaker_idx)
-        speaker = self.agents[speaker_idx]
+        # speaker_idx = self.select_next_speaker(self._step, self.agents, self.last_speaker_idx)
+        speaker = self.agents[self.last_speaker_idx]
+
+        self.increment_speaker_idx()
+        if self.last_speaker_idx == len(self.agents):
+            self.reset_speaker_idx()
 
         # human is selected
         if speaker.name == "Human":

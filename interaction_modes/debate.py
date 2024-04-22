@@ -3,6 +3,9 @@ from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
 from plantoid_agents.debate_agent import PlantoidDebateAgent
 
 class PlantoidDebate:
+
+    mode_name = 'debate'
+
     def __init__(
         self,
         agents: List[PlantoidDialogueAgent],
@@ -11,6 +14,13 @@ class PlantoidDebate:
         self.agents = agents
         self._step = 0
         self.select_next_speaker = selection_function
+        self.last_speaker_idx = 0
+
+    def increment_speaker_idx(self):
+        self.last_speaker_idx += 1
+
+    def set_speaker_idx(self, idx: int):
+        self.last_speaker_idx = idx
 
     def reset(self):
         for agent in self.agents:
@@ -28,7 +38,8 @@ class PlantoidDebate:
 
     def step(self) -> tuple[str, str]:
         # 1. choose the next speaker
-        speaker_idx = self.select_next_speaker(self._step, self.agents)
+        speaker_idx = self.select_next_speaker(self._step, self.agents, self.last_speaker_idx)
+        self.set_speaker_idx(speaker_idx)
         speaker = self.agents[speaker_idx]
 
         # human is selected

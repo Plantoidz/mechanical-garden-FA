@@ -74,7 +74,7 @@ def select_llm(interface: str ="openai") -> Union[ChatOpenAI, ChatHuggingFace]:
 
         chat_model = ChatOpenAI(
             openai_api_key=OPENAI_API_KEY,
-            model="gpt-4-turbo",
+            model="gpt-4-turbo", # "gpt-3.5-turbo"
             temperature=0.5,
         )
 

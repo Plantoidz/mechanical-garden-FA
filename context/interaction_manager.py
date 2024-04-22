@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Type
 
 from interaction_modes.conversation import PlantoidConversation
+from interaction_modes.kiosk import PlantoidKiosk
 from interaction_modes.debate import PlantoidDebate
 from interaction_modes.clone import PlantoidClone
 
@@ -10,7 +11,7 @@ from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
 from plantoid_agents.debate_agent import PlantoidDebateAgent
 from plantoid_agents.clone_agent import PlantoidCloneAgent
 
-from utils.config_util import read_character_config, read_interaction_mode_config
+from utils.config_util import read_character_config, read_interaction_mode_config, read_addendum_config
 import context.character_setup as character_setup # TODO: roll this into context config
 import context.speaker_selection as speaker_selection # TODO: roll this into context config
 
@@ -26,6 +27,9 @@ class InteractionManager:
         if selection_function == 'conversation':
             return speaker_selection.select_next_speaker_with_human_conversation
         
+        if selection_function == 'kiosk':
+            return speaker_selection.select_next_speaker_with_human_kiosk
+        
         if selection_function == 'debate':
             return speaker_selection.select_next_speaker_with_human_debate
         
@@ -38,6 +42,9 @@ class InteractionManager:
         """
         if selection_function == 'conversation':
             return speaker_selection.generate_character_bidding_template_conversation
+        
+        if selection_function == 'kiosk':
+            return speaker_selection.generate_character_bidding_template_kiosk
         
         if selection_function == 'debate':
             return speaker_selection.generate_character_bidding_template_debate
@@ -52,6 +59,9 @@ class InteractionManager:
         if agent_type == 'conversation':
             return PlantoidDialogueAgent
         
+        if agent_type == 'kiosk':
+            return PlantoidDebateAgent
+        
         if agent_type == 'debate':
             return PlantoidDebateAgent
         
@@ -65,11 +75,31 @@ class InteractionManager:
         if interaction_mode == 'conversation':
             return PlantoidConversation
         
+        if interaction_mode == 'kiosk':
+            return PlantoidKiosk
+        
         if interaction_mode == 'debate':
             return PlantoidDebate
         
         if interaction_mode == 'clone':
             return PlantoidClone
+        
+    def get_interaction_addendum(self, interaction_mode: str) -> List[str]:
+        """
+        Retrieves the interaction addendum based on the provided interaction mode.
+        """
+        if interaction_mode == 'conversation':
+            return []
+        
+        if interaction_mode == 'kiosk':
+            kiosk_config = read_addendum_config(interaction_mode)
+            return [kiosk_config['reasoning_prompt1']]
+        
+        if interaction_mode == 'debate':
+            return []
+        
+        if interaction_mode == 'clone':
+            return []
         
     def get_interaction_description(self, interaction_mode: str):
         """
@@ -77,6 +107,10 @@ class InteractionManager:
         """
         if interaction_mode == 'conversation':
             return "This is a friendly conversation on exploring each other's personalities. What do you like to do for fun?"
+        
+        if interaction_mode == 'kiosk':
+            kiosk_config = read_addendum_config(interaction_mode)
+            return kiosk_config['description']
         
         if interaction_mode == 'debate':
             return "This is a heated debate on the topic of ETH vs BTC cryptocurrency. Let your hearts loose!"
@@ -105,6 +139,7 @@ class InteractionManager:
 
         interaction_mode = self.get_interaction_mode(use_interaction_mode)
         interaction_description = self.get_interaction_description(use_interaction_mode)
+        interaction_addendum = self.get_interaction_addendum(use_interaction_mode)
         plantoid_agent = self.get_plantoid_agent(use_agent_type)
         selection_function = self.get_selection_function(use_selection_function)
         bidding_function = self.get_bidding_function(use_bidding_template)
@@ -112,6 +147,7 @@ class InteractionManager:
         return {
             "interaction_mode": interaction_mode,
             "interaction_description": interaction_description,
+            "interaction_addendum": interaction_addendum,
             "plantoid_agent": plantoid_agent,
             "characters": use_characters,
             "bidding_function": bidding_function,
@@ -121,7 +157,9 @@ class InteractionManager:
     def get_system_message(
         self,
         character: any,
+        interaction_mode_name: str,
         interaction_description: str,
+        interaction_addendum: List[str],
         use_message_type: str = 'raw',
         word_limit: int = 25, # TODO: move to config
     ):
@@ -137,7 +175,9 @@ class InteractionManager:
         if use_message_type == 'specified':
 
             character_header = character_setup.generate_character_header(
+                interaction_mode_name,
                 interaction_description,
+                interaction_addendum,
                 # specified_topic,
                 character_name,
                 character_description,
@@ -159,7 +199,9 @@ class InteractionManager:
         characters: Dict[str, List[Dict[str, Any]]],
         plantoid_agent: Type,
         bidding_function: any,
+        interaction_mode_name: str,
         interaction_description: str,
+        interaction_addendum: List[str],
     ) -> List[Any]:
         """
         Generates context for each character based on the configurations.
@@ -175,7 +217,9 @@ class InteractionManager:
 
             system_message = self.get_system_message(
                 character,
+                interaction_mode_name,
                 interaction_description,
+                interaction_addendum,
                 use_message_type='specified'
             )
 
@@ -226,6 +270,7 @@ class InteractionManager:
         # get the context
         interaction_mode = interaction_context['interaction_mode']
         interaction_description = interaction_context['interaction_description']
+        interaction_addendum = interaction_context['interaction_addendum']
         plantoid_agent = interaction_context['plantoid_agent']
         characters = interaction_context['characters']
         bidding_function = interaction_context['bidding_function']
@@ -235,7 +280,9 @@ class InteractionManager:
             characters,
             plantoid_agent,
             bidding_function,
+            interaction_mode.mode_name,
             interaction_description,
+            interaction_addendum,
         )
 
         self.start_interaction(

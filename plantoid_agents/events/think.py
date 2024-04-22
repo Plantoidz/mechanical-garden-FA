@@ -60,7 +60,7 @@ class Think:
         ai_chat = AIChat(
             system=system_message.content,
             api_key=OPENAI_API_KEY,
-            model="gpt-4-turbo",
+            model="gpt-4-turbo", # "gpt-3.5-turbo"
             console=False,
             params = {"temperature": 0.5}#, "max_tokens": 3}
         )
