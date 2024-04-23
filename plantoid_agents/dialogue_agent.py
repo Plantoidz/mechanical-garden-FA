@@ -67,6 +67,7 @@ class PlantoidDialogueAgent:
 
     def listen_for_speech(self) -> str:
 
+        self.listen_module.play_speech_indicator()
         user_message = self.listen_module.listen()
 
         print("Human said: " + user_message)

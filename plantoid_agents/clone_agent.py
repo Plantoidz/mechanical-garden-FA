@@ -25,6 +25,19 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
         self.bidding_template = bidding_template
         self.clone_voice = True
         self.create_clone = True
+        self.timeout_override_seconds = 5
+
+    def listen_for_speech(self) -> str:
+
+        print("Current timeout: ", self.timeout_override_seconds)
+        print("Current voice id: ", self.get_voice_id())
+
+        self.listen_module.play_speech_indicator()
+        user_message = self.listen_module.listen(self.timeout_override_seconds)
+
+        print("Human said: " + user_message)
+
+        return user_message
 
     def speak(self, message: str) -> None:
         """
@@ -36,15 +49,19 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
         self.speak_module.speak(
             message,
             self.get_voice_id(),
-            voice_set_callback=self.set_create_clone,
+            voice_set_callback=None,
             clone_voice=self.clone_voice,
             create_clone=self.create_clone,
         )
 
+        # if self.create_clone == False:
+        #     self.timeout_override_seconds = 5
         # print("CREATE CLONE: ", self.create_clone)
         # print("VOICE ID: ", self.get_voice_id())
 
     def set_create_clone(self, voice_id: str) -> None:
+        print("CALL SET CREATE CLONE")
         self.create_clone = False
         self.eleven_voice_id = voice_id
+        # self.timeout_override_seconds = 5
 

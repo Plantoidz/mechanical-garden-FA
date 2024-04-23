@@ -36,6 +36,12 @@ class PlantoidDebate:
         # increment time
         self._step += 1
 
+    def enunciate(self, intro_message: str):
+
+        print('Enunciating:', intro_message)
+        speaker = self.agents[self.last_speaker_idx]
+        speaker.speak(intro_message)
+
     def step(self) -> tuple[str, str]:
         # 1. choose the next speaker
         speaker_idx = self.select_next_speaker(self._step, self.agents, self.last_speaker_idx)

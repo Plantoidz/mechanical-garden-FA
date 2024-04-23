@@ -116,7 +116,7 @@ class InteractionManager:
             return "This is a heated debate on the topic of ETH vs BTC cryptocurrency. Let your hearts loose!"
         
         if interaction_mode == 'clone':
-            return "You are a clone of me!"
+            return "I will become your clone. I would like to hear you speak for 30 seconds to start."
         
     def get_interaction_context(self) -> Dict[str, Any]:
         """
@@ -240,6 +240,7 @@ class InteractionManager:
     def start_interaction(
         self,
         interaction_mode: Type,
+        interaction_description: str,
         characters: List[Any],
         selection_function: any,
         max_iters: int = 10
@@ -251,7 +252,9 @@ class InteractionManager:
             agents=characters,
             selection_function=selection_function
         )
+
         simulator.reset()
+        simulator.enunciate(interaction_description)
 
         n = 0
 
@@ -287,6 +290,7 @@ class InteractionManager:
 
         self.start_interaction(
             interaction_mode,
+            interaction_description,
             character_context,
             selection_function,
         )

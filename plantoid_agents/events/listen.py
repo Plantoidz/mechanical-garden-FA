@@ -14,6 +14,7 @@ import requests
 import numpy as np
 import whisper
 import torch
+import pygame
 
 from dotenv import load_dotenv
 from elevenlabs import stream
@@ -55,18 +56,36 @@ class Listen:
     A template class for implementing listening behaviors in an interaction system.
     """
 
-    def __init__(self):
+    def __init__(
+        self,
+        timeout: int = 5,
+        silence_limit: int = 2,
+        threshold: int = 0,
+        record_seconds: int = 2,
+        rate: int = 44100,
+        chunk: int = 512,
+        channels: int = 1,
+    ) -> None:
         """
         Initializes a new instance of the Listen class.
         """
         self.FORMAT = pyaudio.paInt16
-        self.CHANNELS = 1
-        self.RATE = 44100
-        self.CHUNK = 512
-        self.SILENCE_LIMIT = 2   # seconds of silence will stop the recording
-        self.TIMEOUT = 5#15
-        self.RECORD_SECONDS = 2 #seconds to listen for environmental noise
-        self.THRESHOLD = 0
+        self.CHANNELS = channels
+        self.RATE = rate
+        self.CHUNK = chunk
+        self.SILENCE_LIMIT = silence_limit   # seconds of silence will stop the recording
+        self.TIMEOUT = timeout
+        self.RECORD_SECONDS = record_seconds #seconds to listen for environmental noise
+        self.THRESHOLD = threshold
+
+    def play_speech_indicator(self) -> None:
+            
+        # get the path to the speech indicator sound
+        speech_indicator_path = os.getcwd()+"/media/beep_start.wav"
+
+        pygame.mixer.init()
+        pygame.mixer.music.load(speech_indicator_path)
+        pygame.mixer.music.play(loops=1)
 
     def compute_average(self, fragment, sample_width=2):
         """Compute the raw average of audio samples."""
@@ -178,7 +197,7 @@ class Listen:
             
         return max(0,thresholds[-1] + threshold_bias)
 
-    def listen_for_speech_manual(self): # @@@ remember to add acknowledgements afterwards
+    def listen_for_speech_manual(self, timeout_override: str = None): # @@@ remember to add acknowledgements afterwards
 
         config = load_config(os.getcwd()+'/configuration.toml')
 
@@ -186,6 +205,14 @@ class Listen:
 
         # TEMP
         record_mode = 'continuous'
+
+        use_timeout = self.TIMEOUT
+
+        if timeout_override is not None:
+            use_timeout = timeout_override
+
+        print("Timeout override: ", timeout_override)
+        print("Use timeout: ", use_timeout)
 
         # define the audio file path
         # TODO: pass as param
@@ -255,7 +282,7 @@ class Listen:
                     samples.append(data)
 
                     # check for timeout
-                    if(time.time() - timing > self.TIMEOUT):
+                    if(time.time() - timing > use_timeout):
                         print(">>> stopping recording because of timeout")
                         stream.stop_stream()
 
@@ -350,15 +377,15 @@ class Listen:
 
         return utterance
 
-    def recognize_speech_whisper_manual(self):
+    def recognize_speech_whisper_manual(self, timeout_override: str = None):
 
-        self.listen_for_speech_manual()
+        self.listen_for_speech_manual(timeout_override)
         utterance = self.recognize_whisper()
 
         return utterance
     
-    def listen(self) -> Any:
+    def listen(self, timeout_override: str = None) -> Any:
 
-        return self.recognize_speech_whisper_manual()
+        return self.recognize_speech_whisper_manual(timeout_override)
 
     # More methods can be added here as needed

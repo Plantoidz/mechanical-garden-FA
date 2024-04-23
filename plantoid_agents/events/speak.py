@@ -13,8 +13,10 @@ import pygame
 
 
 from dotenv import load_dotenv
-from elevenlabs.client import ElevenLabs
+from elevenlabs.client import ElevenLabs, AsyncElevenLabs
 from elevenlabs import stream, Voice, VoiceSettings
+
+# https://elevenlabs.io/docs/api-reference/edit-voice
 
 
 # Load environment variables from .env file
@@ -26,7 +28,6 @@ ELEVENLABS_API_KEY = os.environ.get("ELEVENLABS_API_KEY")
 client = ElevenLabs(
   api_key=ELEVENLABS_API_KEY
 )
-
 
 # set_api_key(ELEVENLABS_API_KEY)
 
@@ -117,8 +118,12 @@ class Speak:
         pygame.mixer.music.play(loops)
 
     def stop_background_music(self) -> None:
-        print('stop background music')
-        pygame.mixer.music.stop()
+
+        if pygame.mixer.get_init() is not None:
+            print('stop background music')
+            pygame.mixer.music.stop()
+        else:
+            print('Mixer not initialized, no music to stop.')
 
     def clone_voice(
         self,
@@ -130,6 +135,7 @@ class Speak:
         voice_files = [os.getcwd()+"/media/user_audio/temp_reco.wav"]
 
         if create_clone:
+            print('Creating a clone of the user voice...')
             voice = client.clone(
                 # api_key=os.getenv("ELEVENLABS_API_KEY"),
                 name="You",
@@ -138,8 +144,11 @@ class Speak:
             )
 
             voice_set_callback(voice.voice_id)
-        
+            # TODO: use this to add progressive voice files to improve voice
+            # client.voices.edit()
+
         else:
+            print('Using the previously cloned voice...')
             voice = Voice(
                 voice_id=cloned_voice_id, #'NE1ZIqHDl04rAu3fkYQH',
                 settings=VoiceSettings(
