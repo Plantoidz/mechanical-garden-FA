@@ -10,6 +10,7 @@ import sys
 import time
 import requests
 import pygame
+import types
 
 
 from dotenv import load_dotenv
@@ -89,11 +90,31 @@ class Speak:
 
             raise Exception("Error: " + str(status) + ": "+ str(message))
         
-    def stream_audio_response(self, response: str, voice_id: str, callback: Any = None) -> None:
+    def stream_text(self, response_stream):
+
+        if isinstance(response_stream, str):
+            return response_stream
+
+        for chunk in response_stream:
+            if 'choices' in chunk and chunk['choices'][0].get('delta', {}).get('content'):
+                delta = chunk.choices[0].delta
+                text_chunk = delta.content
+                yield text_chunk
+                print(text_chunk, end='', flush=True)
+
+    # def format_response_type(self, response: Any) -> Any:
+    #     return self.stream_text(response) if isinstance(response, types.GeneratorType) else response
+
+    def stream_audio_response(
+        self,
+        response: str,
+        voice_id: str,
+        callback: Any = None
+    ) -> None:
 
         # generate audio stream   
         audio_stream = client.generate(
-            text=f"{response}",
+            text=self.stream_text(response),
             model="eleven_turbo_v2",
             voice=voice_id,
             stream=True
@@ -105,6 +126,13 @@ class Speak:
                 
         # stream audio
         stream(audio_stream)
+
+        # # Check if the response is a generator
+        # if isinstance(response, types.GeneratorType):
+        #     processed_text = stream_text_(response)
+        # else:
+        #     # If response is a string, directly pass the string
+        #     processed_text = response
 
     # Additional methods can be added here as needed
 
@@ -143,12 +171,21 @@ class Speak:
                 files=voice_files,
             )
 
-            voice_set_callback(voice.voice_id)
-            # TODO: use this to add progressive voice files to improve voice
-            # client.voices.edit()
+            if voice_set_callback is not None:
+                voice_set_callback(voice.voice_id)
+
 
         else:
             print('Using the previously cloned voice...')
+
+            # TODO: use this to add progressive voice files to improve voice
+            client.voices.edit(
+                name="You",
+                description="A clone of the user's voice",
+                voice_id=cloned_voice_id,
+                files=voice_files
+            )
+
             voice = Voice(
                 voice_id=cloned_voice_id, #'NE1ZIqHDl04rAu3fkYQH',
                 settings=VoiceSettings(

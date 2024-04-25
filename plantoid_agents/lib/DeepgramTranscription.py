@@ -36,6 +36,7 @@ class DeepgramTranscription:
         if result is None and args:
             result = args[0]  # Assuming result is the first positional argument
 
+        # print("result is", result)
         sentence = result.channel.alternatives[0].transcript
         if not sentence:
             return
@@ -81,9 +82,10 @@ class DeepgramTranscription:
         print(f"Deepgram Unhandled Websocket Message: {unhandled}")
 
     def start_listening(self):
+        
         with ignoreStderr():
-            connection = self.deepgram.listen.live.v("1")
 
+            connection = self.deepgram.listen.live.v("1")
             connection.on(LiveTranscriptionEvents.Transcript, self.on_message)
             # connection.on(LiveTranscriptionEvents.Metadata, self.on_metadata)
             connection.on(LiveTranscriptionEvents.SpeechStarted, self.on_speech_started)

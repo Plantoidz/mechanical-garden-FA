@@ -15,6 +15,10 @@ from plantoid_agents.events.speak import Speak
 from plantoid_agents.events.think import Think
 from plantoid_agents.lib.text_content import *
 
+# TEMP
+from litellm.utils import CustomStreamWrapper
+
+
 class PlantoidDialogueAgent:
     def __init__(
         self,
@@ -37,7 +41,7 @@ class PlantoidDialogueAgent:
         self.listen_module = Listen()
 
         #TODO: do not hardcode!
-        self.use_model_type = "langchain"
+        self.use_model_type = "litellm"
 
     def get_voice_id(self) -> str:
 
@@ -91,18 +95,15 @@ class PlantoidDialogueAgent:
         use_content = "\n".join(self.message_history + [self.prefix])
         # print("use_content:", use_content)
 
-        print("AGENT:", self.name)
-        print("SYSTEM MESSAGE:", self.system_message)
-        print("MESSAGE HISTORY:", self.message_history)
+        # print("AGENT:", self.name)
+        # print("SYSTEM MESSAGE:", self.system_message)
+        # print("MESSAGE HISTORY:", self.message_history)
 
         message = self.think_module.think(
             self.system_message,
             use_content,
             self.use_model_type,
         )
-
-        print(self.name, 'says:')
-        print(message)
 
         return message
     
@@ -112,18 +113,26 @@ class PlantoidDialogueAgent:
         """
 
         self.speak_module.stop_background_music()
-        
+
         self.speak_module.speak(
             message,
             self.get_voice_id(),
             callback=None, #self.speak_module.stop_background_music,
         )
+    
+    def receive(self, name: str, message: Union[str, CustomStreamWrapper]) -> None:
 
-    def receive(self, name: str, message: str) -> None:
         """
         Concatenates {message} spoken by {name} into message history
         """
-        self.message_history.append(f"{name}: {message}")
+        # NOTE: stream data is not available to stringify until after speech
+        # generator has not iterated before this point!
+        formatted_message = self.think_module.format_response_type(message)
+
+        print(self.name, 'says:')
+        print(formatted_message)
+
+        self.message_history.append(f"{name}: {formatted_message}")
 
     def clip_history(self, lst, n_messages=5):
         """

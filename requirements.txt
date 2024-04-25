@@ -9,6 +9,7 @@ nltk
 speechrecognition
 #scipy
 pyserial
+playsound
 #mutagen
 #regex_spm
 toml
