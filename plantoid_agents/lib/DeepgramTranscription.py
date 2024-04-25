@@ -1,4 +1,4 @@
-from deepgram import DeepgramClient, LiveTranscriptionEvents, LiveOptions, Microphone
+from deepgram import DeepgramClient, LiveTranscriptionEvents, LiveOptions
 from dotenv import load_dotenv
 import logging, verboselogs
 import time
@@ -6,6 +6,8 @@ from ctypes import *
 from contextlib import contextmanager
 import os
 import sys
+
+from plantoid_agents.lib.microphone import ModifiedMicrophone
 
 @contextmanager
 def ignoreStderr():
@@ -111,7 +113,7 @@ class DeepgramTranscription:
                 print("Failed to connect to Deepgram")
                 return
 
-            microphone = Microphone(
+            microphone = ModifiedMicrophone(
                 connection.send,
                 input_device_index=self.device_index,
                 rate=self.sample_rate,
@@ -127,7 +129,9 @@ class DeepgramTranscription:
                 # Optionally, you can keep a debug print here:
                 # print("Transcribing...")
 
-            microphone.finish()
+            audio_file_path = os.getcwd() + "/media/user_audio/temp_reco_dg.wav"
+
+            microphone.finish(audio_file_path=audio_file_path)
             connection.finish()
 
             print("Finished")
