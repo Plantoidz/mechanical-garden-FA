@@ -11,13 +11,17 @@ import logging
 
 # Configuration — this is sloppy, fix later
 load_dotenv()
-tts = ElevenLabs(api_key="")
+
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+ELEVENLABS_API_KEY = os.environ.get("ELEVENLABS_API_KEY")
+
+tts = ElevenLabs(api_key=ELEVENLABS_API_KEY)
 llm_config = "ollama_chat/llama3"
 personality = open(os.getcwd()+"/utils/experiments/personality.txt").read().strip()
-ai = AIChat(system=personality, api_key="", model="gpt-4-turbo")
+ai = AIChat(system=personality, api_key=OPENAI_API_KEY, model="gpt-4-turbo")
 
 #Deepgram
-transcription = DeepgramTranscription()
+transcription = DeepgramTranscription(sample_rate=48000, device_index=3)
 transcription.start_listening()
 utterance = transcription.get_final_result()
         
@@ -30,7 +34,7 @@ utterance = transcription.get_final_result()
 async def audio_streaming():
     audio_stream = tts.generate(
         text=text_streaming(utterance),
-        voice="5g2h5kYnQtKFFdPm8PpK",
+        voice="K5W90fMZclFpp7zIpkCc",
         model="eleven_turbo_v2",
         stream=True
     )

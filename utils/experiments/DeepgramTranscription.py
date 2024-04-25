@@ -1,12 +1,14 @@
 from deepgram import DeepgramClient, LiveTranscriptionEvents, LiveOptions, Microphone
 
 class DeepgramTranscription:
-    def __init__(self):
+    def __init__(self, sample_rate: int = 48000, device_index: int = 0):
         self.deepgram = DeepgramClient()
         self.is_finals = []
         self.final_result = ""
         self.transcription_complete = False  # New flag for completion
-
+        self.sample_rate = sample_rate
+        self.device_index = device_index
+        
     def on_message(self, *args, **kwargs):
         result = kwargs.get('result', None)
         if result is None and args:
@@ -39,7 +41,7 @@ class DeepgramTranscription:
             smart_format=True,
             encoding="linear16",
             channels=1,
-            sample_rate=16000,
+            sample_rate=self.sample_rate,
             interim_results=True,
             utterance_end_ms="1000",
             vad_events=True,
@@ -50,7 +52,12 @@ class DeepgramTranscription:
             print("Failed to connect to Deepgram")
             return
 
-        microphone = Microphone(connection.send)
+        microphone = Microphone(
+            connection.send,
+            input_device_index=self.device_index,
+            rate=self.sample_rate,
+        )
+
         microphone.start()
 
         # Wait until the final result is ready
