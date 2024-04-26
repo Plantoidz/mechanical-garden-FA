@@ -1,6 +1,6 @@
 from typing import Callable, List, Union
 
-from langchain.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain_community.chat_models.huggingface import ChatHuggingFace
 
 from langchain.output_parsers import RegexParser

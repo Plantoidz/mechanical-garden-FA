@@ -22,6 +22,7 @@ torch
 openai-whisper
 langchain
 langchain-community
+langchain-open-ai
 huggingface_hub
 elevenlabs
 simpleaichat

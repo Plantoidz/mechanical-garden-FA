@@ -2,7 +2,8 @@ from typing import Callable, List, Union
 import tenacity
 import os
 import numpy as np
-from langchain.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
+from langchain_community.chat_models import ChatLiteLLM
 from langchain_community.chat_models.huggingface import ChatHuggingFace
 from langchain_community.llms import HuggingFaceTextGenInference, HuggingFaceEndpoint, HuggingFaceHub
 from dotenv import load_dotenv
