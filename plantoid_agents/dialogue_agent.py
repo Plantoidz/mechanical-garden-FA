@@ -42,6 +42,7 @@ class PlantoidDialogueAgent:
 
         #TODO: do not hardcode!
         self.use_model_type = "litellm"
+        self.use_streaming = True
 
     def get_voice_id(self) -> str:
 
@@ -103,6 +104,7 @@ class PlantoidDialogueAgent:
             self.system_message,
             use_content,
             self.use_model_type,
+            self.use_streaming,
         )
 
         return message
@@ -129,8 +131,8 @@ class PlantoidDialogueAgent:
         # generator has not iterated before this point!
         formatted_message = self.think_module.format_response_type(message)
 
-        print(self.name, 'says:')
-        print(formatted_message)
+        # print(self.name, 'says:')
+        # print(formatted_message)
 
         self.message_history.append(f"{name}: {formatted_message}")
 

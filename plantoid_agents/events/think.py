@@ -81,7 +81,7 @@ class Think:
 
         return SystemMessage(content=bid_system_message)
     
-    def think_litellm(self, system_message: SystemMessage, use_content: str):
+    def think_litellm(self, system_message: SystemMessage, use_content: str, streaming):
 
         messages = [{
             "content": system_message.content,
@@ -94,15 +94,28 @@ class Think:
 
         # print("LITELLM MESSAGE:", messages)
 
-        response_stream = completion(
-            model=self.llm_config, 
-            messages=messages, 
-            stream=True
-        )
+        if streaming:
 
-        # self.stream_text(response_stream)
+            response_stream = completion(
+                model=self.llm_config, 
+                messages=messages, 
+                stream=True
+            )
 
-        return response_stream
+            # self.stream_text(response_stream)
+
+            return response_stream
+        
+        else:
+
+            response = completion(
+                model=self.llm_config, 
+                messages=messages, 
+                stream=False
+            )
+
+            response = response.choices[0].message.content
+            return response
 
     def think_simpleAIChat(self, system_message: SystemMessage, use_content: str) -> str:
 
@@ -131,7 +144,7 @@ class Think:
 
         return message.content
     
-    def think(self, system_message: SystemMessage, use_content: str, use_model: str) -> str:
+    def think(self, system_message: SystemMessage, use_content: str, use_model: str, use_streaming: bool) -> str:
             
         if use_model == 'simpleAIChat':
             message = self.think_simpleAIChat(system_message, use_content)
@@ -140,7 +153,7 @@ class Think:
             message = self.think_langchain(system_message, use_content)
 
         if use_model == 'litellm':
-            message = self.think_litellm(system_message, use_content)
+            message = self.think_litellm(system_message, use_content, use_streaming)
 
         return message
 
