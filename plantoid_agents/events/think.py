@@ -1,4 +1,5 @@
-from typing import Callable, List, Union
+from typing import Callable, List, Union, Any
+import types
 
 import openai
 import os
@@ -20,11 +21,15 @@ from langchain.schema import (
 )
 
 from simpleaichat import AsyncAIChat, AIChat
+from litellm import completion, acompletion
+from litellm.utils import CustomStreamWrapper
+# https://github.com/BerriAI/litellm/blob/main/litellm/utils.py
 
 # Load environment variables from .env file
 load_dotenv()
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+ELEVENLABS_API_KEY = os.environ.get("ELEVENLABS_API_KEY")
 
 class Think:
     """
@@ -40,6 +45,29 @@ class Think:
         Initializes a new instance of the Think class.
         """
         self.model = model
+        self.llm_config = "gpt-4-turbo" # "ollama_chat/llama3"
+
+    def stream_text(self, response_stream):
+
+        for chunk in response_stream:
+            if chunk.choices[0].delta and chunk.choices[0].delta.content:
+                delta = chunk.choices[0].delta
+                text_chunk = delta.content
+                # yield text_chunk
+                print(text_chunk, end='', flush=True)
+
+    def gather_response(self, response_stream):
+        full_text = ""
+        for chunk in response_stream:
+            if chunk.choices[0].delta and chunk.choices[0].delta.content:
+                delta = chunk.choices[0].delta
+                text_chunk = delta.content
+                full_text += text_chunk
+                print(text_chunk, end='', flush=True)
+        return full_text
+    
+    def format_response_type(self, response: Any) -> Any:
+        return response.response_uptil_now if isinstance(response, CustomStreamWrapper) else response
 
     def generate_bid_template(self, bidding_template, message_history) -> SystemMessage:
 
@@ -52,6 +80,42 @@ class Think:
         )
 
         return SystemMessage(content=bid_system_message)
+    
+    def think_litellm(self, system_message: SystemMessage, use_content: str, streaming):
+
+        messages = [{
+            "content": system_message.content,
+            "role": "system"
+        },
+        {
+            "content": use_content,
+            "role": "user"
+        }]
+
+        # print("LITELLM MESSAGE:", messages)
+
+        if streaming:
+
+            response_stream = completion(
+                model=self.llm_config, 
+                messages=messages, 
+                stream=True
+            )
+
+            # self.stream_text(response_stream)
+
+            return response_stream
+        
+        else:
+
+            response = completion(
+                model=self.llm_config, 
+                messages=messages, 
+                stream=False
+            )
+
+            response = response.choices[0].message.content
+            return response
 
     def think_simpleAIChat(self, system_message: SystemMessage, use_content: str) -> str:
 
@@ -80,13 +144,16 @@ class Think:
 
         return message.content
     
-    def think(self, system_message: SystemMessage, use_content: str, use_model: str) -> str:
+    def think(self, system_message: SystemMessage, use_content: str, use_model: str, use_streaming: bool) -> str:
             
         if use_model == 'simpleAIChat':
             message = self.think_simpleAIChat(system_message, use_content)
 
         if use_model == 'langchain':
             message = self.think_langchain(system_message, use_content)
+
+        if use_model == 'litellm':
+            message = self.think_litellm(system_message, use_content, use_streaming)
 
         return message
 

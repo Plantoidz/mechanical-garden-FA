@@ -23,6 +23,8 @@ from ctypes import *
 from contextlib import contextmanager
 from collections import deque
 
+from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
+
 # from whisper_mic.whisper_mic import WhisperMic
 
 # Load environment variables from .env file
@@ -36,6 +38,7 @@ ELEVENLABS_API_KEY = os.environ.get("ELEVENLABS_API_KEY")
 # )
 
 # set_api_key(ELEVENLABS_API_KEY)
+
 
 @contextmanager
 def ignoreStderr():
@@ -62,9 +65,10 @@ class Listen:
         silence_limit: int = 2,
         threshold: int = 0,
         record_seconds: int = 2,
-        rate: int = 44100,
+        rate: int = 48000,
         chunk: int = 512,
         channels: int = 1,
+        device_index: int = 3,
     ) -> None:
         """
         Initializes a new instance of the Listen class.
@@ -77,6 +81,8 @@ class Listen:
         self.TIMEOUT = timeout
         self.RECORD_SECONDS = record_seconds #seconds to listen for environmental noise
         self.THRESHOLD = threshold
+        self.device_index = device_index
+        self.transcription = DeepgramTranscription(sample_rate=self.RATE, device_index=self.device_index)
 
     #todo: revisit cue sounds and background music
     def play_speech_indicator(self) -> None:
@@ -224,10 +230,14 @@ class Listen:
         with ignoreStderr():
             audio = pyaudio.PyAudio()
 
-        stream = audio.open(format=self.FORMAT, channels=self.CHANNELS,
-                    rate=self.RATE, input=True,
-                    # input_device_index = device_index,
-                    frames_per_buffer=self.CHUNK)
+        stream = audio.open(
+            format=self.FORMAT,
+            channels=self.CHANNELS,
+            rate=self.RATE,
+            input=True,
+            input_device_index = self.device_index,
+            frames_per_buffer=self.CHUNK
+        )
         
         print('quiet! checking noise threshold...')
 
@@ -267,10 +277,12 @@ class Listen:
 
             while(run):
 
-                data = stream.read(self.CHUNK)
-                silence_buffer.append(abs(audioop.avg(data, 2)))
+                data = stream.read(self.CHUNK, exception_on_overflow=True)
+                # Process your data here
+                # Example: calculate the average volume
+                volume = audioop.rms(data, 2)  # Adjust according to the format
 
-                samples_buffer.extend(data)
+                silence_buffer.append(volume)
 
                 if (True in [x > THRESHOLD for x in silence_buffer]):
 
@@ -385,8 +397,18 @@ class Listen:
 
         return utterance
     
+    def recognize_speech_deepgram(self):
+
+        self.transcription.start_listening()
+        utterance = self.transcription.get_final_result()
+
+        print("DEEPGRAM UTTERANCE:", utterance)
+
+        return utterance
+    
     def listen(self, timeout_override: str = None) -> Any:
 
-        return self.recognize_speech_whisper_manual(timeout_override)
+        # return self.recognize_speech_whisper_manual(timeout_override)
+        return self.recognize_speech_deepgram()
 
     # More methods can be added here as needed

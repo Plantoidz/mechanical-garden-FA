@@ -23,8 +23,8 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
     ) -> None:
         super().__init__(name, system_message, model, eleven_voice_id)
         self.bidding_template = bidding_template
-        self.clone_voice = True
-        self.create_clone = True
+        self.clone_voice = False
+        self.create_clone = False
         self.timeout_override_seconds = 5
 
     def listen_for_speech(self) -> str:

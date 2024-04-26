@@ -1,4 +1,4 @@
-from deepgram import DeepgramClient, LiveTranscriptionEvents, LiveOptions, Microphone
+from deepgram import DeepgramClient, LiveTranscriptionEvents, LiveOptions
 from dotenv import load_dotenv
 import logging, verboselogs
 import time
@@ -6,6 +6,8 @@ from ctypes import *
 from contextlib import contextmanager
 import os
 import sys
+
+from plantoid_agents.lib.microphone import ModifiedMicrophone
 
 @contextmanager
 def ignoreStderr():
@@ -24,27 +26,19 @@ def ignoreStderr():
 class DeepgramTranscription:
     def __init__(self, sample_rate: int = 48000, device_index: int = 0, timeout: int = 5):
         self.deepgram = DeepgramClient()
-        self.sample_rate = sample_rate
-        self.device_index = device_index
-        self.timeout = timeout
-        self.reset()
-
-    def reset(self):
-        """
-        Resets the state variables to their initial conditions.
-        """
         self.is_finals = []
         self.utterance = ""
         self.transcription_complete = False  # New flag for completion
-        self.sample_rate = self.sample_rate
-        self.device_index = self.device_index
-        self.timeout = self.timeout  # Timeout in seconds
+        self.sample_rate = sample_rate
+        self.device_index = device_index
+        self.timeout = timeout  # Timeout in seconds
         
     def on_message(self, *args, **kwargs):
         result = kwargs.get('result', None)
         if result is None and args:
             result = args[0]  # Assuming result is the first positional argument
 
+        # print("result is", result)
         sentence = result.channel.alternatives[0].transcript
         if not sentence:
             return
@@ -90,9 +84,10 @@ class DeepgramTranscription:
         print(f"Deepgram Unhandled Websocket Message: {unhandled}")
 
     def start_listening(self):
+        
         with ignoreStderr():
-            connection = self.deepgram.listen.live.v("1")
 
+            connection = self.deepgram.listen.live.v("1")
             connection.on(LiveTranscriptionEvents.Transcript, self.on_message)
             # connection.on(LiveTranscriptionEvents.Metadata, self.on_metadata)
             connection.on(LiveTranscriptionEvents.SpeechStarted, self.on_speech_started)
@@ -118,7 +113,7 @@ class DeepgramTranscription:
                 print("Failed to connect to Deepgram")
                 return
 
-            microphone = Microphone(
+            microphone = ModifiedMicrophone(
                 connection.send,
                 input_device_index=self.device_index,
                 rate=self.sample_rate,
@@ -134,7 +129,9 @@ class DeepgramTranscription:
                 # Optionally, you can keep a debug print here:
                 # print("Transcribing...")
 
-            microphone.finish()
+            audio_file_path = os.getcwd() + "/media/user_audio/temp_reco_dg.wav"
+
+            microphone.finish(audio_file_path=audio_file_path)
             connection.finish()
 
             print("Finished")

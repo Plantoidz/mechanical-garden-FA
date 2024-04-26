@@ -254,7 +254,7 @@ class InteractionManager:
         )
 
         simulator.reset()
-        simulator.enunciate(interaction_description)
+        # simulator.enunciate(interaction_description)
 
         n = 0
 
