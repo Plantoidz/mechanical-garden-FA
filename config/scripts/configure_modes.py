@@ -11,6 +11,8 @@ class ModeConfigurator:
         with open(self.modes_file, 'r') as file:
             return json.load(file)[key]
 
+#TODO: is this needed? #logging
+
     def create_mode_directory(self, mode_data):
         modes_directory = os.path.dirname(self.modes_file)
         mode = mode_data['current_mode']
@@ -37,21 +39,21 @@ class ModeConfigurator:
 
     def configure_mode(self):
         try:
-            print("\Mode:\n")
+            print("\nMode:\n")
             mode_names = list(self.modes.keys())
             for idx, mode in enumerate(mode_names, start=1):
                 description = self.modes[mode]["description"]
                 print(f"{idx}: {mode} - {description}")
 
             total_modes = len(self.modes)
-            selection = int(input(f"Enter the mode number (1-{total_modes}): "))
+            selection = int(input(f"\nEnter the mode number (1-{total_modes}): "))
 
             if 1 <= selection <= total_modes:
                 mode = mode_names[selection-1]  # adjust index for 0-based list
                 mode_data = self.modes[mode]
                 mode_directory = self.create_mode_directory(mode_data)
                 self.set_mode_data(mode)
-                print(f"Data for mode {mode} has been set in directory {mode_directory}.")
+                # print(f"Data for mode {mode} has been set in directory {mode_directory}.")
             else:
                 print("Invalid selection!")
 
