@@ -15,6 +15,12 @@ from plantoid_agents.events.speak import Speak
 from plantoid_agents.events.think import Think
 from plantoid_agents.lib.text_content import *
 
+BLUE = '\033[94m'
+RED = '\033[91m'
+GREEN = '\033[92m'
+YELLOW = '\033[93m'
+ENDC = '\033[0m'
+
 class PlantoidDialogueAgent:
     def __init__(
         self,
@@ -57,11 +63,11 @@ class PlantoidDialogueAgent:
 
         if "yes" in user_message.lower():
             
-            print("The human will speak now...")
+            print(GREEN + "The human will speak now..." + ENDC)
             return True
         
         else:
-            print("The human will just listen for now...")
+            print(GREEN + "The human will just listen for now..." + ENDC)
             return False
 
 
@@ -81,19 +87,20 @@ class PlantoidDialogueAgent:
         """
 
         # play the background music
-        self.speak_module.play_background_music()
+        # self.speak_module.play_background_music()
 
         # generate the message from the langchain model
-        print(self.name, 'is thinking about response...')
+        print(BLUE + "\n" + self.name + ' is thinking about response...' + ENDC)
 
         self.message_history = self.clip_history(self.message_history, n_messages=5)
 
         use_content = "\n".join(self.message_history + [self.prefix])
         # print("use_content:", use_content)
 
-        print("AGENT:", self.name)
-        print("SYSTEM MESSAGE:", self.system_message)
-        print("MESSAGE HISTORY:", self.message_history)
+        print("\n\t" + BLUE + "AGENT:" + ENDC, self.name)
+        # todo: just print raw system message
+        print("\n\t" + BLUE + "SYSTEM MESSAGE:" + ENDC, "{self.system_message}")
+        print("\n\t" + BLUE + "MESSAGE HISTORY:" + ENDC, self.message_history)
 
         message = self.think_module.think(
             self.system_message,
@@ -101,8 +108,8 @@ class PlantoidDialogueAgent:
             self.use_model_type,
         )
 
-        print(self.name, 'says:')
-        print(message)
+        print("\n" + BLUE + self.name, 'says:' + ENDC)
+        print(GREEN + message + ENDC +"\n")
 
         return message
     

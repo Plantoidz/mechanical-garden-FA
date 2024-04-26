@@ -117,13 +117,12 @@ class Speak:
         pygame.mixer.music.load(background_music_path)
         pygame.mixer.music.play(loops)
 
+    #todo: rename function and make this more general — cue sounds not just background music
     def stop_background_music(self) -> None:
 
         if pygame.mixer.get_init() is not None:
             print('stop background music')
-            pygame.mixer.music.stop()
-        else:
-            print('Mixer not initialized, no music to stop.')
+            background.music.stop()
 
     def clone_voice(
         self,

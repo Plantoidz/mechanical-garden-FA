@@ -106,7 +106,7 @@ class InteractionManager:
         Retrieves the interaction mode based on the provided interaction mode.
         """
         if interaction_mode == 'conversation':
-            return "Let's have a discussion. Can consciousness be explained solely through physical processes, or is there an irreducible subjective component that cannot be replicated in synthetic beings?"
+            return "Let's have a discussion. Should people live in castles in the French countryside?"
         
         if interaction_mode == 'kiosk':
             kiosk_config = read_addendum_config(interaction_mode)
@@ -258,7 +258,7 @@ class InteractionManager:
 
         n = 0
 
-        print('Running interaction mode...')
+        print('\nRunning interaction mode...')
         while n < max_iters:
             name, message = simulator.step()
             # print(f"({name}): {message}")
