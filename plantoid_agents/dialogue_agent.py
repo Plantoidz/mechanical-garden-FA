@@ -114,7 +114,8 @@ class PlantoidDialogueAgent:
         )
 
         print("\n" + BLUE + self.name, 'says:' + ENDC)
-        print(GREEN + message + ENDC +"\n")
+        formatted_message = self.think_module.format_response_type(message)
+        print(formatted_message)
 
         return message
     
