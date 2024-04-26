@@ -1,9 +1,6 @@
 from typing import Callable, List, Union
-import os
-
 from langchain_openai import ChatOpenAI
 from langchain_community.chat_models.huggingface import ChatHuggingFace
-
 from langchain.schema import (
     HumanMessage,
     SystemMessage,
@@ -118,7 +115,7 @@ class PlantoidDialogueAgent:
         Speaks the message using the agent's voice
         """
 
-        self.speak_module.stop_background_music()
+        # self.speak_module.stop_background_music()
         
         self.speak_module.speak(
             message,

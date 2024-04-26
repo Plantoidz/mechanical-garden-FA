@@ -14,7 +14,7 @@ import requests
 import numpy as np
 import whisper
 import torch
-import pygame
+# import pygame
 
 from dotenv import load_dotenv
 from elevenlabs import stream

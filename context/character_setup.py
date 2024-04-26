@@ -1,19 +1,14 @@
 from typing import Callable, List
 import random
 import tenacity
-import playsound
 import os
 import numpy as np
 from langchain.schema import (
     HumanMessage,
     SystemMessage,
 )
-
 from plantoid_agents.dialogue_agent import PlantoidDialogueAgent as DialogueAgent
 from dotenv import load_dotenv
-from elevenlabs import play, stream, save
-from elevenlabs.client import ElevenLabs
-
 from config.scripts.select_llm import get_llm
 from utils.util import load_config
 
