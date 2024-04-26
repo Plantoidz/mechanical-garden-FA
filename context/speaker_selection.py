@@ -1,7 +1,6 @@
 from typing import Callable, List
 import random
 import tenacity
-import playsound
 import random
 import os
 import numpy as np
@@ -147,16 +146,17 @@ def select_next_speaker(
         bids.append(bid)
 
     # randomly select among multiple agents with the same bid
+    # todo: can we just use random to speed up the program load?
     max_value = np.max(bids)
     max_indices = np.where(bids == max_value)[0]
     idx = np.random.choice(max_indices)
 
-    print("Bids:")
+    print("\nBids:")
     for i, (bid, agent) in enumerate(zip(bids, agents)):
         print(f"\t{agent.name} bid: {bid}")
         if i == idx:
             selected_name = agent.name
-    print(f"Selected: {selected_name}")
+    print(f"\nSelected: {selected_name}")
 
     audio_stream = client.generate(
             text=f"{selected_name}?",
@@ -230,7 +230,7 @@ def select_next_speaker_with_human_clone(
     max_indices = np.where(bids == max_value)[0]
     idx = np.random.choice(max_indices)
 
-    print("Bids:")
+    print("\nBids:")
     for i, (bid, agent) in enumerate(zip(bids, agents)):
 
         print(f"\t{agent.name} bid: {bid}")
@@ -238,7 +238,7 @@ def select_next_speaker_with_human_clone(
         if i == idx:
             selected_name = agent.name
 
-    print(f"Selected: {selected_name}")
+    print(f"\nSelected: {selected_name}")
 
     return idx
 

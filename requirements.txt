@@ -4,6 +4,7 @@ openai
 requests
 pydub
 sounddevice
+soundcard
 numpy
 nltk
 speechrecognition
@@ -22,6 +23,7 @@ torch
 openai-whisper
 langchain
 langchain-community
+langchain-open-ai
 huggingface_hub
 elevenlabs
 simpleaichat
@@ -34,3 +36,5 @@ sentencepiece
 jinja2
 litellm
 ollama
+# deepgram
+mpv

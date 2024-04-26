@@ -10,7 +10,7 @@ from config.scripts.default_prompt_config import default_chat_completion_config,
 from utils.util import load_config, str_to_bool
 
 
-from langchain.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain_community.chat_models.huggingface import ChatHuggingFace
 from langchain.output_parsers import RegexParser
 from langchain.prompts import PromptTemplate

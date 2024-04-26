@@ -14,7 +14,7 @@ import requests
 import numpy as np
 import whisper
 import torch
-import pygame
+# import pygame
 
 from dotenv import load_dotenv
 from elevenlabs import stream
@@ -84,14 +84,15 @@ class Listen:
         self.device_index = device_index
         self.transcription = DeepgramTranscription(sample_rate=self.RATE, device_index=self.device_index)
 
+    #todo: revisit cue sounds and background music
     def play_speech_indicator(self) -> None:
             
         # get the path to the speech indicator sound
         speech_indicator_path = os.getcwd()+"/media/beep_start.wav"
 
-        pygame.mixer.init()
-        pygame.mixer.music.load(speech_indicator_path)
-        pygame.mixer.music.play(loops=1)
+        # pygame.mixer.init()
+        # pygame.mixer.music.load(speech_indicator_path)
+        # pygame.mixer.music.play(loops=1)
 
     def compute_average(self, fragment, sample_width=2):
         """Compute the raw average of audio samples."""

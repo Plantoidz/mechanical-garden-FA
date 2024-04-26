@@ -1,15 +1,14 @@
 from typing import Any, Dict, List, Type
-
 import pyaudio
 import wave
-import audioop
+# import audioop
 import struct
 import random
 import os
 import sys
 import time
 import requests
-import pygame
+# import pygame
 import types
 
 
@@ -136,22 +135,21 @@ class Speak:
 
     # Additional methods can be added here as needed
 
-    def play_background_music(self, loops=-1) -> None:
+    # def play_background_music(self, loops=-1) -> None:
 
-        # get the path to the background music
-        background_music_path = os.getcwd()+"/media/ambient3.mp3"
+    #     # get the path to the background music
+    #     background_music_path = os.getcwd()+"/media/ambient3.mp3"
 
-        pygame.mixer.init()
-        pygame.mixer.music.load(background_music_path)
-        pygame.mixer.music.play(loops)
+    #     pygame.mixer.init()
+    #     pygame.mixer.music.load(background_music_path)
+    #     pygame.mixer.music.play(loops)
 
-    def stop_background_music(self) -> None:
+    # #todo: rename function and make this more general — cue sounds not just background music
+    # def stop_background_music(self) -> None:
 
-        if pygame.mixer.get_init() is not None:
-            print('stop background music')
-            pygame.mixer.music.stop()
-        else:
-            print('Mixer not initialized, no music to stop.')
+    #     if pygame.mixer.get_init() is not None:
+    #         print('stop background music')
+    #         background.music.stop()
 
     def clone_voice(
         self,

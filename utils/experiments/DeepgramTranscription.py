@@ -24,12 +24,21 @@ def ignoreStderr():
 class DeepgramTranscription:
     def __init__(self, sample_rate: int = 48000, device_index: int = 0, timeout: int = 5):
         self.deepgram = DeepgramClient()
+        self.sample_rate = sample_rate
+        self.device_index = device_index
+        self.timeout = timeout
+        self.reset()
+
+    def reset(self):
+        """
+        Resets the state variables to their initial conditions.
+        """
         self.is_finals = []
         self.utterance = ""
         self.transcription_complete = False  # New flag for completion
-        self.sample_rate = sample_rate
-        self.device_index = device_index
-        self.timeout = timeout  # Timeout in seconds
+        self.sample_rate = self.sample_rate
+        self.device_index = self.device_index
+        self.timeout = self.timeout  # Timeout in seconds
         
     def on_message(self, *args, **kwargs):
         result = kwargs.get('result', None)

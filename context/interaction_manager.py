@@ -106,7 +106,7 @@ class InteractionManager:
         Retrieves the interaction mode based on the provided interaction mode.
         """
         if interaction_mode == 'conversation':
-            return "This is a friendly conversation on exploring each other's personalities. What do you like to do for fun?"
+            return "Let's have a discussion. Should people live in castles in the French countryside?"
         
         if interaction_mode == 'kiosk':
             kiosk_config = read_addendum_config(interaction_mode)
@@ -258,7 +258,7 @@ class InteractionManager:
 
         n = 0
 
-        print('Running interaction mode...')
+        print('\nRunning interaction mode...')
         while n < max_iters:
             name, message = simulator.step()
             # print(f"({name}): {message}")

@@ -1,21 +1,14 @@
 from typing import Callable, List
 import random
 import tenacity
-import playsound
 import os
 import numpy as np
-from langchain.output_parsers import RegexParser
-from langchain.prompts import PromptTemplate
 from langchain.schema import (
     HumanMessage,
     SystemMessage,
 )
-
 from plantoid_agents.dialogue_agent import PlantoidDialogueAgent as DialogueAgent
 from dotenv import load_dotenv
-from elevenlabs import play, stream, save
-from elevenlabs.client import ElevenLabs
-
 from config.scripts.select_llm import get_llm
 from utils.util import load_config
 
@@ -175,7 +168,6 @@ def generate_character_header(
 
         response = f"""
             This is your character description, in angle brackets: << {character_description} >>
-
             You have asked the human the following introspective question, in angle brackets: << {interaction_description} >>
             True to your character description, you must respond to the human's answer to the introspective question in the following way, in angle brackets:
             << {interaction_addendum_str} >>
@@ -198,9 +190,7 @@ def generate_character_header(
         #     You must keep all of your responses {word_limit} words!
         # """
         
-        response = f"""
-
-            This is a description of your current interaction mode, in angle brackets: << {interaction_description} >>
+        response = f"""This is a description of your current interaction mode, in angle brackets: << {interaction_description} >>
             This is your character description, in angle brackets: << {character_description} >>
             Always adhere to your character description, be poignant and extreme if you must!
             You must state your true opinion, but make sure to consider what the others are thinking.
