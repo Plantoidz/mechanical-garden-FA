@@ -119,3 +119,5 @@ media/user_audio/
 # ================================================
 
 ~
+utils/experiments/streaming_e2e_test.py
+utils/experiments/streaming_e2e_test.py

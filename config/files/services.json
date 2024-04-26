@@ -4,7 +4,7 @@
     {"name": "Anthropic Claude3 Haiku", "llm_config": "claude-3-haiku-20240307"},
     {"name": "Google Gemini Pro", "llm_config": "gemini/gemini-pro"},
     {"name": "HuggingFace [WIP]", "llm_config": "huggingface/<model_name>"},
-    {"name": "Ollama Llama2", "llm_config": "ollama_chat/llama2"},
+    {"name": "Ollama Llama3", "llm_config": "ollama_chat/llama3"},
     {"name": "Ollama Mistral", "llm_config": "ollama_chat/mistral"}
   ],
   "speech_recognition_models": [

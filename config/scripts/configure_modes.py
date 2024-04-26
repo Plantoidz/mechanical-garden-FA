@@ -37,7 +37,7 @@ class ModeConfigurator:
 
     def configure_mode(self):
         try:
-            print("Select a mode:")
+            print("\Mode:\n")
             mode_names = list(self.modes.keys())
             for idx, mode in enumerate(mode_names, start=1):
                 description = self.modes[mode]["description"]

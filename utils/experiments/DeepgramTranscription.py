@@ -1,14 +1,18 @@
 from deepgram import DeepgramClient, LiveTranscriptionEvents, LiveOptions, Microphone
 
 class DeepgramTranscription:
-    def __init__(self, sample_rate: int = 48000, device_index: int = 0):
+    def __init__(self):
         self.deepgram = DeepgramClient()
+        self.reset()
+
+    def reset(self):
+        """
+        Resets the state variables to their initial conditions.
+        """
         self.is_finals = []
         self.final_result = ""
-        self.transcription_complete = False  # New flag for completion
-        self.sample_rate = sample_rate
-        self.device_index = device_index
-        
+        self.transcription_complete = False
+
     def on_message(self, *args, **kwargs):
         result = kwargs.get('result', None)
         if result is None and args:
@@ -25,13 +29,15 @@ class DeepgramTranscription:
                 self.final_result = ' '.join(self.is_finals)
                 print(f"Speech Final: {self.final_result}")
                 self.transcription_complete = True  # Set completion flag
-                self.is_finals = []
+                self.is_finals = []  # Reset for potential further use
             else:
                 print(f"Is Final: {sentence}")
         else:
             print(f"Interim Results: {sentence}")
 
     def start_listening(self):
+        self.reset()  # Reset state at the beginning of a listening session
+
         connection = self.deepgram.listen.live.v("1")
         connection.on(LiveTranscriptionEvents.Transcript, self.on_message)
 
@@ -41,7 +47,7 @@ class DeepgramTranscription:
             smart_format=True,
             encoding="linear16",
             channels=1,
-            sample_rate=self.sample_rate,
+            sample_rate=16000,
             interim_results=True,
             utterance_end_ms="1000",
             vad_events=True,
@@ -52,12 +58,7 @@ class DeepgramTranscription:
             print("Failed to connect to Deepgram")
             return
 
-        microphone = Microphone(
-            connection.send,
-            input_device_index=self.device_index,
-            rate=self.sample_rate,
-        )
-
+        microphone = Microphone(connection.send)
         microphone.start()
 
         # Wait until the final result is ready

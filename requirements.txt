@@ -4,6 +4,7 @@ openai
 requests
 pydub
 sounddevice
+soundcard
 numpy
 nltk
 speechrecognition
@@ -33,3 +34,5 @@ sentencepiece
 jinja2
 litellm
 ollama
+# deepgram
+mpv
