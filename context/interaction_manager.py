@@ -106,7 +106,7 @@ class InteractionManager:
         Retrieves the interaction mode based on the provided interaction mode.
         """
         if interaction_mode == 'conversation':
-            return "This is a friendly conversation on exploring each other's personalities. What do you like to do for fun?"
+            return "Let's have a discussion. Can consciousness be explained solely through physical processes, or is there an irreducible subjective component that cannot be replicated in synthetic beings?"
         
         if interaction_mode == 'kiosk':
             kiosk_config = read_addendum_config(interaction_mode)

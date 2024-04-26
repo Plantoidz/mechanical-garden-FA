@@ -2,6 +2,7 @@ from context.interaction_manager import InteractionManager
 import json
 import os
 import sounddevice as sd
+from config.scripts.select_llm import get_llm
 
 def run_program():
     print("Hello Mechanical Garden!")

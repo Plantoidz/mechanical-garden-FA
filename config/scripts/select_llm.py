@@ -16,7 +16,7 @@ OPENAI_API_KEY = os.environ.get("OPENAI")
 LLM_ENDPOINT_URL = "https://hh1j4c263kruj77c.eu-west-1.aws.endpoints.huggingface.cloud"
 HF_TOKEN = os.environ.get("HUGGINGFACEHUB_API_TOKEN")
 
-print("HUGGINGFACEHUB_API_TOKEN", HF_TOKEN)
+# print("HUGGINGFACEHUB_API_TOKEN", HF_TOKEN)
 
 # TODO: look Into
 # python -c "from huggingface_hub.hf_api import HfFolder; HfFolder.save_token('YOUR_TOKEN_HERE')"
