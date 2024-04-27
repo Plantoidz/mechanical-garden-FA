@@ -3,8 +3,9 @@ import json
 import re
 import os
 
-def get_arp_table():
-    result = subprocess.run(['arp', '-a'], capture_output=True, text=True)
+def get_arp_table(interface):
+    result = subprocess.run(['arp', '-i', interface, '-a'], capture_output=True, text=True)
+    print(result.stderr)
     return result.stdout
 
 def parse_arp_output(output):
@@ -18,20 +19,23 @@ def read_json_file(filename):
             return json.load(file)
     return []
 
-def save_to_json(entries, filename='/config/files/working/mac_addresses.json'):
+def save_to_json(entries, filename='mac_addresses.json'):
     with open(filename, 'w') as file:
         json.dump(entries, file, indent=4)
 
-def update_devices(filename='/config/files/working/mac_addresses.json'):
-    arp_output = get_arp_table()
+def update_devices(filename='mac_addresses.json'):
+    interface = input("Name of the interface you want to scan: ")
+    print("["+interface+"]")
+    arp_output = get_arp_table(interface)
     arp_entries = parse_arp_output(arp_output)
-    existing_data = read_json_file(filename)
-    updated_data = {entry['MAC_address']: entry for entry in existing_data}
+    # existing_data = read_json_file(filename)
+    # updated_data = {entry['MAC_address']: entry for entry in existing_data}
 
+    updated_data = {}
     for ip, mac in arp_entries:
-        if mac in updated_data:
-            updated_data[mac]['last_known_IP'] = ip
-        else:
+        # if mac in updated_data:
+        #     updated_data[mac]['last_known_IP'] = ip
+        # else:
             updated_data[mac] = {"MAC_address": mac, "last_known_IP": ip, "channel_id": None}
 
     save_to_json(list(updated_data.values()), filename)
@@ -48,7 +52,7 @@ def assign_channel_ids(filename='mac_addresses.json'):
     for i in range(channel_count):
         print("\nAvailable MAC Addresses:")
         for index, entry in enumerate(data):
-            print(f"{index + 1}. MAC: {entry['MAC_address']}, Current Channel: {entry['channel_id']}")
+            print(f"{index + 1}. MAC: {entry['MAC_address']}\t\tLast IP: {entry['last_known_IP']}\t\tCurrent Channel: {entry['channel_id']}")
 
         try:
             mac_index = int(input(f"Select the MAC address number to assign to channel {i + 1}: ")) - 1
