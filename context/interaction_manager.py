@@ -106,7 +106,7 @@ class InteractionManager:
         Retrieves the interaction mode based on the provided interaction mode.
         """
         if interaction_mode == 'conversation':
-            return "Let's have a debate, entirely in the French language. Do large language models exhibit any degree of sentience, or are they simply sophisticated information processing systems? Can sentience be measured on a spectrum, and if so, where would large language models fall?"
+            return "Let's discuss. Do large language models exhibit any degree of sentience, or are they simply sophisticated information processing systems? Can sentience be measured on a spectrum, and if so, where would large language models fall?"
         
         if interaction_mode == 'confession':
             confession_config = read_addendum_config(interaction_mode)

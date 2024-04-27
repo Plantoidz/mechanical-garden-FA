@@ -18,11 +18,11 @@ def read_json_file(filename):
             return json.load(file)
     return []
 
-def save_to_json(entries, filename='mac_addresses.json'):
+def save_to_json(entries, filename='/config/files/working/mac_addresses.json'):
     with open(filename, 'w') as file:
         json.dump(entries, file, indent=4)
 
-def update_devices(filename='mac_addresses.json'):
+def update_devices(filename='/config/files/working/mac_addresses.json'):
     arp_output = get_arp_table()
     arp_entries = parse_arp_output(arp_output)
     existing_data = read_json_file(filename)
