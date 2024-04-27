@@ -83,7 +83,7 @@ class DeepgramTranscription:
         unhandled = kwargs['unhandled'] 
         print(f"Deepgram Unhandled Websocket Message: {unhandled}")
 
-    def start_listening(self):
+    def start_listening(self, step: int = 0):
 
         print("Start listening deepgram...")
         print("sample rate: ", self.sample_rate)
@@ -118,24 +118,24 @@ class DeepgramTranscription:
                 print("Failed to connect to Deepgram")
                 return
 
-            # microphone = ModifiedMicrophone(
-            #     connection.send,
-            #     input_device_index=self.device_index,
-            #     rate=self.sample_rate,
-            # )
-
-            microphone = Microphone(
+            microphone = ModifiedMicrophone(
                 connection.send,
-                # rate=48000,
-                # input_device_index=self.device_index,
-                # rate=self.sample_rate,
+                input_device_index=self.device_index,
+                rate=self.sample_rate,
             )
+
+            # microphone = Microphone(
+            #     connection.send,
+            #     # rate=48000,
+            #     # input_device_index=self.device_index,
+            #     # rate=self.sample_rate,
+            # )
 
             microphone.start()
 
             start_time = time.time()  # Note the start time
 
-            time.sleep(5)
+            time.sleep(2)
 
             # # Wait until the transcription is complete or 5 seconds have elapsed
             # while not self.transcription_complete or (time.time() - start_time) < self.timeout:
@@ -143,10 +143,17 @@ class DeepgramTranscription:
             #     # Optionally, you can keep a debug print here:
             #     # print("Transcribing...")
 
-            # audio_file_path = os.getcwd() + "/media/user_audio/temp_reco_dg.wav"
+            # Define the directory path
+            directory = os.path.join(os.getcwd(), "media/user_audio/temp")
 
-            # microphone.finish(audio_file_path=audio_file_path)
-            microphone.finish()
+            # Ensure the directory exists
+            os.makedirs(directory, exist_ok=True)
+
+            # Define the audio file path within the newly ensured directory
+            audio_file_path = os.path.join(directory, f"temp_reco_dg_{str(step)}.wav")
+
+            microphone.finish(audio_file_path=audio_file_path)
+            # microphone.finish()
             connection.finish()
 
             print("Finished")

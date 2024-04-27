@@ -69,7 +69,7 @@ class Listen:
         rate: int = 48000,
         chunk: int = 512,
         channels: int = 1,
-        device_index: int = 1,
+        device_index: int = 0,
     ) -> None:
         """
         Initializes a new instance of the Listen class.
@@ -398,17 +398,17 @@ class Listen:
 
         return utterance
     
-    def recognize_speech_deepgram(self):
+    def recognize_speech_deepgram(self, step: int = 0):
 
-        self.transcription.start_listening()
+        self.transcription.start_listening(step=step)
         utterance = self.transcription.get_final_result()
 
         print("DEEPGRAM UTTERANCE:", utterance)
 
         return utterance
     
-    def listen(self, timeout_override: str = None) -> Any:
-        return self.recognize_speech_whisper_manual(timeout_override)
-        # return self.recognize_speech_deepgram()
+    def listen(self, timeout_override: str = None, step: int = 0) -> Any:
+        # return self.recognize_speech_whisper_manual(timeout_override)
+        return self.recognize_speech_deepgram(step=step)
 
     # More methods can be added here as needed

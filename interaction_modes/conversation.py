@@ -53,7 +53,7 @@ class PlantoidConversation:
             print('Human Selected')
 
             # 2. next (human) speaker sends message
-            message = speaker.listen_for_speech()
+            message = speaker.listen_for_speech(self._step)
 
         else:
 

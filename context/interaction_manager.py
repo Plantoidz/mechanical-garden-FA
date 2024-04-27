@@ -17,7 +17,7 @@ import context.speaker_selection as speaker_selection # TODO: roll this into con
 
 
 class InteractionManager:
-    def __init__(self, llm: Any):
+    def __init__(self):
         pass
         # self.llm = llm  # Language Learning Model or any contextually relevant model
 

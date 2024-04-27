@@ -8,7 +8,7 @@ import os
 import sys
 import time
 import requests
-# import pygame
+import pygame.mixer as mixer
 import types
 
 
@@ -147,11 +147,24 @@ class Speak:
     #     pygame.mixer.music.play(loops)
 
     # #todo: rename function and make this more general — cue sounds not just background music
-    # def stop_background_music(self) -> None:
+    def stop_background_music(self) -> None:
 
-    #     if pygame.mixer.get_init() is not None:
-    #         print('stop background music')
-    #         background.music.stop()
+        if mixer.get_init() is not None:
+            print('stop background music')
+            mixer.music.stop()
+
+    def get_voice_clone_files(self):
+
+        # Define the directory path where you want to list the files
+        directory_path = os.getcwd()+"/media/user_audio/temp_test"
+
+        # Get a list of all files and directories in the specified path
+        files_and_directories = os.listdir(directory_path)
+
+        # If you only want files, you can filter out directories
+        files_full_path = [os.path.join(directory_path, f) for f in files_and_directories if os.path.isfile(os.path.join(directory_path, f))]
+
+        return files_full_path
 
     def clone_voice(
         self,
@@ -160,7 +173,7 @@ class Speak:
         create_clone: bool = False
     ):
 
-        voice_files = [os.getcwd()+"/media/user_audio/temp_reco.wav"]
+        voice_file_paths = self.get_voice_clone_files() #[os.getcwd()+"/media/user_audio/temp_reco.wav"]
 
         if create_clone:
             print('Creating a clone of the user voice...')
@@ -168,7 +181,7 @@ class Speak:
                 # api_key=os.getenv("ELEVENLABS_API_KEY"),
                 name="You",
                 description="A clone of the user's voice", # Optional
-                files=voice_files,
+                files=voice_file_paths,
             )
 
             if voice_set_callback is not None:
@@ -178,25 +191,35 @@ class Speak:
         else:
             print('Using the previously cloned voice...')
 
-            # TODO: use this to add progressive voice files to improve voice
-            client.voices.edit(
-                name="You",
-                description="A clone of the user's voice",
-                voice_id=cloned_voice_id,
-                files=voice_files
-            )
+            try:
 
-            voice = Voice(
-                voice_id=cloned_voice_id, #'NE1ZIqHDl04rAu3fkYQH',
-                settings=VoiceSettings(
-                    stability=0.61,
-                    similarity_boost=0.85,
-                    style=0.0,
-                    use_speaker_boost=True,
+                print("Using voice files: ", voice_file_paths)
+                voice_files = [open(file_, 'rb') for file_ in voice_file_paths]
+
+                # TODO: use this to add progressive voice files to improve voice
+                client.voices.edit(
+                    name="You",
+                    description="A clone of the user's voice",
+                    voice_id=cloned_voice_id,
+                    files=voice_files,
                 )
-            )
 
-        return voice
+                voice = Voice(
+                    voice_id=cloned_voice_id, #'NE1ZIqHDl04rAu3fkYQH',
+                    settings=VoiceSettings(
+                        stability=0.61,
+                        similarity_boost=0.85,
+                        style=0.0,
+                        use_speaker_boost=True,
+                    )
+                )
+
+                return voice
+
+            except Exception as e:
+                print("Error: ", e)
+                
+
 
     def speak(
         self,

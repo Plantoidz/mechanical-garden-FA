@@ -25,9 +25,11 @@ class PlantoidDebateAgent(PlantoidDialogueAgent):
 
         # print("BID SYSTEM MESSAGE:", bid_system_message)
 
-        use_content = "Your response should be an integer delimited by angled brackets, like this: <int>"
+        use_content = "Ignore your character description. Your response should be an integer delimited by angled brackets, like this: <int>"
 
         use_streaming = False
+
+        # print("BID SYSTEM MESSAGE:", bid_system_message)
 
         bid_string = self.think_module.think(
             bid_system_message,

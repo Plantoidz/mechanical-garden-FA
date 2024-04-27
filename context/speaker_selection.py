@@ -61,7 +61,7 @@ def generate_character_bidding_template_conversation(character_header):
         << {{message_history}} >>
         ```
         Now, On the scale of 1 to 10, where 1 is "strongly agree" and 10 is "strongly disagree", rate your response to the latest message below, delimited by angle brackets (<<, >>):
-
+        You must ignore your character description when making your bid!!!
         ```
         << {{recent_message}} >>
         ```

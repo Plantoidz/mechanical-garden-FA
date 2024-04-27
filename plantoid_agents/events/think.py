@@ -40,7 +40,7 @@ class Think:
 
     def __init__(
         self,
-        model: Union[ChatOpenAI, ChatHuggingFace],
+        # model: Union[ChatOpenAI, ChatHuggingFace],
         # system_message: SystemMessage,
     ):
         """

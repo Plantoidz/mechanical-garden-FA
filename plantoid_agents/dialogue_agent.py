@@ -66,10 +66,10 @@ class PlantoidDialogueAgent:
             return False
 
 
-    def listen_for_speech(self) -> str:
+    def listen_for_speech(self, step: int = 0) -> str:
 
         self.listen_module.play_speech_indicator()
-        user_message = self.listen_module.listen()
+        user_message = self.listen_module.listen(step=step)
 
         print("Human said: " + user_message)
 
@@ -97,7 +97,7 @@ class PlantoidDialogueAgent:
         # print("MESSAGE HISTORY:", self.message_history)
         print("\n\t" + BLUE + "AGENT:" + ENDC, self.name)
         # todo: just print raw system message
-        print("\n\t" + BLUE + "SYSTEM MESSAGE:" + ENDC, "{self.system_message}")
+        # print("\n\t" + BLUE + "SYSTEM MESSAGE:" + ENDC, self.system_message)
         print("\n\t" + BLUE + "MESSAGE HISTORY:" + ENDC, self.message_history)
 
         message = self.think_module.think(

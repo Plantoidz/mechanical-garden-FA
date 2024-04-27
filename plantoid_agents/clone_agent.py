@@ -14,17 +14,17 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
     ) -> None:
         super().__init__(name, system_message, eleven_voice_id)
         self.bidding_template = bidding_template
-        self.clone_voice = False
-        self.create_clone = False
+        self.clone_voice = True
+        self.create_clone = True
         self.timeout_override_seconds = 5
 
-    def listen_for_speech(self) -> str:
+    def listen_for_speech(self, step: int = 0) -> str:
 
         print("Current timeout: ", self.timeout_override_seconds)
         print("Current voice id: ", self.get_voice_id())
 
         self.listen_module.play_speech_indicator()
-        user_message = self.listen_module.listen(self.timeout_override_seconds)
+        user_message = self.listen_module.listen(self.timeout_override_seconds, step=step)
 
         print("Human said: " + user_message)
 
@@ -40,7 +40,7 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
         self.speak_module.speak(
             message,
             self.get_voice_id(),
-            voice_set_callback=None,
+            voice_set_callback=self.set_create_clone,
             clone_voice=self.clone_voice,
             create_clone=self.create_clone,
         )

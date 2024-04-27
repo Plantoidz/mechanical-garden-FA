@@ -107,7 +107,7 @@ class DeepgramTranscription:
             smart_format=True,
             encoding="linear16",
             channels=1,
-            sample_rate=48000, #self.sample_rate,
+            sample_rate=self.sample_rate,
             interim_results=True,
             utterance_end_ms="1000",
             vad_events=True,
@@ -126,9 +126,8 @@ class DeepgramTranscription:
 
         microphone = Microphone(
             connection.send,
-            rate=48000,
-            input_device_index=0,
-            # rate=self.sample_rate,
+            rate=self.sample_rate,
+            input_device_index=self.device_index,
         )
 
         microphone.start()
