@@ -1,27 +1,18 @@
-from typing import Callable, List, Union
+from typing import Callable, List, Union, Any
 
-from langchain_openai import ChatOpenAI
-from langchain_community.chat_models.huggingface import ChatHuggingFace
-
-from langchain.output_parsers import RegexParser
 from langchain.prompts import PromptTemplate
-from langchain.schema import (
-    HumanMessage,
-    SystemMessage,
-)
-
 from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
 
 class PlantoidCloneAgent(PlantoidDialogueAgent):
     def __init__(
         self,
         name,
-        system_message: SystemMessage,
+        system_message: str,
         bidding_template: PromptTemplate,
-        model: Union[ChatOpenAI, ChatHuggingFace],
+        # model: Any, # Union[ChatOpenAI, ChatHuggingFace],
         eleven_voice_id: str,
     ) -> None:
-        super().__init__(name, system_message, model, eleven_voice_id)
+        super().__init__(name, system_message, eleven_voice_id)
         self.bidding_template = bidding_template
         self.clone_voice = False
         self.create_clone = False

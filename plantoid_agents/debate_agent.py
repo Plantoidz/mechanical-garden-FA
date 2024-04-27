@@ -1,24 +1,17 @@
-from typing import Callable, List, Union
-from langchain_community.chat_models import ChatOpenAI
-from langchain_community.chat_models.huggingface import ChatHuggingFace
+from typing import Callable, List, Union, Any
 from langchain.prompts import PromptTemplate
-from langchain.schema import (
-    HumanMessage,
-    SystemMessage,
-)
-
 from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
 
 class PlantoidDebateAgent(PlantoidDialogueAgent):
     def __init__(
         self,
         name,
-        system_message: SystemMessage,
+        system_message: str,
         bidding_template: PromptTemplate,
-        model: Union[ChatOpenAI, ChatHuggingFace],
+        # model: Any, #Union[ChatOpenAI, ChatHuggingFace],
         eleven_voice_id: str,
     ) -> None:
-        super().__init__(name, system_message, model, eleven_voice_id)
+        super().__init__(name, system_message, eleven_voice_id)
         self.bidding_template = bidding_template
 
     def bid(self) -> str:

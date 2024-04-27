@@ -5,18 +5,12 @@ import random
 import os
 import numpy as np
 from langchain.output_parsers import RegexParser
-from langchain.prompts import PromptTemplate
-from langchain.schema import (
-    HumanMessage,
-    SystemMessage,
-)
 
 from plantoid_agents.dialogue_agent import PlantoidDialogueAgent as DialogueAgent
 from dotenv import load_dotenv
 from elevenlabs import play, stream, save
 from elevenlabs.client import ElevenLabs
 
-from config.scripts.select_llm import get_llm
 from utils.util import load_config
 
 # Load environment variables from .env file
@@ -29,9 +23,6 @@ config = load_config(os.getcwd()+"/configuration.toml")
 
 # instantiate the LLM to use
 use_narrator_voice_id = config['general']['use_narrator_voice_id']
-
-#TODO: make class and have this as param
-llm = get_llm()
 
 client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
 

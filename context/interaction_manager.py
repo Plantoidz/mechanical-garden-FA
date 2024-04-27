@@ -18,7 +18,8 @@ import context.speaker_selection as speaker_selection # TODO: roll this into con
 
 class InteractionManager:
     def __init__(self, llm: Any):
-        self.llm = llm  # Language Learning Model or any contextually relevant model
+        pass
+        # self.llm = llm  # Language Learning Model or any contextually relevant model
 
     def get_selection_function(self, selection_function: str) -> any:
         """
@@ -228,7 +229,7 @@ class InteractionManager:
             character_object = plantoid_agent(
                 name=character_name,
                 system_message=system_message, 
-                model=self.llm,
+                # model=self.llm,
                 bidding_template=bidding_template,
                 eleven_voice_id=character_voice_id
             )
