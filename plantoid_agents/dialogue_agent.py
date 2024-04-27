@@ -28,6 +28,7 @@ class PlantoidDialogueAgent:
         system_message: SystemMessage,
         model: Union[ChatOpenAI, ChatHuggingFace],
         eleven_voice_id: str,
+        channel_id: str,
     ) -> None:
         self.name = name
         self.system_message = system_message
@@ -42,6 +43,11 @@ class PlantoidDialogueAgent:
         self.speak_module = Speak()
         self.listen_module = Listen()
 
+        self.channel_id = channel_id
+        print("CHANNEL ID TYPE = ", type(self.channel_id))
+        print("VOICE ID TYPE = ", type(self.eleven_voice_id))
+
+
         #TODO: do not hardcode!
         self.use_model_type = "litellm"
         self.use_streaming = True
@@ -49,6 +55,10 @@ class PlantoidDialogueAgent:
     def get_voice_id(self) -> str:
 
         return self.eleven_voice_id
+    
+    def get_channel_id(self) -> int:
+        
+        return self.channel_id
 
     def reset(self):
         self.message_history = ["Here is the conversation so far."]
@@ -130,6 +140,7 @@ class PlantoidDialogueAgent:
         self.speak_module.speak(
             message,
             self.get_voice_id(),
+            self.get_channel_id(),
             callback=None, #self.speak_module.stop_background_music,
         )
     

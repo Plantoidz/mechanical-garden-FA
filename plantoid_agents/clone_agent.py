@@ -20,8 +20,9 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
         bidding_template: PromptTemplate,
         model: Union[ChatOpenAI, ChatHuggingFace],
         eleven_voice_id: str,
+        channel_id: str,
     ) -> None:
-        super().__init__(name, system_message, model, eleven_voice_id)
+        super().__init__(name, system_message, model, eleven_voice_id, channel_id)
         self.bidding_template = bidding_template
         self.clone_voice = False
         self.create_clone = False
