@@ -33,7 +33,6 @@ class CharacterConfigurator:
             print("Invalid choice!")
             return self.select_character()
         
-
     def select_channel_id(self, i):
         index = input(f"Enter the channel ID for the character (default is {i}): ")
         if(not index): index = i

@@ -54,7 +54,7 @@ class PlantoidConfession:
             self.reset_speaker_idx()
 
         # human is selected
-        if speaker.name == "Human":
+        if speaker.is_human == True:
 
             print('Human Selected')
 

@@ -5,14 +5,15 @@ from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
 class PlantoidDebateAgent(PlantoidDialogueAgent):
     def __init__(
         self,
-        name,
+        name: str,
+        is_human: bool,
         system_message: str,
         bidding_template: PromptTemplate,
         # model: Any, #Union[ChatOpenAI, ChatHuggingFace],
         eleven_voice_id: str,
         channel_id: str,
     ) -> None:
-        super().__init__(name, system_message, eleven_voice_id, channel_id)
+        super().__init__(name, is_human, system_message, eleven_voice_id, channel_id)
         self.bidding_template = bidding_template
         print("Initialized: ", name, " with channel_id = ", channel_id)
 

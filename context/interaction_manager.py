@@ -12,9 +12,11 @@ from plantoid_agents.debate_agent import PlantoidDebateAgent
 from plantoid_agents.clone_agent import PlantoidCloneAgent
 
 from utils.config_util import read_character_config, read_interaction_mode_config, read_addendum_config
+from utils.util import str_to_bool
 import context.character_setup as character_setup # TODO: roll this into context config
 import context.speaker_selection as speaker_selection # TODO: roll this into context config
 
+import random
 
 class InteractionManager:
     def __init__(self):
@@ -85,6 +87,13 @@ class InteractionManager:
         if interaction_mode == 'clone':
             return PlantoidClone
         
+    def choose_stimulus(self, interaction_config: dict, interaction_mode: str):
+
+        use_stimuli = interaction_config[interaction_mode+'_modes']
+        random_key = random.choice(list(use_stimuli.keys()))
+
+        return use_stimuli[random_key]
+        
     def get_interaction_addendum(self, interaction_mode: str) -> List[str]:
         """
         Retrieves the interaction addendum based on the provided interaction mode.
@@ -94,14 +103,15 @@ class InteractionManager:
         
         if interaction_mode == 'confession':
             confession_config = read_addendum_config(interaction_mode)
-            return [confession_config['reasoning_prompt1']]
+            stimulus = self.choose_stimulus(confession_config, interaction_mode)
+            return [stimulus['reasoning_prompt1']]
         
         if interaction_mode == 'debate':
             return []
         
         if interaction_mode == 'clone':
             return []
-        
+                
     def get_interaction_description(self, interaction_mode: str):
         """
         Retrieves the interaction mode based on the provided interaction mode.
@@ -111,7 +121,8 @@ class InteractionManager:
         
         if interaction_mode == 'confession':
             confession_config = read_addendum_config(interaction_mode)
-            return confession_config['description']
+            stimulus = self.choose_stimulus(confession_config, interaction_mode)
+            return [stimulus['description']]
         
         if interaction_mode == 'debate':
             return "This is a heated debate on the topic of ETH vs BTC cryptocurrency. Let your hearts loose!"
@@ -132,18 +143,19 @@ class InteractionManager:
         use_selection_function = mode_config['selection_function']
         use_characters = character_config['characters']
 
-        print(f"Using interaction mode: {use_interaction_mode}")
-        print(f"Using agent type: {use_agent_type}")
-        print(f"Using bidding template: {use_bidding_template}")
-        print(f"Using selection function: {use_selection_function}")
-        print("Using characters:", [x["name"] for x in use_characters])
-
         interaction_mode = self.get_interaction_mode(use_interaction_mode)
         interaction_description = self.get_interaction_description(use_interaction_mode)
         interaction_addendum = self.get_interaction_addendum(use_interaction_mode)
         plantoid_agent = self.get_plantoid_agent(use_agent_type)
         selection_function = self.get_selection_function(use_selection_function)
         bidding_function = self.get_bidding_function(use_bidding_template)
+
+        print(f"Using interaction mode: {use_interaction_mode}")
+        print(f"Using interaction description (stimulus): {interaction_description}")
+        print(f"Using agent type: {use_agent_type}")
+        print(f"Using bidding template: {use_bidding_template}")
+        print(f"Using selection function: {use_selection_function}")
+        print("Using characters:", [x["name"] for x in use_characters])
 
         return {
             "interaction_mode": interaction_mode,
@@ -216,6 +228,7 @@ class InteractionManager:
             character_description = character['description']
             character_voice_id = character['eleven_voice_id']
             character_channel_id = character['default_channel']
+            character_is_human = str_to_bool(character['is_human'])
 
             system_message = self.get_system_message(
                 character,
@@ -229,6 +242,7 @@ class InteractionManager:
 
             character_object = plantoid_agent(
                 name=character_name,
+                is_human=character_is_human,
                 system_message=system_message, 
                 # model=self.llm,
                 bidding_template=bidding_template,
@@ -263,6 +277,8 @@ class InteractionManager:
 
         print('\nRunning interaction mode...')
         while n < max_iters:
+            # TODO: add a condition that picks one random interaction addednum and injects it into the conversation
+            # every X turns
             name, message = simulator.step()
             # print(f"({name}): {message}")
             n += 1

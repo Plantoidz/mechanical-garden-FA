@@ -6,14 +6,15 @@ from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
 class PlantoidCloneAgent(PlantoidDialogueAgent):
     def __init__(
         self,
-        name,
+        name: str,
+        is_human: bool,
         system_message: str,
         bidding_template: PromptTemplate,
         # model: Any, # Union[ChatOpenAI, ChatHuggingFace],
         eleven_voice_id: str,
         channel_id: str,
     ) -> None:
-        super().__init__(name, system_message, eleven_voice_id, channel_id)
+        super().__init__(name, is_human, system_message, eleven_voice_id, channel_id)
         self.bidding_template = bidding_template
         self.clone_voice = True
         self.create_clone = True

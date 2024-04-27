@@ -19,12 +19,14 @@ class PlantoidDialogueAgent:
     def __init__(
         self,
         name: str,
+        is_human: bool,
         system_message: str,
         # model: Union[ChatOpenAI, ChatHuggingFace],
         eleven_voice_id: str,
         channel_id: str,
     ) -> None:
         self.name = name
+        self.is_human = is_human
         self.system_message = system_message
         # self.model = model
         self.prefix = f"{self.name}: "

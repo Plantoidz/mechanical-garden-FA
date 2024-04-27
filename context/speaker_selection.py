@@ -4,6 +4,7 @@ import tenacity
 import random
 import os
 import numpy as np
+import time
 from langchain.output_parsers import RegexParser
 
 from plantoid_agents.dialogue_agent import PlantoidDialogueAgent as DialogueAgent
@@ -165,8 +166,22 @@ def check_last_speaker_is_human(agent: DialogueAgent):
     last_item = agent.message_history[-1]
     # print("latest message history:", last_item)
 
-    if last_item.split(":")[0] == "Human":
+    if "Human" in last_item.split(":")[0]:
         print("Last speaker was human")
+
+        return True
+    
+    return False
+
+def check_is_last_speaker(agent: DialogueAgent):
+
+    last_item = agent.message_history[-1]
+    # print("latest message history:", last_item)
+
+    last_message_speaker = last_item.split(":")[0]
+
+    if agent.name == last_message_speaker:
+        print("Last speaker was the agent itself")
 
         return True
     
@@ -184,12 +199,13 @@ def select_next_speaker_with_human_clone(
     # get human and agent preferences
     for agent in agents:
 
-        if agent.name == "Human":
+        if agent.is_human == True:
 
             print("checking for human participation...")
-            last_speaker_is_human = check_last_speaker_is_human(agent)
+            # last_speaker_is_human = check_last_speaker_is_human(agent)
+            is_last_speaker = check_is_last_speaker(agent)
 
-            if last_speaker_is_human:
+            if is_last_speaker:
 
                 will_participate = False
 
@@ -233,7 +249,7 @@ def select_next_speaker_with_human_clone(
 
     return idx
 
-def select_next_speaker_with_human_conversation(
+def select_next_speaker_with_human_conversation_OLD(
     step: int,
     agents: List[DialogueAgent],
     last_speaker_idx: int,
@@ -245,12 +261,13 @@ def select_next_speaker_with_human_conversation(
     # get human and agent preferences
     for agent in agents:
 
-        if agent.name == "Human":
+        if agent.is_human == True:
 
             print("checking for human participation...")
-            last_speaker_is_human = check_last_speaker_is_human(agent)
+            # last_speaker_is_human = check_last_speaker_is_human(agent)
+            is_last_speaker = check_is_last_speaker(agent)
 
-            if last_speaker_is_human:
+            if is_last_speaker:
 
                 will_participate = False
 
@@ -294,6 +311,54 @@ def select_next_speaker_with_human_conversation(
 
     return idx
 
+def select_next_speaker_with_human_conversation(
+    step: int,
+    agents: List[DialogueAgent],
+    last_speaker_idx: int,
+) -> int:
+    
+    start_time = time.time()
+
+    # initialize bids
+    bids = []
+
+    # get human and agent preferences
+    for agent in agents:
+
+        is_last_speaker = check_is_last_speaker(agent)
+
+        if is_last_speaker:
+
+            bid = 0
+
+        else:
+
+            bid = random.randint(0, 100)
+        
+        # append bid to bids
+        bids.append(bid)
+
+    # randomly select among multiple agents with the same bid
+    max_value = np.max(bids)
+    max_indices = np.where(bids == max_value)[0]
+    idx = np.random.choice(max_indices)
+
+    print("Bids:")
+    for i, (bid, agent) in enumerate(zip(bids, agents)):
+
+        print(f"\t{agent.name} bid: {bid}")
+
+        if i == idx:
+            selected_name = agent.name
+
+    print(f"Selected: {selected_name}")
+
+    end_time = time.time()
+
+    print(f"Time taken to select speaker: {end_time - start_time}")
+
+    return idx
+
 def select_next_speaker_with_human_confession(
     step: int,
     agents: List[DialogueAgent],
@@ -314,12 +379,13 @@ def select_next_speaker_with_human_debate(
     # get human and agent preferences
     for agent in agents:
 
-        if agent.name == "Human":
+        if agent.is_human == True:
 
             print("checking for human participation...")
-            last_speaker_is_human = check_last_speaker_is_human(agent)
+            # last_speaker_is_human = check_last_speaker_is_human(agent)
+            is_last_speaker = check_is_last_speaker(agent)
 
-            if last_speaker_is_human:
+            if is_last_speaker:
 
                 will_participate = False
 

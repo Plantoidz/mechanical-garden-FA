@@ -10,8 +10,16 @@ def run_program():
     # instantiate the InteractionManager
     interaction_manager = InteractionManager()
 
-    # start the interaction
-    interaction_manager.run_interaction()
+    try:
+
+        while True:
+
+            # start the interaction
+            interaction_manager.run_interaction()
+
+    except KeyboardInterrupt:
+        print("Exiting interaction.")
+        pass
 
 def config_mode():
     os.system("$(which python) config/scripts/configure_modes.py")
