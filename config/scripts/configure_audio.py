@@ -1,5 +1,21 @@
 import subprocess
+import pyaudio
 
+def list_audio_devices():
+    p = pyaudio.PyAudio()
+    num_devices = p.get_device_count()
+    print("Number of devices:", num_devices)
+    print("Available devices:\n")
+    
+    for i in range(num_devices):
+        dev = p.get_device_info_by_index(i)
+        print(f"Device index: {dev['index']}")
+        print(f"Device name: {dev['name']}")
+        print(f"Host API: {p.get_host_api_info_by_index(dev['hostApi'])['name']}")
+        print(f"Max input channels: {dev['maxInputChannels']}")
+        print(f"Max output channels: {dev['maxOutputChannels']}")
+        print(f"Default sample rate: {dev['defaultSampleRate']}\n")
+        
 def list_audio_devices():
     # Get a list of output and input devices
     result = subprocess.run(["pactl", "list", "short", "sinks"], capture_output=True, text=True)

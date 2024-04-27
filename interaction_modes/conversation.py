@@ -48,12 +48,12 @@ class PlantoidConversation:
         speaker = self.agents[speaker_idx]
 
         # human is selected
-        if speaker.name == "Human":
+        if speaker.is_human == True:
 
             print('Human Selected')
 
             # 2. next (human) speaker sends message
-            message = speaker.listen_for_speech()
+            message = speaker.listen_for_speech(self._step)
 
         else:
 
