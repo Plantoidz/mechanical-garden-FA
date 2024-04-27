@@ -12,7 +12,7 @@ class PlantoidDebateAgent(PlantoidDialogueAgent):
         eleven_voice_id: str,
         channel_id: str,
     ) -> None:
-        super().__init__(name, system_message, eleven_voice_id)
+        super().__init__(name, system_message, eleven_voice_id, channel_id)
         self.bidding_template = bidding_template
         print("Initialized: ", name, " with channel_id = ", channel_id)
 

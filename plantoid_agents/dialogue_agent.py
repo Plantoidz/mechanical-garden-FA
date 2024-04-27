@@ -36,8 +36,8 @@ class PlantoidDialogueAgent:
         self.think_module = Think()
         self.speak_module = Speak()
         self.listen_module = Listen()
-
         self.channel_id = channel_id
+        
         print("CHANNEL ID TYPE = ", type(self.channel_id))
         print("VOICE ID TYPE = ", type(self.eleven_voice_id))
 

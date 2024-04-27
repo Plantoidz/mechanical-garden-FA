@@ -13,7 +13,7 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
         eleven_voice_id: str,
         channel_id: str,
     ) -> None:
-        super().__init__(name, system_message, eleven_voice_id)
+        super().__init__(name, system_message, eleven_voice_id, channel_id)
         self.bidding_template = bidding_template
         self.clone_voice = True
         self.create_clone = True
@@ -35,12 +35,15 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
         """
         Speaks the message using the agent's voice
         """
-
+        print("CREATE CLONE: ", self.create_clone)
+        print("VOICE ID: ", self.get_voice_id())
+        
         self.speak_module.stop_background_music()
 
         self.speak_module.speak(
             message,
             self.get_voice_id(),
+            self.get_channel_id(),
             voice_set_callback=self.set_create_clone,
             clone_voice=self.clone_voice,
             create_clone=self.create_clone,
@@ -48,8 +51,7 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
 
         # if self.create_clone == False:
         #     self.timeout_override_seconds = 5
-        # print("CREATE CLONE: ", self.create_clone)
-        # print("VOICE ID: ", self.get_voice_id())
+
 
     def set_create_clone(self, voice_id: str) -> None:
         print("CALL SET CREATE CLONE")
