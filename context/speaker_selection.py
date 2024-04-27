@@ -80,7 +80,7 @@ def generate_character_bidding_template_conversation(character_header):
 
     return bidding_template
 
-def generate_character_bidding_template_kiosk(character_header):
+def generate_character_bidding_template_confession(character_header):
 
     bid_parser = get_bid_parser()
 
@@ -303,7 +303,7 @@ def select_next_speaker_with_human_conversation(
 
     return idx
 
-def select_next_speaker_with_human_kiosk(
+def select_next_speaker_with_human_confession(
     step: int,
     agents: List[DialogueAgent],
     last_speaker_idx: int,

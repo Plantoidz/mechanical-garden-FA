@@ -1,9 +1,9 @@
 from typing import Callable, List
 from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
 
-class PlantoidKiosk:
+class PlantoidConfession:
 
-    mode_name = 'kiosk'
+    mode_name = 'confession'
 
     def __init__(
         self,

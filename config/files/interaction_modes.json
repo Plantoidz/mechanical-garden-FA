@@ -15,10 +15,10 @@
             "description": "Multi-participant debate with a moderator, optionally including humans."
         },
         "confessional": {
-            "current_mode": "kiosk",
+            "current_mode": "confession",
             "agent_type": "debate",
-            "selection_function": "kiosk",
-            "bidding_template": "kiosk",
+            "selection_function": "confession",
+            "bidding_template": "confession",
             "description": "Robot(s) take turns asking pre-scripted questions and responding (requires additional setup)",
             "reasoning_prompt1": "I'm going to tell you something that I am afraid people will find out about me, when I am at a party or festival. Please offer me some insights that can help transform my fears into ways I can face and overcome my fears",
             "reasoning_prompt1_msg": "Overcome your fears in this way:",

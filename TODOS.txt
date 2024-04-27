@@ -1,5 +1,5 @@
-1. Create "kiosk" mode where a prompt is given to human and all plantoids address the question
-1a. Figure out if the prompt clipping mode for kiosk should re-surface the human's answer, or use a generic min(5, n_plantoids)
+1. Create "confession" mode where a prompt is given to human and all plantoids address the question
+1a. Figure out if the prompt clipping mode for confession should re-surface the human's answer, or use a generic min(5, n_plantoids)
 2. Within event classes, create a function which can disambiguate arduino communication modes (USB, serial, etc... for Led lighting) ie: communicate_with_arduino()
 3. Integrate Ben output on streaming, litellm etc
 

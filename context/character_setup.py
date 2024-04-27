@@ -164,7 +164,7 @@ def generate_character_header(
             Always generate an introspective sentence based on the human's input context.
             Never forget to keep your response to {word_limit} words!
         """
-    if interaction_mode == "kiosk" and character_name not in ["Human", "Clone"]:
+    if interaction_mode == "confession" and character_name not in ["Human", "Clone"]:
 
         response = f"""
             This is your character description, in angle brackets: << {character_description} >>

@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Type
 
 from interaction_modes.conversation import PlantoidConversation
-from interaction_modes.kiosk import PlantoidKiosk
+from interaction_modes.confession import PlantoidConfession
 from interaction_modes.debate import PlantoidDebate
 from interaction_modes.clone import PlantoidClone
 
@@ -27,8 +27,8 @@ class InteractionManager:
         if selection_function == 'conversation':
             return speaker_selection.select_next_speaker_with_human_conversation
         
-        if selection_function == 'kiosk':
-            return speaker_selection.select_next_speaker_with_human_kiosk
+        if selection_function == 'confession':
+            return speaker_selection.select_next_speaker_with_human_confession
         
         if selection_function == 'debate':
             return speaker_selection.select_next_speaker_with_human_debate
@@ -43,8 +43,8 @@ class InteractionManager:
         if selection_function == 'conversation':
             return speaker_selection.generate_character_bidding_template_conversation
         
-        if selection_function == 'kiosk':
-            return speaker_selection.generate_character_bidding_template_kiosk
+        if selection_function == 'confession':
+            return speaker_selection.generate_character_bidding_template_confession
         
         if selection_function == 'debate':
             return speaker_selection.generate_character_bidding_template_debate
@@ -59,7 +59,7 @@ class InteractionManager:
         if agent_type == 'conversation':
             return PlantoidDialogueAgent
         
-        if agent_type == 'kiosk':
+        if agent_type == 'confession':
             return PlantoidDebateAgent
         
         if agent_type == 'debate':
@@ -75,8 +75,8 @@ class InteractionManager:
         if interaction_mode == 'conversation':
             return PlantoidConversation
         
-        if interaction_mode == 'kiosk':
-            return PlantoidKiosk
+        if interaction_mode == 'confession':
+            return PlantoidConfession
         
         if interaction_mode == 'debate':
             return PlantoidDebate
@@ -91,9 +91,9 @@ class InteractionManager:
         if interaction_mode == 'conversation':
             return []
         
-        if interaction_mode == 'kiosk':
-            kiosk_config = read_addendum_config(interaction_mode)
-            return [kiosk_config['reasoning_prompt1']]
+        if interaction_mode == 'confession':
+            confession_config = read_addendum_config(interaction_mode)
+            return [confession_config['reasoning_prompt1']]
         
         if interaction_mode == 'debate':
             return []
@@ -106,11 +106,11 @@ class InteractionManager:
         Retrieves the interaction mode based on the provided interaction mode.
         """
         if interaction_mode == 'conversation':
-            return "Let's have a discussion. Should people live in castles in the French countryside?"
+            return "Let's have a debate, entirely in the French language. Do large language models exhibit any degree of sentience, or are they simply sophisticated information processing systems? Can sentience be measured on a spectrum, and if so, where would large language models fall?"
         
-        if interaction_mode == 'kiosk':
-            kiosk_config = read_addendum_config(interaction_mode)
-            return kiosk_config['description']
+        if interaction_mode == 'confession':
+            confession_config = read_addendum_config(interaction_mode)
+            return confession_config['description']
         
         if interaction_mode == 'debate':
             return "This is a heated debate on the topic of ETH vs BTC cryptocurrency. Let your hearts loose!"

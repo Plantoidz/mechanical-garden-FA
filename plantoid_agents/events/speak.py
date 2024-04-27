@@ -114,7 +114,7 @@ class Speak:
         # generate audio stream   
         audio_stream = client.generate(
             text=self.stream_text(response),
-            model="eleven_turbo_v2",
+            model="eleven_multilingual_v2",
             voice=voice_id,
             stream=True
         )
@@ -125,6 +125,8 @@ class Speak:
                 
         # stream audio
         stream(audio_stream)
+        # todo: figure out how to pass the channel_id all the way through
+        # magicstream(audio_stream, "1")
 
         # # Check if the response is a generator
         # if isinstance(response, types.GeneratorType):
