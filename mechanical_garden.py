@@ -96,6 +96,9 @@ def config_characters():
 def config_services():
     os.system("python config/scripts/configure_services.py")
 
+def config_network():
+    os.system("python config/scripts/configure_network.py")
+
 def config_audio():
     os.system("python config/scripts/configure_audio.py")
 
@@ -109,9 +112,10 @@ def show_menu():
     print("3. Config Mode")
     print("4. Config Characters")
     print("5. Config Services")
-    print("6. Config Audio (Linux only)")
-    print("7. Test Audio")
-    print("8. Exit")
+    print("6. Config Network Devices")
+    print("7. Config Audio (Linux only)")
+    print("8. Test Audio")
+    print("9. Exit")
 
 if __name__ == "__main__":
     while True:
@@ -129,10 +133,12 @@ if __name__ == "__main__":
         elif choice == '5':
             config_services()
         elif choice == '6':
-            config_audio()
+            config_network()
         elif choice == '7':
-            test_audio()
+            config_audio()
         elif choice == '8':
+            test_audio()
+        elif choice == '9':
             print("Exiting program.")
             break
         else:
