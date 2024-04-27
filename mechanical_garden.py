@@ -99,6 +99,9 @@ def config_services():
 def config_network():
     os.system("python3 config/scripts/configure_network.py")
 
+def add_human_participant():
+    os.system("python3 config/scripts/add_human_participant.py")
+
 def config_audio():
     os.system("python3 config/scripts/configure_audio.py")
 
@@ -112,7 +115,7 @@ def show_menu():
     print("3. Config Mode")
     print("4. Config Characters")
     print("5. Config Services")
-    print("6. Config Network Devices")
+    print("6. Add Human Participant")
     print("7. Config Audio (Linux only)")
     print("8. Test Audio")
     print("9. Exit")
@@ -133,7 +136,7 @@ if __name__ == "__main__":
         elif choice == '5':
             config_services()
         elif choice == '6':
-            config_network()
+            add_human_participant()
         elif choice == '7':
             config_audio()
         elif choice == '8':

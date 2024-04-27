@@ -38,3 +38,5 @@ litellm
 ollama
 # deepgram
 mpv
+serial
+keyboard
