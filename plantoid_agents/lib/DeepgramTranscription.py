@@ -1,4 +1,4 @@
-from deepgram import DeepgramClient, LiveTranscriptionEvents, LiveOptions
+from deepgram import DeepgramClient, Microphone, LiveTranscriptionEvents, LiveOptions
 from dotenv import load_dotenv
 import logging, verboselogs
 import time
@@ -8,6 +8,7 @@ import os
 import sys
 
 from plantoid_agents.lib.microphone import ModifiedMicrophone
+
 
 @contextmanager
 def ignoreStderr():
@@ -24,7 +25,7 @@ def ignoreStderr():
         os.close(old_stderr)
 
 class DeepgramTranscription:
-    def __init__(self, sample_rate: int = 48000, device_index: int = 0, timeout: int = 5):
+    def __init__(self, sample_rate: int = 16000, device_index: int = None, timeout: int = 5):
         self.deepgram = DeepgramClient()
         self.is_finals = []
         self.utterance = ""
@@ -102,7 +103,8 @@ class DeepgramTranscription:
                 smart_format=True,
                 encoding="linear16",
                 channels=1,
-                sample_rate=self.sample_rate,
+                #why does this sample_rate need to be hard coded?
+                sample_rate=16000,
                 interim_results=True,
                 utterance_end_ms="1000",
                 vad_events=True,
@@ -113,10 +115,10 @@ class DeepgramTranscription:
                 print("Failed to connect to Deepgram")
                 return
 
-            microphone = ModifiedMicrophone(
+            microphone = Microphone(
                 connection.send,
-                input_device_index=self.device_index,
-                rate=self.sample_rate,
+                # input_device_index=self.device_index,
+                # rate=self.sample_rate,
             )
 
             microphone.start()
@@ -131,7 +133,9 @@ class DeepgramTranscription:
 
             audio_file_path = os.getcwd() + "/media/user_audio/temp_reco_dg.wav"
 
-            microphone.finish(audio_file_path=audio_file_path)
+            # microphone.finish(audio_file_path=audio_file_path)
+            # this won't be necessary if deepgram API can return an mp3
+            microphone.finish()
             connection.finish()
 
             print("Finished")

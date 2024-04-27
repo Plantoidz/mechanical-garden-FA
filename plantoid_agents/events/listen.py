@@ -13,7 +13,7 @@ import time
 import requests
 import numpy as np
 import whisper
-import torch
+# import torch
 # import pygame
 
 from dotenv import load_dotenv
@@ -407,7 +407,6 @@ class Listen:
         return utterance
     
     def listen(self, timeout_override: str = None) -> Any:
-
         # return self.recognize_speech_whisper_manual(timeout_override)
         return self.recognize_speech_deepgram()
 
