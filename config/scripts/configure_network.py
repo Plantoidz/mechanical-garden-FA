@@ -36,7 +36,7 @@ def update_devices(filename='mac_addresses.json'):
         # if mac in updated_data:
         #     updated_data[mac]['last_known_IP'] = ip
         # else:
-            updated_data[mac] = {"MAC_address": mac, "last_known_IP": ip, "channel_id": None}
+            updated_data[mac] = {"MAC_address": mac, "last_known_IP": ip, "channel_id": 0}
 
     save_to_json(list(updated_data.values()), filename)
     print("\nDevices have been updated.")

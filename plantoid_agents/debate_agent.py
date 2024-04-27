@@ -10,9 +10,11 @@ class PlantoidDebateAgent(PlantoidDialogueAgent):
         bidding_template: PromptTemplate,
         # model: Any, #Union[ChatOpenAI, ChatHuggingFace],
         eleven_voice_id: str,
+        channel_id: str,
     ) -> None:
         super().__init__(name, system_message, eleven_voice_id)
         self.bidding_template = bidding_template
+        print("Initialized: ", name, " with channel_id = ", channel_id)
 
     def bid(self) -> str:
         """

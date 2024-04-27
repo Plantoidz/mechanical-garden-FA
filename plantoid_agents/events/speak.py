@@ -11,6 +11,7 @@ import requests
 import pygame.mixer as mixer
 import types
 
+from utils.experiments.MultichannelRouter import Iterator, magicstream
 
 from dotenv import load_dotenv
 from elevenlabs.client import ElevenLabs, AsyncElevenLabs
@@ -108,6 +109,7 @@ class Speak:
         self,
         response: str,
         voice_id: str,
+        channel_id: str,
         callback: Any = None
     ) -> None:
 
@@ -124,9 +126,10 @@ class Speak:
             callback()
                 
         # stream audio
-        stream(audio_stream)
+        # stream(audio_stream)
         # todo: figure out how to pass the channel_id all the way through
-        # magicstream(audio_stream, "1")
+        print("MAGIC STREAM WITH CHANNEL_ID == ", channel_id)
+        magicstream(audio_stream, channel_id)
 
         # # Check if the response is a generator
         # if isinstance(response, types.GeneratorType):
@@ -225,6 +228,7 @@ class Speak:
         self,
         response: str,
         voice_id: str,
+        channel_id: str,
         callback: Any = None,
         voice_set_callback: Any = None,
         clone_voice: bool = False,
@@ -243,6 +247,7 @@ class Speak:
             self.stream_audio_response(
                 response,
                 voice,
+                channel_id,
                 callback=callback,
             )
 
@@ -250,5 +255,6 @@ class Speak:
             self.stream_audio_response(
                 response,
                 voice_id,
+                channel_id,
                 callback=callback,
             )
