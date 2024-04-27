@@ -7,9 +7,9 @@ import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
-import utils.serial_utils
+#import utils.serial_utils
 import serial.tools.list_ports
-from utils.serial_utils import send_to_arduino
+# from utils.serial_utils import send_to_arduino
 
 class CharacterConfigurator:
     def __init__(self, source_file, destination_file):
