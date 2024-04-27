@@ -4,10 +4,7 @@ import subprocess
 import re
 import serial
 import sys
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
-
-#import utils.serial_utils
+# import utils.serial_utils
 import serial.tools.list_ports
 # from utils.serial_utils import send_to_arduino
 
@@ -36,11 +33,11 @@ class CharacterConfigurator:
     def select_channel_id(self, i):
         index = input(f"Enter the channel ID for the character (default is {i}): ")
         if(not index): index = i
-        if 0 <= index < 8:
+        if 0 <= index < 1000:
             return index
         else:
-            print("Invalid choice, must be between 0 and 7") ## TODO increase to allow for more channels!
-            return index
+            print("Invalid choice, must be between 0 and 1000") ## TODO increase to allow for more channels!
+        return index
 
 
     def select_Wifi(self):
@@ -103,8 +100,10 @@ class CharacterConfigurator:
             choice = self.select_character()
 
             selected_characters_map[choice['name']] = i  # Mapping name to the default channel
+            # channel_id = int(self.select_channel_id(i))
 
             channel_id = self.select_channel_id(i)
+            
             choice['default_channel'] = channel_id
 
             comm_io = self.select_comm_io()

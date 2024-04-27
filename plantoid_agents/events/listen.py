@@ -24,7 +24,7 @@ from contextlib import contextmanager
 from collections import deque
 
 # from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
-from plantoid_agents.lib.DeepgramTranscription_linux import DeepgramTranscription
+from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
 
 # from whisper_mic.whisper_mic import WhisperMic
 
