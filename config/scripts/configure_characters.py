@@ -1,5 +1,15 @@
 import json
 import os
+import subprocess
+import re
+import serial
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+
+import utils.serial_utils
+import serial.tools.list_ports
+from utils.serial_utils import send_to_arduino
 
 class CharacterConfigurator:
     def __init__(self, source_file, destination_file):
@@ -22,6 +32,62 @@ class CharacterConfigurator:
         else:
             print("Invalid choice!")
             return self.select_character()
+        
+
+    def select_channel_id(self, i):
+        index = input(f"Enter the channel ID for the character (default is {i}): ")
+        if(not index): index = i
+        if 0 <= index < 8:
+            return index
+        else:
+            print("Invalid choice, must be between 0 and 7") ## TODO increase to allow for more channels!
+            return index
+
+
+    def select_Wifi(self):
+
+        result = subprocess.run(['arp', '-a'], capture_output=True, text=True)
+        print(result.stderr)
+        print(result.stdout)
+
+        pattern = re.compile(r"\((\d+\.\d+\.\d+\.\d+)\)\s+at\s+([\da-fA-F:]+)")
+        entries = pattern.findall(result.stdout)
+
+        for ip, mac in entries:
+            print("MAC_address: ", mac, "last_known_IP: ", ip)
+
+        index = str(input("Enter the IP address of the character: "))
+        return index
+    
+
+    def select_Serial(self):
+
+        ports = serial.tools.list_ports.comports()
+        serial_ports = []
+        for port, desc, hwid in sorted(ports):
+                    print("{}: {} [{}]".format(port, desc, hwid))
+                    #if("USB" in desc): serial_ports.append(port)
+                    serial_ports.append(port)
+
+        print(serial_ports)
+        index = str(input("Enter the Serial port of the character: "))
+        return index
+
+    def select_addr(self, io):
+        if(io == "wifi"):
+            r = self.select_Wifi()
+            return r
+        
+        elif (io == "serial"):
+            r = self.select_Serial()
+            return r
+        
+        
+    def select_comm_io(self):
+
+        return str(input("Choose the I/O communication type (serial or wifi): "))
+      
+
 
     def configure_characters(self):
         num_of_characters = int(input("How many characters do you want to select? "))
@@ -39,9 +105,23 @@ class CharacterConfigurator:
             selected_characters.append(choice)
             selected_characters_map[choice['name']] = i  # Mapping name to the default channel
 
-        for character in selected_characters:
-            if character['name'] in selected_characters_map:
-                character['default_channel'] = selected_characters_map[character['name']]
+            channel_id = self.select_channel_id(i)
+            choice['default_channel'] = choice
+
+            comm_io = self.select_comm_io()
+            choice['i/o'] = comm_io
+
+            addr = self.select_addr(comm_io)
+            choice['addr'] = addr
+
+
+
+
+
+       
+        # for character in selected_characters:
+        #     if character['name'] in selected_characters_map:
+        #         character['default_channel'] = selected_characters_map[character['name']]
 
         config = {"characters": selected_characters}
 

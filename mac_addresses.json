@@ -1,27 +1,17 @@
 [
     {
-        "MAC_address": "ff:ff:ff:ff:ff:ff",
-        "last_known_IP": "192.168.1.255",
-        "channel_id": 0
-    },
-    {
-        "MAC_address": "80:69:1a:84:7f:d7",
-        "last_known_IP": "192.168.1.1",
-        "channel_id": 0
-    },
-    {
         "MAC_address": "0:e0:4c:68:7:ba",
         "last_known_IP": "192.168.1.5",
         "channel_id": 0
     },
     {
-        "MAC_address": "8:3a:8d:e3:a7:a8",
-        "last_known_IP": "192.168.1.101",
-        "channel_id": 2
+        "MAC_address": "ff:ff:ff:ff:ff:ff",
+        "last_known_IP": "192.168.1.255",
+        "channel_id": 0
     },
     {
-        "MAC_address": "8:3a:8d:cf:9b:8",
-        "last_known_IP": "192.168.1.102",
-        "channel_id": 1
+        "MAC_address": "1:0:5e:0:0:fb",
+        "last_known_IP": "224.0.0.251",
+        "channel_id": 0
     }
 ]
