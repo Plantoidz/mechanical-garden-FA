@@ -56,7 +56,7 @@ class CharacterConfigurator:
         for ip, mac in entries:
             print("MAC_address: ", mac, "last_known_IP: ", ip)
 
-        index = str(input("Enter the IP address of the character: "))
+        index = str(input("Enter the IP address of the character (press enter to ignore): "))
         return index
     
 
@@ -102,21 +102,19 @@ class CharacterConfigurator:
             print(f"\nSelect character {i + 1}:")
             self.display_menu()
             choice = self.select_character()
-            selected_characters.append(choice)
+
             selected_characters_map[choice['name']] = i  # Mapping name to the default channel
 
             channel_id = self.select_channel_id(i)
-            choice['default_channel'] = choice
+            choice['default_channel'] = channel_id
 
             comm_io = self.select_comm_io()
-            choice['i/o'] = comm_io
+            choice['io'] = comm_io
 
             addr = self.select_addr(comm_io)
             choice['addr'] = addr
 
-
-
-
+            selected_characters.append(choice)
 
        
         # for character in selected_characters:
