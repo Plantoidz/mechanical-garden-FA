@@ -1,0 +1,26 @@
+[
+    {
+        "stimuli": "stimuli/open_ended.json",
+        "description": "An open-ended invitation to discuss"
+    },
+    {
+        "stimuli": "stimuli/our_relationship_with_AI.json",
+        "description": "Our Relationship with AI: Exploring the Future of Human-Machine Interaction"
+    },
+    {
+        "stimuli": "stimuli/consciousness.json",
+        "description": "Exploring the Enigma of Consciousness: Human, Natural, and Alternative Intelligences"
+    },
+    {
+        "stimuli": "stimuli/takeover.json",
+        "description": "The Singularity Salon: Humans & Synthetics Face the Future"
+    },
+    {
+        "stimuli": "stimuli/partying.json",
+        "description": "Synthetic Soirées and Human Happenings"
+    },
+    {
+        "stimuli": "stimuli/sentience.json",
+        "description": "Is AI Alive? Exploring the Boundaries of Sentience"
+    }
+]
