@@ -39,7 +39,6 @@ class CharacterConfigurator:
             print("Invalid choice, must be between 0 and 1000") ## TODO increase to allow for more channels!
         return index
 
-
     def select_Wifi(self):
 
         result = subprocess.run(['arp', '-a'], capture_output=True, text=True)

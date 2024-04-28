@@ -181,8 +181,6 @@ def check_is_last_speaker(agent: DialogueAgent):
     last_message_speaker = last_item.split(":")[0]
 
     if agent.name == last_message_speaker:
-        print("\nSkipping — I just spoke")
-
         return True
     
     return False
@@ -245,7 +243,7 @@ def select_next_speaker_with_human_clone(
         if i == idx:
             selected_name = agent.name
 
-    print(f"\nSelected: {selected_name}")
+    # print(f"\nSelected: {selected_name}")
 
     return idx
 
