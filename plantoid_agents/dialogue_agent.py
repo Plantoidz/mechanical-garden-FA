@@ -68,7 +68,16 @@ class PlantoidDialogueAgent:
 
 
     def tunnel_wifi(self, val):
+        if(not self.tunnel):
+           if(self.io and self.addr):
+            try:
+                    self.tunnel = Telnet(self.addr, 23, timeout=3)
+                    self.callback = self.tunnel_wifi
+            except Exception as err:
+                    print("Failed to connect: ", err)
+
         if(self.tunnel): self.tunnel.write(val.encode('ascii') + b"\n")
+        
 
     def tunnel_serial(self, val):
         return ## TODO, activate the serial communication

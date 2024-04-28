@@ -4,6 +4,8 @@ import types
 import openai
 import os
 
+import traceback
+
 from dotenv import load_dotenv
 
 from config.scripts.default_prompt_config import default_chat_completion_config, default_completion_config
@@ -146,6 +148,7 @@ class Think:
     
     def think(self, agent, system_message: SystemMessage, use_content: str, use_model: str, use_streaming: bool) -> str:
         
+     #   traceback.print_stack()
         print("calling callback for ", agent.name, " ---> ", agent.callback)
         if(agent.callback): agent.callback("<thinking>")
 
