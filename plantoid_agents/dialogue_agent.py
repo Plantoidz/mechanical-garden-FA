@@ -1,10 +1,4 @@
 from typing import Callable, List, Union
-from langchain_openai import ChatOpenAI
-from langchain_community.chat_models.huggingface import ChatHuggingFace
-from langchain.schema import (
-    HumanMessage,
-    SystemMessage,
-)
 
 from telnetlib import Telnet
 
@@ -27,27 +21,29 @@ class PlantoidDialogueAgent:
     def __init__(
         self,
         name: str,
-        system_message: SystemMessage,
-        model: Union[ChatOpenAI, ChatHuggingFace],
+        is_human: bool,
+        system_message: str,
+        # model: Union[ChatOpenAI, ChatHuggingFace],
         eleven_voice_id: str,
         channel_id: str,
         io: str,
         addr: str,
     ) -> None:
         self.name = name
+        self.is_human = is_human
         self.system_message = system_message
-        self.model = model
+        # self.model = model
         self.prefix = f"{self.name}: "
         self.reset()
 
         ### CUSTOM ATTRIBUTES ###
         # eleven voice id
         self.eleven_voice_id = eleven_voice_id
-        self.think_module = Think(model)
+        self.think_module = Think()
         self.speak_module = Speak()
         self.listen_module = Listen()
-
         self.channel_id = channel_id
+        
         print("CHANNEL ID TYPE = ", type(self.channel_id))
         print("VOICE ID TYPE = ", type(self.eleven_voice_id))
 
@@ -113,10 +109,10 @@ class PlantoidDialogueAgent:
             return False
 
 
-    def listen_for_speech(self, agents) -> str:
+    def listen_for_speech(self, agents, step: int = 0) -> str:
 
         self.listen_module.play_speech_indicator()
-        user_message = self.listen_module.listen(agents)
+        user_message = self.listen_module.listen(agents, step=step)
 
         print("Human said: " + user_message)
 
@@ -144,7 +140,7 @@ class PlantoidDialogueAgent:
         # print("MESSAGE HISTORY:", self.message_history)
         print("\n\t" + BLUE + "AGENT:" + ENDC, self.name)
         # todo: just print raw system message
-        print("\n\t" + BLUE + "SYSTEM MESSAGE:" + ENDC, "{self.system_message}")
+        # print("\n\t" + BLUE + "SYSTEM MESSAGE:" + ENDC, self.system_message)
         print("\n\t" + BLUE + "MESSAGE HISTORY:" + ENDC, self.message_history)
 
         message = self.think_module.think(

@@ -12,7 +12,7 @@ from config.scripts.default_prompt_config import default_chat_completion_config,
 from utils.util import load_config, str_to_bool
 
 
-from langchain_openai import ChatOpenAI
+from langchain_community.chat_models import ChatLiteLLM, ChatOpenAI
 from langchain_community.chat_models.huggingface import ChatHuggingFace
 from langchain.output_parsers import RegexParser
 from langchain.prompts import PromptTemplate
@@ -21,6 +21,8 @@ from langchain.schema import (
     HumanMessage,
     SystemMessage,
 )
+
+from config.scripts.select_llm import get_llm
 
 from simpleaichat import AsyncAIChat, AIChat
 from litellm import completion, acompletion
@@ -40,14 +42,16 @@ class Think:
 
     def __init__(
         self,
-        model: Union[ChatOpenAI, ChatHuggingFace],
+        # model: Union[ChatOpenAI, ChatHuggingFace],
         # system_message: SystemMessage,
     ):
         """
         Initializes a new instance of the Think class.
         """
-        self.model = model
         self.llm_config = "gpt-4-turbo" # "ollama_chat/llama3"
+        self.langchain_model = get_llm()
+        self.ai_chat_model = AIChat
+        self.litellm_model = completion
 
     def stream_text(self, response_stream):
 
@@ -81,12 +85,12 @@ class Think:
             recent_message=message_history[-1],
         )
 
-        return SystemMessage(content=bid_system_message)
+        return bid_system_message
     
-    def think_litellm(self, system_message: SystemMessage, use_content: str, streaming):
+    def think_litellm(self, system_message: str, use_content: str, streaming):
 
         messages = [{
-            "content": system_message.content,
+            "content": system_message,
             "role": "system"
         },
         {
@@ -98,7 +102,7 @@ class Think:
 
         if streaming:
 
-            response_stream = completion(
+            response_stream = self.litellm_model(
                 model=self.llm_config, 
                 messages=messages, 
                 stream=True
@@ -110,7 +114,7 @@ class Think:
         
         else:
 
-            response = completion(
+            response = self.litellm_model(
                 model=self.llm_config, 
                 messages=messages, 
                 stream=False
@@ -119,12 +123,12 @@ class Think:
             response = response.choices[0].message.content
             return response
 
-    def think_simpleAIChat(self, system_message: SystemMessage, use_content: str) -> str:
+    def think_simpleAIChat(self, system_message: str, use_content: str) -> str:
 
         # print("USE CONTENT:", use_content)
 
-        ai_chat = AIChat(
-            system=system_message.content,
+        ai_chat = self.ai_chat_model(
+            system=system_message,
             api_key=OPENAI_API_KEY,
             model="gpt-4-turbo", # "gpt-3.5-turbo"
             console=False,
@@ -135,23 +139,22 @@ class Think:
         
         return message
 
-    def think_langchain(self, system_message: SystemMessage, use_content: str) -> str:
+    def think_langchain(self, system_message: str, use_content: str) -> str:
         
-        message = self.model(
+        message = self.langchain_model(
             [
-                system_message,
+                SystemMessage(content=system_message),
                 HumanMessage(content=use_content),
             ]
         )
 
         return message.content
     
-    def think(self, agent, system_message: SystemMessage, use_content: str, use_model: str, use_streaming: bool) -> str:
+    def think(self, agent, system_message: str, use_content: str, use_model: str, use_streaming: bool) -> str:
         
      #   traceback.print_stack()
         print("calling callback for ", agent.name, " ---> ", agent.callback)
         if(agent.callback): agent.callback("<thinking>")
-
 
         if use_model == 'simpleAIChat':
             message = self.think_simpleAIChat(system_message, use_content)

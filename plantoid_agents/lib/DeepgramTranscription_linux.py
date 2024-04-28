@@ -1,4 +1,4 @@
-from deepgram import DeepgramClient, Microphone, LiveTranscriptionEvents, LiveOptions
+from deepgram import DeepgramClient, LiveTranscriptionEvents, LiveOptions, Microphone
 from dotenv import load_dotenv
 import logging, verboselogs
 import time
@@ -8,7 +8,6 @@ import os
 import sys
 
 from plantoid_agents.lib.microphone import ModifiedMicrophone
-
 
 @contextmanager
 def ignoreStderr():
@@ -25,7 +24,7 @@ def ignoreStderr():
         os.close(old_stderr)
 
 class DeepgramTranscription:
-    def __init__(self, sample_rate: int = 16000, device_index: int = None, timeout: int = 5):
+    def __init__(self, sample_rate: int = 48000, device_index: int = 0, timeout: int = 5):
         self.deepgram = DeepgramClient()
         self.is_finals = []
         self.utterance = ""
@@ -48,13 +47,14 @@ class DeepgramTranscription:
             self.is_finals.append(sentence)
 
             if result.speech_final:
-                self.final_result = ' '.join(self.is_finals)
-                print(f"Speech Final: {self.final_result}")
-                self.transcription_complete = True  # Set completion flag
-                self.is_finals = []  # Reset for potential further use
+                utterance_ = ' '.join(self.is_finals)
+                print(f"Speech Final: {utterance_}")
+
+                # NOTE: moved to on_utterance_end event
+                # self.transcription_complete = True  # Set completion flag
+                # self.is_finals = []
             else:
                 print(f"Is Final: {sentence}")
-          
         else:
             print(f"Interim Results: {sentence}")
 
@@ -76,14 +76,19 @@ class DeepgramTranscription:
         print(f"Deepgram Connection Closed")
 
     def on_error(self, *args, **kwargs):
-        error = kwargs['error'] 
-        print(f"Deepgram Handled Error: {error}")
+        # error = kwargs['error'] 
+        print(f"Deepgram Handled Error: {args} {kwargs}")
 
     def on_unhandled(self, *args, **kwargs):
         unhandled = kwargs['unhandled'] 
         print(f"Deepgram Unhandled Websocket Message: {unhandled}")
 
-    def start_listening(self):
+    def start_listening(self, step: int = 0):
+
+        print("Start listening deepgram...")
+        print("sample rate: ", self.sample_rate)
+        print("device index: ", self.device_index)
+
         
         with ignoreStderr():
 
@@ -102,8 +107,7 @@ class DeepgramTranscription:
                 smart_format=True,
                 encoding="linear16",
                 channels=1,
-                #why does this sample_rate need to be hard coded?
-                sample_rate=16000,
+                sample_rate=48000, #self.sample_rate,
                 interim_results=True,
                 utterance_end_ms="1000",
                 vad_events=True,
@@ -114,27 +118,42 @@ class DeepgramTranscription:
                 print("Failed to connect to Deepgram")
                 return
 
-            microphone = Microphone(
+            microphone = ModifiedMicrophone(
                 connection.send,
-                # input_device_index=self.device_index,
-                # rate=self.sample_rate,
+                input_device_index=self.device_index,
+                rate=self.sample_rate,
             )
+
+            # microphone = Microphone(
+            #     connection.send,
+            #     # rate=48000,
+            #     # input_device_index=self.device_index,
+            #     # rate=self.sample_rate,
+            # )
 
             microphone.start()
 
             start_time = time.time()  # Note the start time
 
-            # Wait until the transcription is complete or 5 seconds have elapsed
-            while not self.transcription_complete or (time.time() - start_time) < self.timeout:
-                time.sleep(0.1)  # Sleep briefly to avoid busy waiting
-                # Optionally, you can keep a debug print here:
-                # print("Transcribing...")
+            time.sleep(2)
 
-            audio_file_path = os.getcwd() + "/media/user_audio/temp_reco_dg.wav"
+            # # Wait until the transcription is complete or 5 seconds have elapsed
+            # while not self.transcription_complete or (time.time() - start_time) < self.timeout:
+            #     time.sleep(0.1)  # Sleep briefly to avoid busy waiting
+            #     # Optionally, you can keep a debug print here:
+            #     # print("Transcribing...")
 
-            # microphone.finish(audio_file_path=audio_file_path)
-            # this won't be necessary if deepgram API can return an mp3
-            microphone.finish()
+            # Define the directory path
+            directory = os.path.join(os.getcwd(), "media/user_audio/temp")
+
+            # Ensure the directory exists
+            os.makedirs(directory, exist_ok=True)
+
+            # Define the audio file path within the newly ensured directory
+            audio_file_path = os.path.join(directory, f"temp_reco_dg_{str(step)}.wav")
+
+            microphone.finish(audio_file_path=audio_file_path)
+            # microphone.finish()
             connection.finish()
 
             print("Finished")

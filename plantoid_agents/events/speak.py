@@ -8,7 +8,7 @@ import os
 import sys
 import time
 import requests
-# import pygame
+import pygame.mixer as mixer
 import types
 
 from utils.experiments.MultichannelRouter import Iterator, magicstream
@@ -105,12 +105,99 @@ class Speak:
     # def format_response_type(self, response: Any) -> Any:
     #     return self.stream_text(response) if isinstance(response, types.GeneratorType) else response
 
+    def play_background_music(self, loops=-1) -> None:
+
+        # get the path to the background music
+        background_music_path = os.getcwd()+"/media/ambient3.mp3"
+
+        mixer.init()
+        mixer.music.load(background_music_path)
+        mixer.music.play(loops)
+
+    # #todo: rename function and make this more general — cue sounds not just background music
+    def stop_background_music(self) -> None:
+
+        if mixer.get_init() is not None:
+            print('stop background music')
+            mixer.music.stop()
+
+    def get_voice_clone_files(self):
+
+        # Define the directory path where you want to list the files
+        directory_path = os.getcwd()+"/media/user_audio/temp_test"
+
+        # Get a list of all files and directories in the specified path
+        files_and_directories = os.listdir(directory_path)
+
+        # If you only want files, you can filter out directories
+        files_full_path = [os.path.join(directory_path, f) for f in files_and_directories if os.path.isfile(os.path.join(directory_path, f))]
+
+        return files_full_path
+
+    def clone_voice(
+        self,
+        voice_set_callback: Any,
+        cloned_voice_id: str = None,
+        create_clone: bool = False
+    ):
+
+        voice_file_paths = self.get_voice_clone_files() #[os.getcwd()+"/media/user_audio/temp_reco.wav"]
+        voice_files = [open(file_, 'rb') for file_ in voice_file_paths]
+        print("Using voice files: ", voice_file_paths)
+
+        if create_clone:
+            
+            print('Creating a clone of the user voice...')
+
+            voice = client.voices.add(
+                name="You",
+                description="A clone of the user's voice",
+                files=voice_files,
+            )
+
+            cloned_voice_id = voice.voice_id
+
+            if voice_set_callback is not None:
+                print("Cloned voice ID: ", cloned_voice_id)
+                voice_set_callback(cloned_voice_id)
+
+
+        else:
+            print('Using the previously cloned voice...')
+
+            client.voices.edit(
+                name="You",
+                description="A clone of the user's voice",
+                voice_id=cloned_voice_id,
+                files=voice_files,
+            )
+
+        voice = Voice(
+            voice_id=cloned_voice_id, #'NE1ZIqHDl04rAu3fkYQH',
+            settings=VoiceSettings(
+                stability=0.61,
+                similarity_boost=0.85,
+                style=0.0,
+                use_speaker_boost=True,
+            )
+        )
+
+        # voice = client.clone(
+        #     # api_key=os.getenv("ELEVENLABS_API_KEY"),
+        #     name="You",
+        #     description="A clone of the user's voice", # Optional
+        #     files=voice_file_paths,
+        # )
+
+        return voice
+
     def stream_audio_response(
         self,
         response: str,
         voice_id: str,
         channel_id: str,
-        callback: Any = None
+        callback: Any = None,
+        use_multichannel: bool = True,
     ) -> None:
 
         # generate audio stream   
@@ -127,79 +214,12 @@ class Speak:
                 
         # stream audio
         # stream(audio_stream)
-        # todo: figure out how to pass the channel_id all the way through
-        print("MAGIC STREAM WITH CHANNEL_ID == ", channel_id)
-        magicstream(audio_stream, channel_id)
-
-        # # Check if the response is a generator
-        # if isinstance(response, types.GeneratorType):
-        #     processed_text = stream_text_(response)
-        # else:
-        #     # If response is a string, directly pass the string
-        #     processed_text = response
-
-    # Additional methods can be added here as needed
-
-    # def play_background_music(self, loops=-1) -> None:
-
-    #     # get the path to the background music
-    #     background_music_path = os.getcwd()+"/media/ambient3.mp3"
-
-    #     pygame.mixer.init()
-    #     pygame.mixer.music.load(background_music_path)
-    #     pygame.mixer.music.play(loops)
-
-    # #todo: rename function and make this more general — cue sounds not just background music
-    # def stop_background_music(self) -> None:
-
-    #     if pygame.mixer.get_init() is not None:
-    #         print('stop background music')
-    #         background.music.stop()
-
-    def clone_voice(
-        self,
-        voice_set_callback: Any,
-        cloned_voice_id: str = None,
-        create_clone: bool = False
-    ):
-
-        voice_files = [os.getcwd()+"/media/user_audio/temp_reco.wav"]
-
-        if create_clone:
-            print('Creating a clone of the user voice...')
-            voice = client.clone(
-                # api_key=os.getenv("ELEVENLABS_API_KEY"),
-                name="You",
-                description="A clone of the user's voice", # Optional
-                files=voice_files,
-            )
-
-            if voice_set_callback is not None:
-                voice_set_callback(voice.voice_id)
-
+        if use_multichannel:
+            # print("Streaming on channel", channel_id, "\n")
+            magicstream(audio_stream, channel_id)
 
         else:
-            print('Using the previously cloned voice...')
-
-            # TODO: use this to add progressive voice files to improve voice
-            client.voices.edit(
-                name="You",
-                description="A clone of the user's voice",
-                voice_id=cloned_voice_id,
-                files=voice_files
-            )
-
-            voice = Voice(
-                voice_id=cloned_voice_id, #'NE1ZIqHDl04rAu3fkYQH',
-                settings=VoiceSettings(
-                    stability=0.61,
-                    similarity_boost=0.85,
-                    style=0.0,
-                    use_speaker_boost=True,
-                )
-            )
-
-        return voice
+            stream(audio_stream)
 
     def speak(
         self,

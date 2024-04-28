@@ -13,7 +13,7 @@ import time
 import requests
 import numpy as np
 import whisper
-# import torch
+import torch
 # import pygame
 
 from dotenv import load_dotenv
@@ -24,6 +24,7 @@ from contextlib import contextmanager
 from collections import deque
 
 from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
+# from plantoid_agents.lib.DeepgramTranscription_linux import DeepgramTranscription
 
 # from whisper_mic.whisper_mic import WhisperMic
 
@@ -65,10 +66,10 @@ class Listen:
         silence_limit: int = 2,
         threshold: int = 0,
         record_seconds: int = 2,
-        rate: int = 48000,
+        rate: int = 16000,
         chunk: int = 512,
         channels: int = 1,
-        device_index: int = 3,
+        device_index: int = 0,
     ) -> None:
         """
         Initializes a new instance of the Listen class.
@@ -397,21 +398,20 @@ class Listen:
 
         return utterance
     
-    def recognize_speech_deepgram(self):
+    def recognize_speech_deepgram(self, step: int = 0):
 
         self.transcription.start_listening()
+        # self.transcription.start_listening(step=step)
         utterance = self.transcription.get_final_result()
 
         print("DEEPGRAM UTTERANCE:", utterance)
 
         return utterance
     
-    def listen(self, characters, timeout_override: str = None) -> Any:
+    def listen(self, characters, timeout_override: str = None, step: int = 0) -> Any:
         # return self.recognize_speech_whisper_manual(timeout_override)
-
         for character in characters:
             if(character.callback): character.callback("<listening>")
-
-        return self.recognize_speech_deepgram()
+        return self.recognize_speech_deepgram(step=step)
 
     # More methods can be added here as needed

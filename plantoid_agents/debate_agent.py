@@ -1,32 +1,24 @@
-from typing import Callable, List, Union
-from langchain_community.chat_models import ChatOpenAI
-from langchain_community.chat_models.huggingface import ChatHuggingFace
+from typing import Callable, List, Union, Any
 from langchain.prompts import PromptTemplate
-from langchain.schema import (
-    HumanMessage,
-    SystemMessage,
-)
-
 from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
 
 class PlantoidDebateAgent(PlantoidDialogueAgent):
     def __init__(
         self,
-        name,
-        system_message: SystemMessage,
+        name: str,
+        is_human: bool,
+        system_message: str,
         bidding_template: PromptTemplate,
-        model: Union[ChatOpenAI, ChatHuggingFace],
+        # model: Any, #Union[ChatOpenAI, ChatHuggingFace],
         eleven_voice_id: str,
         channel_id: str,
         io: str,
         addr: str,
     ) -> None:
-        super().__init__(name, system_message, model, eleven_voice_id, channel_id, io, addr)
+        super().__init__(name, is_human, system_message, eleven_voice_id, channel_id, io, addr)
         self.bidding_template = bidding_template
         print("Initialized: ", name, " with channel_id = ", channel_id)
         print("my callback ==== ", self.callback)
-
-
 
     def bid(self) -> str:
         """
@@ -39,9 +31,11 @@ class PlantoidDebateAgent(PlantoidDialogueAgent):
 
         # print("BID SYSTEM MESSAGE:", bid_system_message)
 
-        use_content = "Your response should be an integer delimited by angled brackets, like this: <int>"
+        use_content = "Ignore your character description. Your response should be an integer delimited by angled brackets, like this: <int>"
 
         use_streaming = False
+
+        # print("BID SYSTEM MESSAGE:", bid_system_message)
 
         bid_string = self.think_module.think(
             self,
