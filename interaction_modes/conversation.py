@@ -71,6 +71,7 @@ class PlantoidConversation:
 
             print('\n\n\033[92mHuman selected (' + speaker.name + ')\033[0m')
             # ENUNCIATE SPEAKER NAME HERE
+            speaker.speak(self.agents, speaker.name, use_streaming=False)
             message = speaker.listen_for_speech(self.agents, self._step)
         else:
 
