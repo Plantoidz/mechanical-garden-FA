@@ -30,6 +30,12 @@ class CharacterConfigurator:
             print("Invalid choice!")
             return self.select_character()
         
+
+    def select_character_name(self, defaultname):
+        name = input(f"Enter the name of the character (default is {defaultname}): ")
+        if(not name): name = defaultname
+        return name
+        
     def select_channel_id(self, i):
         index = input(f"Enter the channel ID for the character (default is {i}): ")
         if(not index): index = i
@@ -38,6 +44,9 @@ class CharacterConfigurator:
         else:
             print("Invalid choice, must be between 0 and 1000") ## TODO increase to allow for more channels!
         return index
+    
+
+    
 
     def select_Wifi(self):
 
@@ -80,7 +89,7 @@ class CharacterConfigurator:
         
     def select_comm_io(self):
 
-        return str(input("Choose the I/O communication type (serial or wifi): "))
+        return str(input("Choose the I/O communication type (serial or wifi) - press <enter> for None: "))
       
 
 
@@ -98,7 +107,10 @@ class CharacterConfigurator:
             self.display_menu()
             choice = self.select_character()
 
-            selected_characters_map[choice['name']] = i  # Mapping name to the default channel
+            name = self.select_character_name(choice['name'])
+            choice['name'] = name
+
+            selected_characters_map[name] = i  # Mapping name to the default channel
             # channel_id = int(self.select_channel_id(i))
 
             channel_id = self.select_channel_id(i)
