@@ -33,7 +33,15 @@ class DeepgramTranscription:
         self.sample_rate = sample_rate
         self.device_index = device_index
         self.timeout = timeout  # Timeout in seconds
-        
+
+    def reset(self):
+        """
+        Resets the state variables to their initial conditions.
+        """
+        self.is_finals = []
+        self.final_result = ""
+        self.transcription_complete = False
+
     def on_message(self, *args, **kwargs):
         result = kwargs.get('result', None)
         if result is None and args:
@@ -84,7 +92,7 @@ class DeepgramTranscription:
         print(f"Deepgram Unhandled Websocket Message: {unhandled}")
 
     def start_listening(self):
-        
+        self.reset()  # Reset state at the beginning of a listening session
         with ignoreStderr():
 
             connection = self.deepgram.listen.live.v("1")
