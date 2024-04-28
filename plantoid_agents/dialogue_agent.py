@@ -1,6 +1,7 @@
 from typing import Callable, List, Union
 
-from telnetlib import Telnet
+# from telnetlib import Telnet
+import socket
 
 # import plantoid_agents.lib.speech as PlantoidSpeech
 from plantoid_agents.events.listen import Listen
@@ -52,8 +53,10 @@ class PlantoidDialogueAgent:
         if(io == "wifi" and addr):
             print("connecting to Plantoid IP: ", addr)
             try:
-                self.tunnel = Telnet(addr, 23, timeout=3)
+                # self.tunnel = Telnet(addr, 23, timeout=3)
+                self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                 self.callback = self.tunnel_wifi
+                self.addr = addr
             except Exception as err:
                 print("Failed to connect: ", err)
 
@@ -64,15 +67,16 @@ class PlantoidDialogueAgent:
 
 
     def tunnel_wifi(self, val):
-        if(not self.tunnel):
-           if(self.io and self.addr):
-            try:
-                    self.tunnel = Telnet(self.addr, 23, timeout=3)
-                    self.callback = self.tunnel_wifi
-            except Exception as err:
-                    print("Failed to connect: ", err)
+        # if(not self.tunnel):
+        #    if(self.io and self.addr):
+        #     try:
+        #             self.tunnel = Telnet(self.addr, 23, timeout=3)
+        #             self.callback = self.tunnel_wifi
+        #     except Exception as err:
+        #             print("Failed to connect: ", err)
 
-        if(self.tunnel): self.tunnel.write(val.encode('ascii') + b"\n")
+        # if(self.tunnel): self.tunnel.write(val.encode('ascii') + b"\n")
+        if(self.socket): self.socket.sendto(bytes(val, 'utf-8'), (self.addr, 666))
         
 
     def tunnel_serial(self, val):
