@@ -23,8 +23,8 @@ from ctypes import *
 from contextlib import contextmanager
 from collections import deque
 
-# from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
 from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
+# from plantoid_agents.lib.DeepgramTranscription_linux import DeepgramTranscription
 
 # from whisper_mic.whisper_mic import WhisperMic
 
@@ -66,7 +66,7 @@ class Listen:
         silence_limit: int = 2,
         threshold: int = 0,
         record_seconds: int = 2,
-        rate: int = 48000,
+        rate: int = 16000,
         chunk: int = 512,
         channels: int = 1,
         device_index: int = 0,
@@ -400,7 +400,8 @@ class Listen:
     
     def recognize_speech_deepgram(self, step: int = 0):
 
-        self.transcription.start_listening(step=step)
+        self.transcription.start_listening()
+        # self.transcription.start_listening(step=step)
         utterance = self.transcription.get_final_result()
 
         print("DEEPGRAM UTTERANCE:", utterance)

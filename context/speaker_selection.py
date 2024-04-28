@@ -143,9 +143,9 @@ def select_next_speaker(
     max_indices = np.where(bids == max_value)[0]
     idx = np.random.choice(max_indices)
 
-    print("\nBids:")
+    # print("\nBids:")
     for i, (bid, agent) in enumerate(zip(bids, agents)):
-        print(f"\t{agent.name} bid: {bid}")
+        # print(f"\t{agent.name} bid: {bid}")
         if i == idx:
             selected_name = agent.name
     print(f"\nSelected: {selected_name}")
@@ -167,7 +167,7 @@ def check_last_speaker_is_human(agent: DialogueAgent):
     # print("latest message history:", last_item)
 
     if "Human" in last_item.split(":")[0]:
-        print("Last speaker was human")
+        print("\nSkipping — last speaker was human")
 
         return True
     
@@ -181,7 +181,7 @@ def check_is_last_speaker(agent: DialogueAgent):
     last_message_speaker = last_item.split(":")[0]
 
     if agent.name == last_message_speaker:
-        print("Last speaker was the agent itself")
+        print("\nSkipping — I just spoke")
 
         return True
     
@@ -237,10 +237,10 @@ def select_next_speaker_with_human_clone(
     max_indices = np.where(bids == max_value)[0]
     idx = np.random.choice(max_indices)
 
-    print("\nBids:")
+    # print("\nBids:")
     for i, (bid, agent) in enumerate(zip(bids, agents)):
 
-        print(f"\t{agent.name} bid: {bid}")
+        # print(f"\t{agent.name} bid: {bid}")
 
         if i == idx:
             selected_name = agent.name
@@ -299,15 +299,15 @@ def select_next_speaker_with_human_conversation_OLD(
     max_indices = np.where(bids == max_value)[0]
     idx = np.random.choice(max_indices)
 
-    print("Bids:")
-    for i, (bid, agent) in enumerate(zip(bids, agents)):
+    # print("Bids:")
+    # for i, (bid, agent) in enumerate(zip(bids, agents)):
 
-        print(f"\t{agent.name} bid: {bid}")
+    #     print(f"\t{agent.name} bid: {bid}")
 
-        if i == idx:
-            selected_name = agent.name
+    #     if i == idx:
+    #         selected_name = agent.name
 
-    print(f"Selected: {selected_name}")
+    print(f"Next up: {selected_name}")
 
     return idx
 
@@ -317,8 +317,6 @@ def select_next_speaker_with_human_conversation(
     last_speaker_idx: int,
 ) -> int:
     
-    start_time = time.time()
-
     # initialize bids
     bids = []
 
@@ -343,19 +341,15 @@ def select_next_speaker_with_human_conversation(
     max_indices = np.where(bids == max_value)[0]
     idx = np.random.choice(max_indices)
 
-    print("Bids:")
+    # print("Bids:")
     for i, (bid, agent) in enumerate(zip(bids, agents)):
 
-        print(f"\t{agent.name} bid: {bid}")
+        # print(f"\t{agent.name} bid: {bid}")
 
         if i == idx:
             selected_name = agent.name
 
     print(f"Selected: {selected_name}")
-
-    end_time = time.time()
-
-    print(f"Time taken to select speaker: {end_time - start_time}")
 
     return idx
 
@@ -429,10 +423,10 @@ def select_next_speaker_with_human_debate(
     max_indices = np.where(bids == max_value)[0]
     idx = np.random.choice(max_indices)
 
-    print("Bids:")
+    # print("Bids:")
     for i, (bid, agent) in enumerate(zip(bids, agents)):
 
-        print(f"\t{agent.name} bid: {bid}")
+        # print(f"\t{agent.name} bid: {bid}")
 
         if i == idx:
             selected_name = agent.name

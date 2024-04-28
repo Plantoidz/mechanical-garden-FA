@@ -215,7 +215,7 @@ class Speak:
         # stream audio
         # stream(audio_stream)
         if use_multichannel:
-            print("MAGIC STREAM WITH CHANNEL_ID == ", channel_id)
+            # print("Streaming on channel", channel_id, "\n")
             magicstream(audio_stream, channel_id)
 
         else:

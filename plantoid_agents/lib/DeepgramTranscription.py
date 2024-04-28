@@ -48,14 +48,13 @@ class DeepgramTranscription:
             self.is_finals.append(sentence)
 
             if result.speech_final:
-                utterance_ = ' '.join(self.is_finals)
-                print(f"Speech Final: {utterance_}")
-
-                # NOTE: moved to on_utterance_end event
-                # self.transcription_complete = True  # Set completion flag
-                # self.is_finals = []
+                self.final_result = ' '.join(self.is_finals)
+                print(f"Speech Final: {self.final_result}")
+                self.transcription_complete = True  # Set completion flag
+                self.is_finals = []  # Reset for potential further use
             else:
                 print(f"Is Final: {sentence}")
+          
         else:
             print(f"Interim Results: {sentence}")
 
