@@ -10,7 +10,9 @@ def create_character():
         "description": description,
         "default_channel": 999,
         "eleven_voice_id": "5g2h5kYnQtKFFdPm8PpK",
-        "is_human": True
+        "is_human": "True",
+        "io": "",
+        "addr": ""
     }
 
     return new_character

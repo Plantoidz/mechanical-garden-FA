@@ -1,5 +1,7 @@
 from typing import Callable, List
 from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
+from elevenlabs import play, stream, save
+from elevenlabs.client import ElevenLabs
 
 class PlantoidConversation:
 
@@ -51,11 +53,11 @@ class PlantoidConversation:
         # human is selected
         if speaker.is_human == True:
 
-            print('\n\n\033[92mHuman selected\033[0m')
+            print('\n\n\033[92mHuman selected (' + speaker.name + ')\033[0m')
 
             # 2. next (human) speaker sends message
+            # TODO: announce speaker name
             message = speaker.listen_for_speech(self.agents, self._step)        
-
         else:
 
             # 2. next speaker sends message

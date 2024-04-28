@@ -19,7 +19,7 @@ def read_interaction_mode_config():
     return mode_config
 
 def read_addendum_config(interaction_mode):
-    config_path = os.getcwd()+f'/config/files/working/current_{interaction_mode}.json'
+    config_path = os.getcwd()+f'/config/files/working/current_stimuli.json'
 
     with open(config_path, 'r') as file:
         mode_config = json.load(file)
@@ -93,8 +93,8 @@ def check_config():
     config_files = [
         os.getcwd()+"/config/files/working/current_services.json",
         os.getcwd()+"/config/files/working/current_mode.json",
-        # "config/files/working/current_addendum.json",
-        os.getcwd()+"/config/files/working/current_characters.json"
+        os.getcwd()+"/config/files/working/current_characters.json",
+        os.getcwd()+"/config/files/working/current_stimuli.json"
     ]
 
     print("\nCurrent configuration:\n")

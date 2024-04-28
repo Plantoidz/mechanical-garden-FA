@@ -1,5 +1,5 @@
 {
-    "confession_modes": {
+    "confession_stimuli": {
         "pending_forgiveness": {
             "current_mode": "pending_forgiveness",
             "description": "What’s something you’ve not yet asked for forgiveness for?",

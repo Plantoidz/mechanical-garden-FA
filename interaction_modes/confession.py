@@ -55,7 +55,7 @@ class PlantoidConfession:
         # human is selected
         if speaker.is_human == True:
 
-            print('\n\n\033[92mHuman selected\033[0m')
+            print('\n\n\033[92mHuman selected ({speaker.name})\033[0m')
             # 2. next (human) speaker sends message
             message = speaker.listen_for_speech(self._step)
 

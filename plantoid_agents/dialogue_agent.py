@@ -113,7 +113,7 @@ class PlantoidDialogueAgent:
         self.listen_module.play_speech_indicator()
         user_message = self.listen_module.listen(agents, step=step)
 
-        print("\n\033[92m" +"Human said:\033[0m\n" + user_message + "\n")
+        print("\n\033[92m" +"Human said:\033[0m\n" + user_message)
 
         return user_message
 
@@ -126,8 +126,7 @@ class PlantoidDialogueAgent:
         # play the background music
         # self.speak_module.play_background_music()
 
-        # generate the message from the langchain model
-        print(PURPLE + "\n" + self.name + ' is thinking about response...' + ENDC)
+        print("\n\n" + PURPLE + self.name + ' is thinking...' + ENDC)
 
         self.message_history = self.clip_history(self.message_history, n_messages=5)
 
