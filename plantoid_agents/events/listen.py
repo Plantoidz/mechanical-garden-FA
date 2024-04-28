@@ -406,8 +406,12 @@ class Listen:
 
         return utterance
     
-    def listen(self, timeout_override: str = None) -> Any:
+    def listen(self, characters, timeout_override: str = None) -> Any:
         # return self.recognize_speech_whisper_manual(timeout_override)
+
+        for character in characters:
+            if(character.callback): character.callback("<listening>")
+
         return self.recognize_speech_deepgram()
 
     # More methods can be added here as needed

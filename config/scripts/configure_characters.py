@@ -46,15 +46,15 @@ class CharacterConfigurator:
 
     def select_Wifi(self):
 
-        result = subprocess.run(['arp', '-a'], capture_output=True, text=True)
-        print(result.stderr)
-        print(result.stdout)
+        # result = subprocess.run(['arp', '-a'], capture_output=True, text=True)
+        # print(result.stderr)
+        # print(result.stdout)
 
-        pattern = re.compile(r"\((\d+\.\d+\.\d+\.\d+)\)\s+at\s+([\da-fA-F:]+)")
-        entries = pattern.findall(result.stdout)
+        # pattern = re.compile(r"\((\d+\.\d+\.\d+\.\d+)\)\s+at\s+([\da-fA-F:]+)")
+        # entries = pattern.findall(result.stdout)
 
-        for ip, mac in entries:
-            print("MAC_address: ", mac, "last_known_IP: ", ip)
+        # for ip, mac in entries:
+        #     print("MAC_address: ", mac, "last_known_IP: ", ip)
 
         index = str(input("Enter the IP address of the character (press enter to ignore): "))
         return index

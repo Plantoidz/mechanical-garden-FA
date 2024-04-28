@@ -215,6 +215,8 @@ class InteractionManager:
             character_description = character['description']
             character_voice_id = character['eleven_voice_id']
             character_channel_id = character['default_channel']
+            character_io = character['io']
+            character_addr = character['addr']
 
             system_message = self.get_system_message(
                 character,
@@ -232,7 +234,9 @@ class InteractionManager:
                 model=self.llm,
                 bidding_template=bidding_template,
                 eleven_voice_id=character_voice_id,
-                channel_id=character_channel_id
+                channel_id=character_channel_id,
+                io=character_io,
+                addr = character_addr,
             )
 
             character_objects.append(character_object)

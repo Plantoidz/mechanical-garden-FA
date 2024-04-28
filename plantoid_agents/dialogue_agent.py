@@ -6,6 +6,8 @@ from langchain.schema import (
     SystemMessage,
 )
 
+from telnetlib import Telnet
+
 # import plantoid_agents.lib.speech as PlantoidSpeech
 from plantoid_agents.events.listen import Listen
 from plantoid_agents.events.speak import Speak
@@ -29,6 +31,8 @@ class PlantoidDialogueAgent:
         model: Union[ChatOpenAI, ChatHuggingFace],
         eleven_voice_id: str,
         channel_id: str,
+        io: str,
+        addr: str,
     ) -> None:
         self.name = name
         self.system_message = system_message
@@ -47,10 +51,28 @@ class PlantoidDialogueAgent:
         print("CHANNEL ID TYPE = ", type(self.channel_id))
         print("VOICE ID TYPE = ", type(self.eleven_voice_id))
 
+        self.tunnel = None
+        self.callback = None
+        if(io == "wifi" and addr):
+            print("connecting to Plantoid IP: ", addr)
+            try:
+                self.tunnel = Telnet(addr, 23, timeout=3)
+                self.callback = self.tunnel_wifi
+            except Exception as err:
+                print("Failed to connect: ", err)
+
 
         #TODO: do not hardcode!
         self.use_model_type = "litellm"
         self.use_streaming = True
+
+
+    def tunnel_wifi(self, val):
+        if(self.tunnel): self.tunnel.write(val.encode('ascii') + b"\n")
+
+    def tunnel_serial(self, val):
+        return ## TODO, activate the serial communication
+
 
     def get_voice_id(self) -> str:
 
@@ -82,10 +104,10 @@ class PlantoidDialogueAgent:
             return False
 
 
-    def listen_for_speech(self) -> str:
+    def listen_for_speech(self, agents) -> str:
 
         self.listen_module.play_speech_indicator()
-        user_message = self.listen_module.listen()
+        user_message = self.listen_module.listen(agents)
 
         print("Human said: " + user_message)
 
@@ -117,6 +139,7 @@ class PlantoidDialogueAgent:
         print("\n\t" + BLUE + "MESSAGE HISTORY:" + ENDC, self.message_history)
 
         message = self.think_module.think(
+            self,
             self.system_message,
             use_content,
             self.use_model_type,
@@ -129,7 +152,7 @@ class PlantoidDialogueAgent:
 
         return message
     
-    def speak(self, message: str) -> None:
+    def speak(self, agents, message: str) -> None:
         """
         Speaks the message using the agent's voice
         """
@@ -138,6 +161,8 @@ class PlantoidDialogueAgent:
         # self.speak_module.stop_background_music()
         
         self.speak_module.speak(
+            agents,
+            self,
             message,
             self.get_voice_id(),
             self.get_channel_id(),

@@ -203,6 +203,8 @@ class Speak:
 
     def speak(
         self,
+        agents,
+        agent,
         response: str,
         voice_id: str,
         channel_id: str,
@@ -212,6 +214,13 @@ class Speak:
         create_clone: bool = False,
 
     ) -> None:
+
+        print(agents)
+        for a in agents:
+            if(a.callback): a.callback("<asleep>")
+
+        if(agent.callback): agent.callback("<speaking>")
+
 
         if clone_voice:
 

@@ -40,7 +40,7 @@ class PlantoidDebate:
 
         print('Enunciating:', intro_message)
         speaker = self.agents[self.last_speaker_idx]
-        speaker.speak(intro_message)
+        speaker.speak(self.agents, intro_message)
 
     def step(self) -> tuple[str, str]:
         # 1. choose the next speaker
@@ -60,7 +60,7 @@ class PlantoidDebate:
 
             # 2. next speaker sends message
             message = speaker.send()
-            speaker.speak(message)
+            speaker.speak(self.agents, message)
 
         # 3. everyone receives message
         for receiver in self.agents:
