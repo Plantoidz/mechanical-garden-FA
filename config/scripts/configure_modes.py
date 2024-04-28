@@ -38,6 +38,10 @@ class ModeConfigurator:
 
     def load_and_display_stimuli(self, mode_directory):
         stimuli_path = os.path.join(mode_directory, 'stimuli.json')
+        if not os.path.exists(stimuli_path):
+            print("No stimuli file found.")
+            return []
+
         with open(stimuli_path, 'r') as file:
             stimuli = json.load(file)
         

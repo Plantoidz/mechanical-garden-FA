@@ -39,6 +39,7 @@ class PlantoidConversation:
         self._step += 1
 
     #todo: need to restore speaking in enunciation, and it's reated to the first turn behavior
+            # ENUNCIATE SIMULUS HERE
     def enunciate(self, intro_message: str):
         print('\n\033[94m' + 'Enunciating: ' + '\033[0m' + '\033[92m' +  f'\n{intro_message}'  + '\033[0m')
         speaker = self.agents[self.last_speaker_idx]
@@ -54,10 +55,8 @@ class PlantoidConversation:
         if speaker.is_human == True:
 
             print('\n\n\033[92mHuman selected (' + speaker.name + ')\033[0m')
-
-            # 2. next (human) speaker sends message
-            # TODO: announce speaker name
-            message = speaker.listen_for_speech(self.agents, self._step)        
+            # ENUNCIATE SPEAKER NAME HERE
+            message = speaker.listen_for_speech(self.agents, self._step)
         else:
 
             # 2. next speaker sends message

@@ -87,7 +87,8 @@ class PlantoidDialogueAgent:
         return self.channel_id
 
     def reset(self):
-        self.message_history = ["Someone should kick off the discussion."]
+        self.message_history = ["Go ahead."]
+        # self.message_history = ["Someone should kick off the discussion."]
 
     def get_human_participation_preference(self) -> bool:
         
