@@ -63,9 +63,9 @@ def main():
     with open(current_mode_dir, 'r') as file:
         mode_type = json.load(file)['current_mode']
 
-    modes_path = os.getcwd()+f'/config/files/{mode_type}/{mode_type}_modes.json'
+    stimuli_path = os.getcwd()+f'/config/files/{mode_type}/{mode_type}_stimuli.json'
     working_directory = os.getcwd()+'/config/files/working'
-    configurator = ModeAddendumConfigurator(modes_path, working_directory)
+    configurator = ModeAddendumConfigurator(stimuli_path, working_directory)
     configurator.configure_mode()
 
 if __name__ == "__main__":

@@ -404,7 +404,7 @@ class Listen:
         # self.transcription.start_listening(step=step)
         utterance = self.transcription.get_final_result()
 
-        print("DEEPGRAM UTTERANCE:", utterance)
+        # print("DEEPGRAM UTTERANCE:", utterance)
 
         return utterance
     

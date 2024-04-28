@@ -11,7 +11,9 @@ from plantoid_agents.lib.text_content import *
 # TEMP
 from litellm.utils import CustomStreamWrapper
 
-BLUE = '\033[94m'
+PURPLE = '\033[94m'
+BLUE = '\033[34m'
+GREY = '\033[90m'
 RED = '\033[91m'
 GREEN = '\033[92m'
 YELLOW = '\033[93m'
@@ -44,9 +46,6 @@ class PlantoidDialogueAgent:
         self.listen_module = Listen()
         self.channel_id = channel_id
         
-        print("CHANNEL ID TYPE = ", type(self.channel_id))
-        print("VOICE ID TYPE = ", type(self.eleven_voice_id))
-
         self.tunnel = None
         self.callback = None
         if(io == "wifi" and addr):
@@ -88,7 +87,7 @@ class PlantoidDialogueAgent:
         return self.channel_id
 
     def reset(self):
-        self.message_history = ["Here is the conversation so far."]
+        self.message_history = ["Someone should kick off the discussion."]
 
     def get_human_participation_preference(self) -> bool:
         
@@ -114,7 +113,7 @@ class PlantoidDialogueAgent:
         self.listen_module.play_speech_indicator()
         user_message = self.listen_module.listen(agents, step=step)
 
-        print("Human said: " + user_message)
+        print("\n\033[92m" +"Human said:\033[0m\n" + user_message + "\n")
 
         return user_message
 
@@ -128,7 +127,7 @@ class PlantoidDialogueAgent:
         # self.speak_module.play_background_music()
 
         # generate the message from the langchain model
-        print(BLUE + "\n" + self.name + ' is thinking about response...' + ENDC)
+        print(PURPLE + "\n" + self.name + ' is thinking about response...' + ENDC)
 
         self.message_history = self.clip_history(self.message_history, n_messages=5)
 
@@ -136,12 +135,12 @@ class PlantoidDialogueAgent:
         # print("use_content:", use_content)
 
         # print("AGENT:", self.name)
-        # print("SYSTEM MESSAGE:", self.system_message)
+        print("\t" + GREY + "Character description:" + ENDC)
         # print("MESSAGE HISTORY:", self.message_history)
-        print("\n\t" + BLUE + "AGENT:" + ENDC, self.name)
+        # print("\n\t" + BLUE + "AGENT:" + ENDC, self.name)
         # todo: just print raw system message
         # print("\n\t" + BLUE + "SYSTEM MESSAGE:" + ENDC, self.system_message)
-        print("\n\t" + BLUE + "MESSAGE HISTORY:" + ENDC, self.message_history)
+        print("\n\t" + GREY + "Message history:", self.message_history, ENDC)
 
         message = self.think_module.think(
             self,
@@ -151,9 +150,9 @@ class PlantoidDialogueAgent:
             self.use_streaming,
         )
 
-        print("\n" + BLUE + self.name, 'says:' + ENDC)
+        print("\n" + PURPLE + self.name, 'says:' + ENDC)
         formatted_message = self.think_module.format_response_type(message)
-        print(formatted_message)
+        # print(formatted_message)
 
         return message
     

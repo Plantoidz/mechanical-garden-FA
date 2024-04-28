@@ -22,6 +22,7 @@ class PlantoidConversation:
         self.last_speaker_idx = idx
 
     def reset(self):
+        print("\nNew stimulus. Resetting conversation...\n")
         for agent in self.agents:
             agent.reset()
 
@@ -35,9 +36,9 @@ class PlantoidConversation:
         # increment time
         self._step += 1
 
+    #todo: need to restore speaking in enunciation, and it's reated to the first turn behavior
     def enunciate(self, intro_message: str):
-
-        print('Enunciating:', intro_message)
+        print('\n\033[94m' + 'Enunciating: ' + '\033[0m' + '\033[92m' +  f'\n{intro_message}'  + '\033[0m')
         speaker = self.agents[self.last_speaker_idx]
         speaker.speak(self.agents, intro_message)
 
@@ -50,7 +51,7 @@ class PlantoidConversation:
         # human is selected
         if speaker.is_human == True:
 
-            print('Human Selected')
+            print('\n\n\033[92mHuman selected\033[0m')
 
             # 2. next (human) speaker sends message
             message = speaker.listen_for_speech(self.agents, self._step)        

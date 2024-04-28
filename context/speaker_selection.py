@@ -148,7 +148,7 @@ def select_next_speaker(
         # print(f"\t{agent.name} bid: {bid}")
         if i == idx:
             selected_name = agent.name
-    print(f"\nSelected: {selected_name}")
+    # print(f"\nSelected: {selected_name}")
 
     audio_stream = client.generate(
             text=f"{selected_name}?",
@@ -305,7 +305,7 @@ def select_next_speaker_with_human_conversation_OLD(
     #     if i == idx:
     #         selected_name = agent.name
 
-    print(f"Next up: {selected_name}")
+    # print(f"Next up: {selected_name}")
 
     return idx
 
@@ -347,7 +347,7 @@ def select_next_speaker_with_human_conversation(
         if i == idx:
             selected_name = agent.name
 
-    print(f"Selected: {selected_name}")
+    # print(f"Selected: {selected_name}")
 
     return idx
 
@@ -429,7 +429,7 @@ def select_next_speaker_with_human_debate(
         if i == idx:
             selected_name = agent.name
 
-    print(f"Selected: {selected_name}")
+    # print(f"Selected: {selected_name}")
 
     #TODO: if statement in case it's a human, tee up a moderator question
     audio_stream = client.generate(

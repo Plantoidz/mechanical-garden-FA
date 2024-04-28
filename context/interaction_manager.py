@@ -88,8 +88,7 @@ class InteractionManager:
             return PlantoidClone
         
     def choose_stimulus(self, interaction_config: dict, interaction_mode: str):
-
-        use_stimuli = interaction_config[interaction_mode+'_modes']
+        use_stimuli = interaction_config[interaction_mode+'_stimuli']
         random_key = random.choice(list(use_stimuli.keys()))
 
         return use_stimuli[random_key]
@@ -99,7 +98,9 @@ class InteractionManager:
         Retrieves the interaction addendum based on the provided interaction mode.
         """
         if interaction_mode == 'conversation':
-            return []
+            conversation_config = read_addendum_config(interaction_mode)
+            stimulus = self.choose_stimulus(conversation_config, interaction_mode)
+            return [stimulus['stimulus']]
         
         if interaction_mode == 'confession':
             confession_config = read_addendum_config(interaction_mode)
@@ -116,8 +117,14 @@ class InteractionManager:
         """
         Retrieves the interaction mode based on the provided interaction mode.
         """
+
         if interaction_mode == 'conversation':
-            return "Let's discuss. Do large language models exhibit any degree of sentience, or are they simply sophisticated information processing systems? Can sentience be measured on a spectrum, and if so, where would large language models fall?"
+            conversation_config = read_addendum_config(interaction_mode)
+            stimulus = self.choose_stimulus(conversation_config, interaction_mode)
+            return [stimulus['stimulus']]
+
+        # if interaction_mode == 'conversation':
+        #     return "Let's discuss. Do large language models exhibit any degree of sentience, or are they simply sophisticated information processing systems? Can sentience be measured on a spectrum, and if so, where would large language models fall?"
         
         if interaction_mode == 'confession':
             confession_config = read_addendum_config(interaction_mode)
@@ -150,13 +157,11 @@ class InteractionManager:
         selection_function = self.get_selection_function(use_selection_function)
         bidding_function = self.get_bidding_function(use_bidding_template)
 
-        print(f"Using interaction mode: {use_interaction_mode}")
-        print(f"Using interaction description (stimulus): {interaction_description}")
-        print(f"Using agent type: {use_agent_type}")
-        print(f"Using bidding template: {use_bidding_template}")
-        print(f"Using selection function: {use_selection_function}")
-        print("Using characters:", [x["name"] for x in use_characters])
-
+        print(f"\t\033[90mUsing interaction mode: {use_interaction_mode}")
+        print("\tUsing characters:", [x["name"] for x in use_characters])
+        print(f"\tUsing agent type: {use_agent_type}")
+        print(f"\tUsing bidding template: {use_bidding_template}")
+        print(f"\tUsing selection function: {use_selection_function}")
         return {
             "interaction_mode": interaction_mode,
             "interaction_description": interaction_description,
@@ -275,11 +280,11 @@ class InteractionManager:
         )
 
         simulator.reset()
-        # simulator.enunciate(interaction_description)
+        simulator.enunciate(interaction_description)
 
         n = 0
 
-        print('\nRunning interaction mode...')
+        # print('\nRunning interaction mode...\n')
         while n < max_iters:
             # TODO: add a condition that picks one random interaction addednum and injects it into the conversation
             # every X turns

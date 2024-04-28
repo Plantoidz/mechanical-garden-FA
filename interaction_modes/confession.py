@@ -39,8 +39,7 @@ class PlantoidConfession:
         self._step += 1
         
     def enunciate(self, intro_message: str):
-
-        print('Enunciating:', intro_message)
+        print('\n\033[94m' + 'Enunciating: ' + '\033[0m' + f'\n{intro_message}')
         speaker = self.agents[self.last_speaker_idx]
         speaker.speak(self.agents, intro_message)
 
@@ -56,8 +55,7 @@ class PlantoidConfession:
         # human is selected
         if speaker.is_human == True:
 
-            print('Human Selected')
-
+            print('\n\n\033[92mHuman selected\033[0m')
             # 2. next (human) speaker sends message
             message = speaker.listen_for_speech(self._step)
 

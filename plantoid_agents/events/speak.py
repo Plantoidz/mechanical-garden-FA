@@ -8,7 +8,7 @@ import os
 import sys
 import time
 import requests
-import pygame.mixer as mixer
+# import pygame.mixer as mixer
 import types
 
 from utils.experiments.MultichannelRouter import Iterator, magicstream
@@ -102,24 +102,24 @@ class Speak:
                 yield text_chunk
                 print(text_chunk, end='', flush=True)
 
-    # def format_response_type(self, response: Any) -> Any:
-    #     return self.stream_text(response) if isinstance(response, types.GeneratorType) else response
+    def format_response_type(self, response: Any) -> Any:
+        return self.stream_text(response) if isinstance(response, types.GeneratorType) else response
 
-    def play_background_music(self, loops=-1) -> None:
+    # def play_background_music(self, loops=-1) -> None:
 
-        # get the path to the background music
-        background_music_path = os.getcwd()+"/media/ambient3.mp3"
+    #     # get the path to the background music
+    #     background_music_path = os.getcwd()+"/media/ambient3.mp3"
 
-        mixer.init()
-        mixer.music.load(background_music_path)
-        mixer.music.play(loops)
+    #     mixer.init()
+    #     mixer.music.load(background_music_path)
+    #     mixer.music.play(loops)
 
     # #todo: rename function and make this more general — cue sounds not just background music
-    def stop_background_music(self) -> None:
+    # def stop_background_music(self) -> None:
 
-        if mixer.get_init() is not None:
-            print('stop background music')
-            mixer.music.stop()
+    #     if mixer.get_init() is not None:
+    #         print('stop background music')
+    #         mixer.music.stop()
 
     def get_voice_clone_files(self):
 
@@ -203,7 +203,7 @@ class Speak:
         # generate audio stream   
         audio_stream = client.generate(
             text=self.stream_text(response),
-            model="eleven_multilingual_v2",
+            model="eleven_turbo_v2",
             voice=voice_id,
             stream=True
         )
@@ -235,7 +235,6 @@ class Speak:
 
     ) -> None:
 
-        print(agents)
         for a in agents:
             if(a.callback): a.callback("<asleep>")
 

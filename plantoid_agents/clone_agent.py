@@ -29,7 +29,7 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
         self.listen_module.play_speech_indicator()
         user_message = self.listen_module.listen(self, agents, self.timeout_override_seconds, step=step)
 
-        print("Human said: " + user_message)
+        print("\n\033[92m" +"Human said:\033[0m\n" + user_message)
 
         return user_message
 

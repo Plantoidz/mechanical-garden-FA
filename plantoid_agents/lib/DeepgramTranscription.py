@@ -57,25 +57,24 @@ class DeepgramTranscription:
 
             if result.speech_final:
                 self.final_result = ' '.join(self.is_finals)
-                print(f"Speech Final: {self.final_result}")
+                print(f"\033[90m\tSpeech Final: {self.final_result}\033[0m")
                 self.utterance = self.final_result
                 self.transcription_complete = True  # Set completion flag
                 #self.is_finals = []  # Reset for potential further use
             else:
-                print(f"Is Final: {sentence}")
+                print(f"\033[90m\tAlmost Final: {sentence}\033[0m")
           
         else:
-            print(f"Interim Results: {sentence}")
+            print(f"\033[90m\tInterim Results: {sentence}\033[0m")
 
     def on_metadata(self, *args, **kwargs):
         metadata = kwargs['metadata'] 
         print(f"Deepgram Metadata: {metadata}")
 
     def on_speech_started(self, *args, **kwargs):
-        print(f"Deepgram Speech Started")
+        print(f"\033[91m\tDeepgram is listening...\033[0m")
 
     def on_utterance_end(self, *args, **kwargs):
-        print("UTTERANCE ENDED !!! ")
         self.utterance = self.final_result
         # if len(self.is_finals) > 0:
         #     # self.utterance = ' '.join(self.is_finals)
@@ -85,7 +84,7 @@ class DeepgramTranscription:
         #     self.transcription_complete = True
 
     def on_close(self, *args, **kwargs):
-        print(f"Deepgram Connection Closed")
+        print(f"\033[91m\tDeepgram Connection Closed\033[0m")
 
     def on_error(self, *args, **kwargs):
         error = kwargs['error'] 
@@ -148,9 +147,6 @@ class DeepgramTranscription:
             # this won't be necessary if deepgram API can return an mp3
             microphone.finish()
             connection.finish()
-
-            print("Finished")
-
 
     def get_final_result(self):
         return self.utterance
