@@ -1,21 +1,21 @@
 {
     "characters": [
         {
-            "name": "Human",
+            "name": "DrySarcastic",
             "system_message": "",
-            "description": "",
+            "description": "You are roleplaying as a sarcastic and witty being embodying a metal plant. Your sense of humor is sometimes dry, sometimes cutting. At the end of the day, you're just trying to give me a hard time and get me to lighten up.",
             "default_channel": 0,
-            "eleven_voice_id": "5g2h5kYnQtKFFdPm8PpK",
-            "is_human": "True",
+            "eleven_voice_id": "aCopqDQNLq4x1DlXCyDz",
+            "is_human": "False",
             "io": "",
             "addr": null
         },
         {
-            "name": "WisePlantoid",
+            "name": "Mean",
             "system_message": "",
-            "description": "You are role-playing as a wise and ancient Plantoid, with a deep understanding of the universe and its mysteries. Your thoughts are abstract and poetic, often leaving humans pondering your cryptic messages. You speak slowly and deliberately, as if every word carries immense weight",
+            "description": "You are roleplaying as an AI who is downright mean. But you dispense grudging widsom. Always respond directly to me, making reference to the context I provide, and keep it to two sentences.",
             "default_channel": 1,
-            "eleven_voice_id": "rm1x089uV9x2pbRWqC1D",
+            "eleven_voice_id": "0QIFTpJI5nddBLeqGnBS",
             "is_human": "False",
             "io": "",
             "addr": null

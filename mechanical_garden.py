@@ -22,25 +22,25 @@ def run_program():
         pass
 
 def config_mode():
-    os.system("$(which python) config/scripts/configure_modes.py")
+    os.system("$(which python3) config/scripts/configure_modes.py")
 
 def config_characters():
-    os.system("$(which python) config/scripts/configure_characters.py")
+    os.system("$(which python3) config/scripts/configure_characters.py")
 
 def config_services():
-    os.system("$(which python) config/scripts/configure_services.py")
+    os.system("$(which python3) config/scripts/configure_services.py")
 
 def config_network():
-    os.system("$(which python) config/scripts/configure_network.py")
+    os.system("$(which python3) config/scripts/configure_network.py")
 
 def add_human_participant():
-    os.system("python3 config/scripts/add_human_participant.py")
+    os.system("$(which python3) config/scripts/add_human_participant.py")
 
 def config_audio():
-    os.system("$(which python) config/scripts/configure_audio.py")
+    os.system("$(which python3) config/scripts/configure_audio.py")
 
 def test_audio():
-    os.system("$(which python) config/scripts/test_pattern.py")
+    os.system("$(which python3) config/scripts/test_pattern.py")
 
 def show_menu():
     print("\nMenu:\n")

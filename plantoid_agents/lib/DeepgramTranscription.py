@@ -58,8 +58,9 @@ class DeepgramTranscription:
             if result.speech_final:
                 self.final_result = ' '.join(self.is_finals)
                 print(f"Speech Final: {self.final_result}")
+                self.utterance = self.final_result
                 self.transcription_complete = True  # Set completion flag
-                self.is_finals = []  # Reset for potential further use
+                #self.is_finals = []  # Reset for potential further use
             else:
                 print(f"Is Final: {sentence}")
           
@@ -74,11 +75,14 @@ class DeepgramTranscription:
         print(f"Deepgram Speech Started")
 
     def on_utterance_end(self, *args, **kwargs):
-        if len(self.is_finals) > 0:
-            self.utterance = ' '.join(self.is_finals)
-            print(f"Deepgram Utterance End: {self.utterance}")
-            self.is_finals = []
-            self.transcription_complete = True
+        print("UTTERANCE ENDED !!! ")
+        self.utterance = self.final_result
+        # if len(self.is_finals) > 0:
+        #     # self.utterance = ' '.join(self.is_finals)
+        #     self.utterance = self.final_result
+        #     print(f"Deepgram Utterance End: {self.utterance}")
+        #     self.is_finals = []
+        #     self.transcription_complete = True
 
     def on_close(self, *args, **kwargs):
         print(f"Deepgram Connection Closed")
