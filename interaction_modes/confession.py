@@ -39,9 +39,10 @@ class PlantoidConfession:
         self._step += 1
         
     def enunciate(self, intro_message: str):
-        print('\n\033[94m' + 'Enunciating: ' + '\033[0m' + f'\n{intro_message}')
+        print('\n\033[94m' + '---- Enunciating: ' + '\033[0m' + f'\n{intro_message}')
         speaker = self.agents[self.last_speaker_idx]
         speaker.speak(self.agents, intro_message)
+
 
     def step(self) -> tuple[str, str]:
         # 1. choose the next speaker

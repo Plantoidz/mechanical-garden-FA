@@ -59,4 +59,5 @@ def magicstream(audio_stream: Iterator[bytes], number_string: str) -> bytes:
         mpv_process.stdin.close()
     mpv_process.wait()
 
+
     return audio

@@ -121,7 +121,7 @@ class InteractionManager:
         if interaction_mode == 'conversation':
             conversation_config = read_addendum_config(interaction_mode)
             stimulus = self.choose_stimulus(conversation_config, interaction_mode)
-            return [stimulus['stimulus']]
+            return stimulus['stimulus']
 
         # if interaction_mode == 'conversation':
         #     return "Let's discuss. Do large language models exhibit any degree of sentience, or are they simply sophisticated information processing systems? Can sentience be measured on a spectrum, and if so, where would large language models fall?"
@@ -129,7 +129,7 @@ class InteractionManager:
         if interaction_mode == 'confession':
             confession_config = read_addendum_config(interaction_mode)
             stimulus = self.choose_stimulus(confession_config, interaction_mode)
-            return [stimulus['description']]
+            return stimulus['description']
         
         if interaction_mode == 'debate':
             return "This is a heated debate on the topic of ETH vs BTC cryptocurrency. Let your hearts loose!"

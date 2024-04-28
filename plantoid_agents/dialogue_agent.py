@@ -156,14 +156,17 @@ class PlantoidDialogueAgent:
 
         return message
     
-    def speak(self, agents, message: str) -> None:
+    def speak(self, agents, message: str, use_streaming: bool = True) -> None:
         """
         Speaks the message using the agent's voice
         """
         
         # TODO: re-enable backgroud stop
         # self.speak_module.stop_background_music()
-        
+        # use_streaming = False
+        print("message ========= ", message)
+        print("speak(1): use streaming = ", use_streaming)
+
         self.speak_module.speak(
             agents,
             self,
@@ -171,6 +174,7 @@ class PlantoidDialogueAgent:
             self.get_voice_id(),
             self.get_channel_id(),
             callback=None, #self.speak_module.stop_background_music,
+            use_streaming = use_streaming,
         )
     
     def receive(self, name: str, message: Union[str, CustomStreamWrapper]) -> None:

@@ -3,6 +3,9 @@ from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
 from elevenlabs import play, stream, save
 from elevenlabs.client import ElevenLabs
 
+from plantoid_agents.events.speak import Speak
+
+
 class PlantoidConversation:
 
     mode_name = 'conversation'
@@ -41,9 +44,21 @@ class PlantoidConversation:
     #todo: need to restore speaking in enunciation, and it's reated to the first turn behavior
             # ENUNCIATE SIMULUS HERE
     def enunciate(self, intro_message: str):
-        print('\n\033[94m' + 'Enunciating: ' + '\033[0m' + '\033[92m' +  f'\n{intro_message}'  + '\033[0m')
+        print('\n\033[94m' + '-------Enunciating: ' + '\033[0m' + '\033[92m' +  f'\n{intro_message}'  + '\033[0m')
         speaker = self.agents[self.last_speaker_idx]
-        speaker.speak(self.agents, intro_message)
+        print('speaker name === ', speaker.name)
+        print("INTRO MSG = ", intro_message)
+
+        speaker.speak(self.agents, intro_message, use_streaming=False)
+
+
+        # Speak.stream_audio_response(
+        #         Speak,
+        #         intro_message,
+        #         speaker.get_voice_id(),
+        #         speaker.channel_id)
+
+
 
     def step(self) -> tuple[str, str]:
         # 1. choose the next speaker

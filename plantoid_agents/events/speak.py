@@ -15,7 +15,7 @@ from utils.experiments.MultichannelRouter import Iterator, magicstream
 
 from dotenv import load_dotenv
 from elevenlabs.client import ElevenLabs, AsyncElevenLabs
-from elevenlabs import stream, Voice, VoiceSettings
+from elevenlabs import stream, Voice, VoiceSettings, play
 
 # https://elevenlabs.io/docs/api-reference/edit-voice
 
@@ -198,28 +198,48 @@ class Speak:
         channel_id: str,
         callback: Any = None,
         use_multichannel: bool = True,
+        use_streaming: bool = True,
     ) -> None:
 
-        # generate audio stream   
-        audio_stream = client.generate(
-            text=self.stream_text(response),
-            model="eleven_turbo_v2",
-            voice=voice_id,
-            stream=True
-        )
+        print("use streaming = ", use_streaming)
 
-        # stop background music callback
-        if callback is not None:
-            callback()
+        if(use_streaming):
+
+            # generate audio stream   
+            audio_stream = client.generate(
+                text=self.stream_text(response),
+                model="eleven_turbo_v2",
+                voice=voice_id,
+                stream=True
+            )
+
+            # stop background music callback
+            if callback is not None:
+                callback()
+                    
+            # stream audio
+            # stream(audio_stream)
                 
-        # stream audio
-        # stream(audio_stream)
-        if use_multichannel:
-            # print("Streaming on channel", channel_id, "\n")
-            magicstream(audio_stream, channel_id)
+            if use_multichannel:
+                print("Streaming on channel", channel_id, " with audio_stream = ", audio_stream, "\n")
+                magicstream(audio_stream, channel_id)
+
+            else:
+                stream(audio_stream)
+        
 
         else:
-            stream(audio_stream)
+            print("RESPONES: ", response)
+            audio = client.generate(
+                text=response,
+                model="eleven_turbo_v2",
+                voice=voice_id,
+                stream=False
+            )
+
+            play(audio)
+
+
 
     def speak(
         self,
@@ -232,8 +252,11 @@ class Speak:
         voice_set_callback: Any = None,
         clone_voice: bool = False,
         create_clone: bool = False,
+        use_streaming: bool = True,
 
     ) -> None:
+
+        print("speaking nothing in the speak function......: ", response)
 
         for a in agents:
             if(a.callback): a.callback("<asleep>")
@@ -254,6 +277,7 @@ class Speak:
                 voice,
                 channel_id,
                 callback=callback,
+                use_streaming=use_streaming,
             )
 
         else:
@@ -262,4 +286,6 @@ class Speak:
                 voice_id,
                 channel_id,
                 callback=callback,
+                use_streaming=use_streaming,
+
             )
