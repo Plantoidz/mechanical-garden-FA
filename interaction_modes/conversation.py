@@ -43,7 +43,7 @@ class PlantoidConversation:
         self._step += 1
 
     #todo: need to restore speaking in enunciation, and it's reated to the first turn behavior
-            # ENUNCIATE SIMULUS HERE
+    # ENUNCIATE SIMULUS HERE
     def enunciate(self, intro_message: str):
         playsound(os.getcwd()+"/media/cleanse.mp3", block=False)
         print('\n\033[94m' + 'Enunciating: ' + '\033[0m' + '\033[92m' +  f'\n{intro_message}'  + '\033[0m')

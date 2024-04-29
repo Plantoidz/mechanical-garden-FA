@@ -7,7 +7,7 @@ from contextlib import contextmanager
 import os
 import sys
 
-# from plantoid_agents.lib.microphone import ModifiedMicrophone
+from microphone import ModifiedMicrophone
 
 @contextmanager
 def ignoreStderr():
@@ -74,6 +74,11 @@ class DeepgramTranscription:
 
     def on_close(self, *args, **kwargs):
         print(f"Deepgram Connection Closed")
+        if len(self.is_finals) > 0:
+            self.utterance = ' '.join(self.is_finals)
+            print(f"Deepgram Utterance End: {self.utterance}")
+            self.is_finals = []
+            self.transcription_complete = True
 
     def on_error(self, *args, **kwargs):
         # error = kwargs['error'] 
@@ -118,17 +123,17 @@ class DeepgramTranscription:
             print("Failed to connect to Deepgram")
             return
 
-        # microphone = ModifiedMicrophone(
-        #     connection.send,
-        #     input_device_index=self.device_index,
-        #     rate=self.sample_rate,
-        # )
-
-        microphone = Microphone(
+        microphone = ModifiedMicrophone(
             connection.send,
+            # input_device_index=self.device_index,
             rate=self.sample_rate,
-            input_device_index=self.device_index,
         )
+
+        # microphone = Microphone(
+        #     connection.send,
+        #     rate=self.sample_rate,
+        #     # input_device_index=self.device_index,
+        # )
 
         microphone.start()
 
@@ -142,10 +147,10 @@ class DeepgramTranscription:
         #     # Optionally, you can keep a debug print here:
         #     # print("Transcribing...")
 
-        # audio_file_path = os.getcwd() + "/media/user_audio/temp_reco_dg.wav"
+        audio_file_path = os.getcwd() + "/media/user_audio/temp_reco_dg.wav"
 
-        # microphone.finish(audio_file_path=audio_file_path)
-        microphone.finish()
+        microphone.finish(audio_file_path=audio_file_path)
+        # microphone.finish()
         connection.finish()
 
         print("Finished")

@@ -48,7 +48,7 @@ class DeepgramTranscription:
 
             if result.speech_final:
                 utterance_ = ' '.join(self.is_finals)
-                print(f"Deepgram heard: {utterance_}")
+                print(f"Speech Final: {utterance_}")
 
                 # NOTE: moved to on_utterance_end event
                 # self.transcription_complete = True  # Set completion flag
@@ -56,7 +56,7 @@ class DeepgramTranscription:
             else:
                 print(f"Is Final: {sentence}")
         else:
-            print(f"Interim results: {sentence}")
+            print(f"Interim Results: {sentence}")
 
     def on_metadata(self, *args, **kwargs):
         metadata = kwargs['metadata'] 
@@ -73,7 +73,7 @@ class DeepgramTranscription:
             self.transcription_complete = True
 
     def on_close(self, *args, **kwargs):
-        # print(f"Deepgram Connection Closed")
+        print(f"Deepgram Connection Closed")
 
     def on_error(self, *args, **kwargs):
         # error = kwargs['error'] 
@@ -157,6 +157,7 @@ class DeepgramTranscription:
             connection.finish()
 
             print("Finished")
+
 
     def get_final_result(self):
         return self.utterance

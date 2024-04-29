@@ -91,11 +91,11 @@ class ModifiedMicrophone:
             self.logger.debug("Microphone.start LEAVE")
             return False
 
-        print("format: %s", self.format)
-        print("channels: %d", self.channels)
-        print("rate: %d", self.rate)
-        print("chunk: %d", self.chunk)
-        print("input_device_id: %d", self.input_device_index)
+        self.logger.info("format: %s", self.format)
+        self.logger.info("channels: %d", self.channels)
+        self.logger.info("rate: %d", self.rate)
+        self.logger.info("chunk: %d", self.chunk)
+        self.logger.info("input_device_id: %d", self.input_device_index)
 
         if inspect.iscoroutinefunction(self.push_callback_org):
             self.logger.verbose("async/await callback - wrapping")
@@ -196,8 +196,6 @@ class ModifiedMicrophone:
         return True
     
     def save_wav_file(self, audio_file_path):
-
-        print("Saving audio file to: ", audio_file_path)
 
         with wave.open(audio_file_path, 'wb') as wf:
             wf.setnchannels(self.channels)

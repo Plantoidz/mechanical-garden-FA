@@ -16,7 +16,7 @@ def list_audio_devices():
         print(f"Max output channels: {dev['maxOutputChannels']}")
         print(f"Default sample rate: {dev['defaultSampleRate']}\n")
         
-def list_audio_devices():
+def list_audio_devices_2():
     # Get a list of output and input devices
     result = subprocess.run(["pactl", "list", "short", "sinks"], capture_output=True, text=True)
     print("Output devices:")

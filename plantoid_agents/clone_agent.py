@@ -21,26 +21,16 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
         self.clone_voice = True
         self.create_clone = True
         self.timeout_override_seconds = 5
+        self.clone_from_single_clip = True
 
-    def listen_for_speech(self, agents, step: int = 0) -> str:
-        print("Current timeout: ", self.timeout_override_seconds)
-        print("Current voice id: ", self.get_voice_id())
-
-        self.listen_module.play_speech_indicator()
-        user_message = self.listen_module.listen(self, agents, self.timeout_override_seconds, step=step)
-
-        print("\n\033[92m" +"Human said:\033[0m\n" + user_message)
-
-        return user_message
-
-    def speak(self, agents, message: str) -> None:
+    def speak(self, agents, message: str, use_streaming: bool = True) -> None:
         """
         Speaks the message using the agent's voice
         """
         print("CREATE CLONE: ", self.create_clone)
         print("VOICE ID: ", self.get_voice_id())
         
-        self.speak_module.stop_background_music()
+        # self.speak_module.stop_background_music()
 
         self.speak_module.speak(
             self,
@@ -51,6 +41,7 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
             voice_set_callback=self.set_create_clone,
             clone_voice=self.clone_voice,
             create_clone=self.create_clone,
+            use_streaming = use_streaming,
         )
 
         # if self.create_clone == False:
@@ -63,3 +54,17 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
         self.eleven_voice_id = voice_id
         # self.timeout_override_seconds = 5
 
+        if self.clone_from_single_clip:
+            self.clone_voice = False
+
+
+    # def listen_for_speech(self, agents, step: int = 0) -> str:
+    #     print("Current timeout: ", self.timeout_override_seconds)
+    #     print("Current voice id: ", self.get_voice_id())
+
+    #     self.listen_module.play_speech_indicator()
+    #     user_message = self.listen_module.listen(self, agents, self.timeout_override_seconds, step=step)
+
+    #     print("\n\033[92m" +"Human said:\033[0m\n" + user_message)
+
+    #     return user_message

@@ -124,7 +124,7 @@ class Speak:
     def get_voice_clone_files(self):
 
         # Define the directory path where you want to list the files
-        directory_path = os.getcwd()+"/media/user_audio/temp_test"
+        directory_path = os.getcwd()+"/media/user_audio/temp"
 
         # Get a list of all files and directories in the specified path
         files_and_directories = os.listdir(directory_path)
@@ -251,10 +251,10 @@ class Speak:
 
     ) -> None:
 
-        for a in agents:
-            if(a.callback): a.callback("<asleep>")
+        # for a in agents:
+        #     if(a.callback): a.callback("<asleep>")
 
-        if(agent.callback): agent.callback("<speaking>")
+        # if(agent.callback): agent.callback("<speaking>")
 
 
         if clone_voice:

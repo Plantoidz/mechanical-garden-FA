@@ -157,7 +157,14 @@ class PlantoidDialogueAgent:
 
         return message
     
-    def speak(self, agents, message: str, use_streaming: bool = True) -> None:
+    def speak(
+        self,
+        agents,
+        message: str,
+        use_streaming: bool = True,
+        clone_voice: bool = False,
+        create_clone: bool = False,
+    ) -> None:
         """
         Speaks the message using the agent's voice
         """
@@ -176,6 +183,8 @@ class PlantoidDialogueAgent:
             self.get_channel_id(),
             callback=None, #self.speak_module.stop_background_music,
             use_streaming = use_streaming,
+            clone_voice = clone_voice,
+            create_clone = create_clone,
         )
     
     def receive(self, name: str, message: Union[str, CustomStreamWrapper]) -> None:
