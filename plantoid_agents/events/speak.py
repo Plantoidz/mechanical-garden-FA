@@ -201,7 +201,7 @@ class Speak:
         use_streaming: bool = True,
     ) -> None:
 
-        print("use streaming = ", use_streaming)
+        # print("use streaming = ", use_streaming)
 
         if(use_streaming):
 
@@ -221,25 +221,20 @@ class Speak:
             # stream(audio_stream)
                 
             if use_multichannel:
-                print("Streaming on channel", channel_id, " with audio_stream = ", audio_stream, "\n")
+                print("\033[90mstreaming on channel",channel_id,"\033[0m\n")
                 magicstream(audio_stream, channel_id)
 
             else:
                 stream(audio_stream)
         
-
         else:
-            print("RESPONES: ", response)
             audio = client.generate(
                 text=response,
                 model="eleven_turbo_v2",
                 voice=voice_id,
                 stream=False
             )
-
             play(audio)
-
-
 
     def speak(
         self,
@@ -255,8 +250,6 @@ class Speak:
         use_streaming: bool = True,
 
     ) -> None:
-
-        print("speaking nothing in the speak function......: ", response)
 
         for a in agents:
             if(a.callback): a.callback("<asleep>")

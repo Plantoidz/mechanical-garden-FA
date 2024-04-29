@@ -136,12 +136,12 @@ class PlantoidDialogueAgent:
         # print("use_content:", use_content)
 
         # print("AGENT:", self.name)
-        print("\t" + GREY + "Character description:" + ENDC)
+        print("" + GREY + "Character description:" + ENDC)
         # print("MESSAGE HISTORY:", self.message_history)
         # print("\n\t" + BLUE + "AGENT:" + ENDC, self.name)
         # todo: just print raw system message
         # print("\n\t" + BLUE + "SYSTEM MESSAGE:" + ENDC, self.system_message)
-        print("\n\t" + GREY + "Message history:", self.message_history, ENDC)
+        print("\n" + GREY + "Message history:", self.message_history, ENDC)
 
         message = self.think_module.think(
             self,
@@ -165,8 +165,8 @@ class PlantoidDialogueAgent:
         # TODO: re-enable backgroud stop
         # self.speak_module.stop_background_music()
         # use_streaming = False
-        print("message ========= ", message)
-        print("speak(1): use streaming = ", use_streaming)
+        # print("message ========= ", message)
+        # print("speak(1): use streaming = ", use_streaming)
 
         self.speak_module.speak(
             agents,

@@ -2,7 +2,8 @@ from typing import Callable, List
 from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
 from elevenlabs import play, stream, save
 from elevenlabs.client import ElevenLabs
-
+import os
+from playsound import playsound
 from plantoid_agents.events.speak import Speak
 
 
@@ -44,11 +45,11 @@ class PlantoidConversation:
     #todo: need to restore speaking in enunciation, and it's reated to the first turn behavior
             # ENUNCIATE SIMULUS HERE
     def enunciate(self, intro_message: str):
-        print('\n\033[94m' + '-------Enunciating: ' + '\033[0m' + '\033[92m' +  f'\n{intro_message}'  + '\033[0m')
+        playsound(os.getcwd()+"/media/cleanse.mp3", block=False)
+        print('\n\033[94m' + 'Enunciating: ' + '\033[0m' + '\033[92m' +  f'\n{intro_message}'  + '\033[0m')
         speaker = self.agents[self.last_speaker_idx]
-        print('speaker name === ', speaker.name)
-        print("INTRO MSG = ", intro_message)
-
+        # print('speaker name === ', speaker.name)
+        # print("INTRO MSG = ", intro_message)
         speaker.speak(self.agents, intro_message, use_streaming=False)
 
 
@@ -57,7 +58,6 @@ class PlantoidConversation:
         #         intro_message,
         #         speaker.get_voice_id(),
         #         speaker.channel_id)
-
 
 
     def step(self) -> tuple[str, str]:

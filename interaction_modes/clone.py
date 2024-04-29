@@ -1,6 +1,5 @@
 from typing import Callable, List
 from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
-
 class PlantoidClone:
 
     mode_name = 'clone'
@@ -36,6 +35,7 @@ class PlantoidClone:
         self._step += 1
 
     def enunciate(self, intro_message: str):
+        # playsound(os.getcwd()+"../media/cleanse.mp3")
         print('\n\033[94m' + 'Enunciating: ' + '\033[0m' + '\033[92m' +  f'\n{intro_message}'  + '\033[0m')
         speaker = self.agents[self.last_speaker_idx]
         speaker.speak(self.agents, intro_message, use_streaming=False)
