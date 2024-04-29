@@ -77,7 +77,7 @@ class DeepgramTranscription:
     def on_utterance_end(self, *args, **kwargs):
         if len(self.is_finals) > 0:
             self.final_result = ' '.join(self.is_finals)
-            # print(f"Deepgram Utterance End: {self.final_result}")
+            print(f"Deepgram Utterance End: {self.final_result}")
             self.is_finals = []
             self.transcription_complete = True
 
@@ -93,10 +93,6 @@ class DeepgramTranscription:
         print(f"Deepgram Unhandled Websocket Message: {unhandled}")
 
     def start_listening(self, step: int = 0):
-
-        # print("Start listening deepgram...")
-        # print("sample rate: ", self.sample_rate)
-        # print("device index: ", self.device_index)        
         # with ignoreStderr():
 
         connection = self.deepgram.listen.live.v("1")

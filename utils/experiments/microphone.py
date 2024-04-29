@@ -208,7 +208,6 @@ class ModifiedMicrophone:
         """
         Stops the microphone stream
         """
-        print("TEST - FINISH MIC RECORDING")
         self.logger.debug("Microphone.finish ENTER")
 
         self.logger.notice("signal exit")

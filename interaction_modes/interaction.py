@@ -88,8 +88,8 @@ class PlantoidInteraction:
         self.set_speaker_idx(speaker_idx, idx_type="current")
         speaker = self.agents[speaker_idx]
 
-        print(f"Current speaker index: {self.current_speaker_idx}")
-        print(f"Last speaker index: {self.last_speaker_idx}")
+        # print(f"Current speaker index: {self.current_speaker_idx}")
+        # print(f"Last speaker index: {self.last_speaker_idx}")
 
         # human is selected
         if speaker.is_human == True:

@@ -91,11 +91,11 @@ class ModifiedMicrophone:
             self.logger.debug("Microphone.start LEAVE")
             return False
 
-        print("format: %s", self.format)
-        print("channels: %d", self.channels)
-        print("rate: %d", self.rate)
-        print("chunk: %d", self.chunk)
-        print("input_device_id: %d", self.input_device_index)
+        # print("format: %s", self.format)
+        # print("channels: %d", self.channels)
+        # print("rate: %d", self.rate)
+        # print("chunk: %d", self.chunk)
+        # print("input_device_id: %d", self.input_device_index)
 
         if inspect.iscoroutinefunction(self.push_callback_org):
             self.logger.verbose("async/await callback - wrapping")
@@ -210,7 +210,6 @@ class ModifiedMicrophone:
         """
         Stops the microphone stream
         """
-        print("TEST - FINISH MIC RECORDING")
         self.logger.debug("Microphone.finish ENTER")
 
         self.logger.notice("signal exit")

@@ -316,7 +316,7 @@ def select_next_speaker_with_human_conversation(
     last_speaker_idx: int,
 ) -> int:
     
-    print("Selecting next speaker, step is: ", step)
+    # print("Selecting next speaker, step is: ", step)
     # initialize bids
     bids = []
 
