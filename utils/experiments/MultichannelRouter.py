@@ -61,3 +61,51 @@ def magicstream(audio_stream: Iterator[bytes], number_string: str) -> bytes:
 
 
     return audio
+
+import subprocess
+
+def magicplay(mp3_filepath: str, number_string: str) -> bytes:
+    channel_map = {
+        "0": "FL",
+        "1": "FR",
+        "2": "FC",
+        "3": "BL",
+        "4": "BR",
+        "5": "BC",
+        "6": "SL",
+        "7": "SR"
+    }
+
+    # Get the channel mapping ID based on the input number string
+    channel_map_id = channel_map.get(str(number_string))
+    if channel_map_id is None:
+        raise ValueError("Invalid number string. Must be a number from 0 to 7.")
+
+    # Build the audio filter string
+    channel_routing_flag = f"--af=lavfi=[pan=octagonal|{channel_map_id}=c0]"
+    mpv_command = [
+        "mpv", "--no-cache", "--no-terminal",
+        channel_routing_flag,
+        "--audio-channels=octagonal",
+        mp3_filepath  # Directly using the MP3 file path
+    ]
+    
+    # Execute the MPV process
+    mpv_process = subprocess.Popen(
+        mpv_command,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+    )
+
+    # Read the processed audio data
+    audio_data = b""
+    while True:
+        chunk = mpv_process.stdout.read(1024)  # Read data chunk by chunk
+        if not chunk:
+            break
+        audio_data += chunk
+
+    # Ensure the MPV process is properly cleaned up
+    mpv_process.wait()
+
+    return audio_data
