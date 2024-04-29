@@ -28,9 +28,9 @@ class InteractionManager:
         Retrieves the selection function based on the provided string.
         """
         if selection_function == 'conversation':
-            return speaker_selection.select_next_speaker_with_human_conversation
+            # return speaker_selection.select_next_speaker_with_human_conversation
             # todo: enable this to be a config parameter
-            # return speaker_selection.select_random_speaker
+            return speaker_selection.select_random_speaker
         
         if selection_function == 'confession':
             return speaker_selection.select_next_speaker_with_human_confession

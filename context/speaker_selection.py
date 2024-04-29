@@ -122,7 +122,8 @@ def mock_select_speaker(step: int, agents: List[DialogueAgent]) -> int:
 
     return 0
 
-def select_random_speaker(step: int, agents: List[DialogueAgent]) -> int:
+# TODO: this a dirty trick (added a default third-arg to select_random_speaker) so that it works in selection_function == 'conversation'
+def select_random_speaker(step: int, agents: List[DialogueAgent], last_speaker_idx: int = 0) -> int:
 
     return random.randint(0, len(agents) - 1)
 
