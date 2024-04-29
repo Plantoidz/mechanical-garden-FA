@@ -77,7 +77,7 @@ class PlantoidDialogueAgent:
             try: 
                 self.socket.sendto(bytes(val, 'utf-8'), (self.addr, 666))
             except Exception as err:
-                print("Failed to connect to", self.address, "with error:", err)
+                print("Failed to connect to", self.addr, "with error:", err)
 
     def tunnel_serial(self, val):
         return ## TODO, activate the serial communication

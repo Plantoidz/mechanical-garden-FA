@@ -252,10 +252,10 @@ class Speak:
 
     ) -> None:
 
-        # for a in agents:
-        #     if(a.callback): a.callback("<asleep>")
+        for a in agents:
+            if(a.callback): a.callback("<asleep>")
 
-        # if(agent.callback): agent.callback("<speaking>")
+        if(agent.callback): agent.callback("<speaking>")
 
 
         if clone_voice:
