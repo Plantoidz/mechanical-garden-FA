@@ -1,5 +1,7 @@
-from typing import Callable, List
+from typing import Callable, List, Union, Any
 from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
+from plantoid_agents.debate_agent import PlantoidDebateAgent
+from plantoid_agents.clone_agent import PlantoidCloneAgent
 from elevenlabs import play, stream, save
 from elevenlabs.client import ElevenLabs
 import os
@@ -7,14 +9,14 @@ from playsound import playsound
 from plantoid_agents.events.speak import Speak
 
 
-class PlantoidConversation:
+class PlantoidInteraction:
 
-    mode_name = 'conversation'
+    mode_name = 'interaction'
 
     def __init__(
         self,
-        agents: List[PlantoidDialogueAgent],
-        selection_function: Callable[[int, List[PlantoidDialogueAgent]], int],
+        agents: List[Union[PlantoidDialogueAgent, PlantoidDebateAgent, PlantoidCloneAgent]],
+        selection_function: Callable[[int, List[Union[PlantoidDialogueAgent, PlantoidDebateAgent, PlantoidCloneAgent]]], int],
     ) -> None:
         self.agents = agents
         self._step = 0
