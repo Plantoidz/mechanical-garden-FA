@@ -16,11 +16,11 @@ class PlantoidConfession(PlantoidInteraction):
     def step(self) -> tuple[str, str]:
         # 1. choose the next speaker
         # speaker_idx = self.select_next_speaker(self._step, self.agents, self.last_speaker_idx)
-        speaker = self.agents[self.last_speaker_idx]
+        speaker = self.agents[self.current_speaker_idx]
 
-        self.increment_speaker_idx()
-        if self.last_speaker_idx == len(self.agents):
-            self.reset_speaker_idx()
+        self.increment_speaker_idx(idx_type="current")
+        if self.current_speaker_idx == len(self.agents):
+            self.reset_speaker_idx(idx_type="current")
 
         # human is selected
         if speaker.is_human == True:

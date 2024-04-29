@@ -28,7 +28,7 @@ class PlantoidClone(PlantoidInteraction):
     def step(self) -> tuple[str, str]:
         # 1. choose the next speaker
         speaker_idx = self.select_next_speaker(self._step, self.agents, self.last_speaker_idx)
-        self.set_speaker_idx(speaker_idx)
+        self.set_speaker_idx(speaker_idx, idx_type="current")
         speaker = self.agents[speaker_idx]
 
         # human is selected

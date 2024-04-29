@@ -22,15 +22,31 @@ class PlantoidInteraction:
         self._step = 0
         self.select_next_speaker = selection_function
         self.last_speaker_idx = 0
+        self.current_speaker_idx = 0
 
-    def increment_speaker_idx(self):
-        self.last_speaker_idx += 1
+    def increment_speaker_idx(self, idx_type: str = "current"):
 
-    def set_speaker_idx(self, idx: int):
-        self.last_speaker_idx = idx
+        if idx_type == "current":
+            self.current_speaker_idx += 1
 
-    def reset_speaker_idx(self):
-        self.last_speaker_idx = 0
+        if idx_type == "last":
+            self.last_speaker_idx += 1
+
+    def set_speaker_idx(self, idx: int, idx_type: str = "current"):
+
+        if idx_type == "current":
+            self.current_speaker_idx = idx
+
+        if idx_type == "last":
+            self.last_speaker_idx = idx
+
+    def reset_speaker_idx(self, idx_type: str = "current"):
+
+        if idx_type == "current":
+            self.current_speaker_idx = 0
+        
+        if idx_type == "last":
+            self.last_speaker_idx = 0
 
     def get_first_non_human_idx(self):
         for idx, agent in enumerate(self.agents):
@@ -62,20 +78,28 @@ class PlantoidInteraction:
         # print('speaker name === ', speaker.name)
         # print("INTRO MSG = ", intro_message)
         speaker.speak(self.agents, intro_message, use_streaming=False)
+
+        self.set_speaker_idx(self.get_first_non_human_idx(), idx_type="last")
         self.inject(speaker.name, intro_message)
 
     def step(self) -> tuple[str, str]:
         # 1. choose the next speaker
         speaker_idx = self.select_next_speaker(self._step, self.agents, self.last_speaker_idx)
-        self.set_speaker_idx(speaker_idx)
+        self.set_speaker_idx(speaker_idx, idx_type="current")
         speaker = self.agents[speaker_idx]
+
+        print(f"Current speaker index: {self.current_speaker_idx}")
+        print(f"Last speaker index: {self.last_speaker_idx}")
 
         # human is selected
         if speaker.is_human == True:
 
             print('\n\n\033[92mHuman selected (' + speaker.name + ')\033[0m')
+
             # ENUNCIATE SPEAKER NAME HERE
-            speaker.speak(self.agents, speaker.name, use_streaming=False)
+            last_speaker = self.agents[self.last_speaker_idx]
+            last_speaker.speak(self.agents, speaker.name, use_streaming=False)
+
             message = speaker.listen_for_speech(self.agents, self._step)
         else:
 
@@ -88,6 +112,7 @@ class PlantoidInteraction:
             receiver.receive(speaker.name, message)
 
         # 4. increment time
+        self.set_speaker_idx(speaker_idx, idx_type="last")
         self._step += 1
 
         return speaker.name, message
