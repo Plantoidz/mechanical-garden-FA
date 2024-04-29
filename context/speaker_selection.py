@@ -309,6 +309,7 @@ def select_next_speaker_with_human_conversation_OLD(
 
     return idx
 
+    # todo: alternating every other turn as a config param
 def select_next_speaker_with_human_conversation(
     step: int,
     agents: List[DialogueAgent],

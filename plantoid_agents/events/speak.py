@@ -234,6 +234,7 @@ class Speak:
                 voice=voice_id,
                 stream=False
             )
+            #todo: implement magicplay
             play(audio)
 
     def speak(
