@@ -1,38 +1,17 @@
 from typing import Callable, List
-from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
-class PlantoidClone:
+from interaction_modes.interaction import PlantoidInteraction
+from plantoid_agents.clone_agent import PlantoidCloneAgent
+
+class PlantoidClone(PlantoidInteraction):
 
     mode_name = 'clone'
 
     def __init__(
         self,
-        agents: List[PlantoidDialogueAgent],
-        selection_function: Callable[[int, List[PlantoidDialogueAgent]], int],
+        agents: List[PlantoidCloneAgent],
+        selection_function: Callable[[int, List[PlantoidCloneAgent]], int],
     ) -> None:
-        self.agents = agents
-        self._step = 0
-        self.select_next_speaker = selection_function
-        self.last_speaker_idx = 0
-
-    def increment_speaker_idx(self):
-        self.last_speaker_idx += 1
-
-    def set_speaker_idx(self, idx: int):
-        self.last_speaker_idx = idx
-
-    def reset(self):
-        for agent in self.agents:
-            agent.reset()
-
-    def inject(self, name: str, message: str):
-        """
-        Initiates the conversation with a {message} from {name}
-        """
-        for agent in self.agents:
-            agent.receive(name, message)
-
-        # increment time
-        self._step += 1
+        super().__init__(agents, selection_function)
 
     def enunciate(self, intro_message: str):
         # playsound(os.getcwd()+"../media/cleanse.mp3")
@@ -45,7 +24,6 @@ class PlantoidClone:
         #     clone_voice = False,
         #     create_clone = False,
         # )
-
 
     def step(self) -> tuple[str, str]:
         # 1. choose the next speaker
