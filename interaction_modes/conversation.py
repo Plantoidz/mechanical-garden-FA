@@ -27,6 +27,14 @@ class PlantoidConversation:
     def set_speaker_idx(self, idx: int):
         self.last_speaker_idx = idx
 
+    def reset_speaker_idx(self):
+        self.last_speaker_idx = 0
+
+    def get_first_non_human_idx(self):
+        for idx, agent in enumerate(self.agents):
+            if agent.is_human == False:
+                return idx
+
     def reset(self):
         print("\nNew stimulus. Resetting conversation...\n")
         for agent in self.agents:
@@ -45,20 +53,14 @@ class PlantoidConversation:
     #todo: need to restore speaking in enunciation, and it's reated to the first turn behavior
     # ENUNCIATE SIMULUS HERE
     def enunciate(self, intro_message: str):
+
         playsound(os.getcwd()+"/media/cleanse.mp3", block=False)
         print('\n\033[94m' + 'Enunciating: ' + '\033[0m' + '\033[92m' +  f'\n{intro_message}'  + '\033[0m')
-        speaker = self.agents[self.last_speaker_idx]
+        speaker = self.agents[self.get_first_non_human_idx()]
         # print('speaker name === ', speaker.name)
         # print("INTRO MSG = ", intro_message)
         speaker.speak(self.agents, intro_message, use_streaming=False)
-
-
-        # Speak.stream_audio_response(
-        #         Speak,
-        #         intro_message,
-        #         speaker.get_voice_id(),
-        #         speaker.channel_id)
-
+        self.inject(speaker.name, intro_message)
 
     def step(self) -> tuple[str, str]:
         # 1. choose the next speaker

@@ -26,6 +26,11 @@ class PlantoidConfession:
     def reset_speaker_idx(self):
         self.last_speaker_idx = 0
 
+    def get_first_non_human_idx(self):
+        for idx, agent in enumerate(self.agents):
+            if agent.is_human == False:
+                return idx
+            
     def reset(self):
         for agent in self.agents:
             agent.reset()
@@ -43,10 +48,9 @@ class PlantoidConfession:
     def enunciate(self, intro_message: str):
         playsound(os.getcwd()+"/media/cleanse.mp3", block=False)
         print('\n\033[94m' + '---- Enunciating: ' + '\033[0m' + f'\n{intro_message}')
-        speaker = self.agents[self.last_speaker_idx]
+        speaker = self.agents[self.get_first_non_human_idx()]
         speaker.speak(self.agents, intro_message, use_streaming=False)
-
-
+        self.inject(speaker.name, intro_message)
 
     def step(self) -> tuple[str, str]:
         # 1. choose the next speaker

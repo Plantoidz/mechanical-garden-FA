@@ -315,6 +315,7 @@ def select_next_speaker_with_human_conversation(
     last_speaker_idx: int,
 ) -> int:
     
+    print("Selecting next speaker, step is: ", step)
     # initialize bids
     bids = []
 
@@ -344,6 +345,10 @@ def select_next_speaker_with_human_conversation(
             else:
 
                 bid = random.randint(0, 10)
+
+        if step == 1 and agent.is_human == True:
+
+            bid = 100
         
         # append bid to bids
         bids.append(bid)
