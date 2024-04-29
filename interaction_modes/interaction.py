@@ -72,7 +72,7 @@ class PlantoidInteraction:
     # ENUNCIATE SIMULUS HERE
     def enunciate(self, intro_message: str):
 
-        playsound(os.getcwd()+"/media/cleanse.mp3", block=False)
+        # playsound(os.getcwd()+"/media/cleanse.mp3", block=False)
         print('\n\033[94m' + 'Enunciating: ' + '\033[0m' + '\033[92m' +  f'\n{intro_message}'  + '\033[0m')
         speaker = self.agents[self.get_first_non_human_idx()]
         # print('speaker name === ', speaker.name)
