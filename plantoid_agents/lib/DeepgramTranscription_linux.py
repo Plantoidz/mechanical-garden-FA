@@ -7,6 +7,8 @@ from contextlib import contextmanager
 import os
 import sys
 
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from plantoid_agents.lib.microphone import ModifiedMicrophone
 
 @contextmanager
@@ -24,14 +26,23 @@ def ignoreStderr():
         os.close(old_stderr)
 
 class DeepgramTranscription:
-    def __init__(self, sample_rate: int = 48000, device_index: int = 0, timeout: int = 5):
+    def __init__(self, sample_rate: int = 48000, device_index: int = None, channels: int = 1, timeout: int = 5):
         self.deepgram = DeepgramClient()
         self.is_finals = []
-        self.utterance = ""
+        self.final_result = ""
         self.transcription_complete = False  # New flag for completion
         self.sample_rate = sample_rate
+        self.channels = channels
         self.device_index = device_index
         self.timeout = timeout  # Timeout in seconds
+
+    def reset(self):
+        """
+        Resets the state variables to their initial conditions.
+        """
+        self.is_finals = []
+        self.final_result = ""
+        self.transcription_complete = False
         
     def on_message(self, *args, **kwargs):
         result = kwargs.get('result', None)
@@ -47,37 +58,35 @@ class DeepgramTranscription:
             self.is_finals.append(sentence)
 
             if result.speech_final:
-                utterance_ = ' '.join(self.is_finals)
-                print(f"Deepgram heard: {utterance_}")
-
-                # NOTE: moved to on_utterance_end event
-                # self.transcription_complete = True  # Set completion flag
-                # self.is_finals = []
+                if len(self.is_finals) > 0:
+                    self.final_result = ' '.join(self.is_finals)
+                    # print(f"Deepgram Utterance End: {self.final_result}")
+                    print(f"\033[90m\tSpeech Final: {self.final_result}\033[0m")
             else:
-                print(f"Is Final: {sentence}")
+                print(f"\033[90m\tAlmost Final: {sentence}\033[0m")
         else:
-            print(f"Interim results: {sentence}")
+            print(f"\033[90m\tInterim Results: {sentence}\033[0m")
 
     def on_metadata(self, *args, **kwargs):
         metadata = kwargs['metadata'] 
         print(f"Deepgram Metadata: {metadata}")
 
     def on_speech_started(self, *args, **kwargs):
-        print(f"Deepgram Speech Started")
+        print(f"\033[91m\tDeepgram is listening...\033[0m")
 
     def on_utterance_end(self, *args, **kwargs):
         if len(self.is_finals) > 0:
-            self.utterance = ' '.join(self.is_finals)
-            print(f"Deepgram Utterance End: {self.utterance}")
+            self.final_result = ' '.join(self.is_finals)
+            print(f"Deepgram Utterance End: {self.final_result}")
             self.is_finals = []
             self.transcription_complete = True
 
     def on_close(self, *args, **kwargs):
-        # print(f"Deepgram Connection Closed")
+        print(f"\033[91m\tDeepgram Connection Closed\033[0m")
 
     def on_error(self, *args, **kwargs):
         # error = kwargs['error'] 
-        print(f"Deepgram Handled Error: {args} {kwargs}")
+        print(f"Deepgram Handled Error: {kwargs}")
 
     def on_unhandled(self, *args, **kwargs):
         unhandled = kwargs['unhandled'] 
@@ -87,78 +96,78 @@ class DeepgramTranscription:
 
         print("Start listening deepgram...")
         print("sample rate: ", self.sample_rate)
-        print("device index: ", self.device_index)
+        print("device index: ", self.device_index)        
+        # with ignoreStderr():
 
-        
-        with ignoreStderr():
+        connection = self.deepgram.listen.live.v("1")
+        connection.on(LiveTranscriptionEvents.Transcript, self.on_message)
+        # connection.on(LiveTranscriptionEvents.Metadata, self.on_metadata)
+        connection.on(LiveTranscriptionEvents.SpeechStarted, self.on_speech_started)
+        connection.on(LiveTranscriptionEvents.UtteranceEnd, self.on_utterance_end)
+        connection.on(LiveTranscriptionEvents.Close, self.on_close)
+        connection.on(LiveTranscriptionEvents.Error, self.on_error)
+        connection.on(LiveTranscriptionEvents.Unhandled, self.on_unhandled)
 
-            connection = self.deepgram.listen.live.v("1")
-            connection.on(LiveTranscriptionEvents.Transcript, self.on_message)
-            # connection.on(LiveTranscriptionEvents.Metadata, self.on_metadata)
-            connection.on(LiveTranscriptionEvents.SpeechStarted, self.on_speech_started)
-            connection.on(LiveTranscriptionEvents.UtteranceEnd, self.on_utterance_end)
-            connection.on(LiveTranscriptionEvents.Close, self.on_close)
-            connection.on(LiveTranscriptionEvents.Error, self.on_error)
-            connection.on(LiveTranscriptionEvents.Unhandled, self.on_unhandled)
+        options = LiveOptions(
+            model="nova-2",
+            language="en-US",
+            smart_format=True,
+            encoding="linear16",
+            channels=self.channels,
+            sample_rate=self.sample_rate,
+            interim_results=True,
+            utterance_end_ms="1000",
+            vad_events=True,
+            endpointing=300
+        )
 
-            options = LiveOptions(
-                model="nova-2",
-                language="en-US",
-                smart_format=True,
-                encoding="linear16",
-                channels=1,
-                sample_rate=48000, #self.sample_rate,
-                interim_results=True,
-                utterance_end_ms="1000",
-                vad_events=True,
-                endpointing=300
-            )
+        if connection.start(options) is False:
+            print("Failed to connect to Deepgram")
+            return
 
-            if connection.start(options) is False:
-                print("Failed to connect to Deepgram")
-                return
+        microphone = ModifiedMicrophone(
+            connection.send,
+            input_device_index=self.device_index,
+            rate=self.sample_rate,
+            channels=self.channels,
+        )
 
-            microphone = ModifiedMicrophone(
-                connection.send,
-                input_device_index=self.device_index,
-                rate=self.sample_rate,
-            )
+        # microphone = Microphone(
+        #     connection.send,
+        #     rate=self.sample_rate,
+        #     # input_device_index=self.device_index,
+        # )
 
-            # microphone = Microphone(
-            #     connection.send,
-            #     # rate=48000,
-            #     # input_device_index=self.device_index,
-            #     # rate=self.sample_rate,
-            # )
+        microphone.start()
 
-            microphone.start()
+        start_time = time.time()  # Note the start time
 
-            start_time = time.time()  # Note the start time
+        # time.sleep(5)
 
-            time.sleep(2)
+        # Wait until the transcription is complete or 5 seconds have elapsed
+        while not self.transcription_complete or (time.time() - start_time) < self.timeout:
+            time.sleep(0.1)  # Sleep briefly to avoid busy waiting
+            # Optionally, you can keep a debug print here:
+            # print("Transcribing...")
 
-            # # Wait until the transcription is complete or 5 seconds have elapsed
-            # while not self.transcription_complete or (time.time() - start_time) < self.timeout:
-            #     time.sleep(0.1)  # Sleep briefly to avoid busy waiting
-            #     # Optionally, you can keep a debug print here:
-            #     # print("Transcribing...")
+        # Define the directory path
+        directory = os.path.join(os.getcwd(), "media/user_audio/temp")
 
-            # Define the directory path
-            directory = os.path.join(os.getcwd(), "media/user_audio/temp")
+        # Ensure the directory exists
+        os.makedirs(directory, exist_ok=True)
 
-            # Ensure the directory exists
-            os.makedirs(directory, exist_ok=True)
+        # Define the audio file path within the newly ensured directory
+        audio_file_path = os.path.join(directory, f"temp_reco_dg_{str(step)}.wav")
 
-            # Define the audio file path within the newly ensured directory
-            audio_file_path = os.path.join(directory, f"temp_reco_dg_{str(step)}.wav")
+        microphone.finish(audio_file_path=audio_file_path)
+        # microphone.finish()
+        connection.finish()
 
-            microphone.finish(audio_file_path=audio_file_path)
-            # microphone.finish()
-            connection.finish()
+        print("Finished")
 
-            print("Finished")
 
     def get_final_result(self):
-        return self.utterance
+        print("Sending final result:", self.final_result)
+        return self.final_result
 
 # todo: implement saving

@@ -37,8 +37,14 @@ class PlantoidClone:
     def enunciate(self, intro_message: str):
         # playsound(os.getcwd()+"../media/cleanse.mp3")
         print('\n\033[94m' + 'Enunciating: ' + '\033[0m' + '\033[92m' +  f'\n{intro_message}'  + '\033[0m')
-        speaker = self.agents[self.last_speaker_idx]
-        speaker.speak(self.agents, intro_message, use_streaming=False)
+        # speaker = self.agents[self.last_speaker_idx]
+        # speaker.speak(
+        #     self.agents,
+        #     intro_message,
+        #     use_streaming=False,
+        #     clone_voice = False,
+        #     create_clone = False,
+        # )
 
 
     def step(self) -> tuple[str, str]:
@@ -53,9 +59,8 @@ class PlantoidClone:
             print('\nWaiting for human...\n')
 
             # 2. next (human) speaker sends message
-            speaker.speak(self.agents, speaker.name, use_streaming=False)
-
-            message = speaker.listen_for_speech(self._step)
+            # speaker.speak(self.agents, speaker.name, use_streaming=False)
+            message = speaker.listen_for_speech(self.agents, self._step)
 
         else:
 

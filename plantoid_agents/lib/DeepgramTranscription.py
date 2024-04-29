@@ -94,7 +94,7 @@ class DeepgramTranscription:
         unhandled = kwargs['unhandled'] 
         print(f"Deepgram Unhandled Websocket Message: {unhandled}")
 
-    def start_listening(self):
+    def start_listening(self, step: int = 0):
         self.reset()  # Reset state at the beginning of a listening session
         with ignoreStderr():
 

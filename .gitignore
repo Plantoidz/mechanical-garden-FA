@@ -105,6 +105,8 @@ tmp/
 tmp/temp_reco.wav
 tmp
 
+venv/
+
 mock_arduino/tmp_log.txt
 responses/
 sermons/
