@@ -1,1 +1,1 @@
-{"current_mode": "clone", "agent_type": "clone", "selection_function": "clone", "bidding_template": "clone", "description": "A conversation between a human and a simulated version of that human."}
+{"current_mode": "conversation", "agent_type": "debate", "selection_function": "conversation", "bidding_template": "conversation", "description": "Ongoing conversation."}
