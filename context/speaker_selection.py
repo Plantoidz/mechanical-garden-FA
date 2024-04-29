@@ -309,12 +309,14 @@ def select_next_speaker_with_human_conversation_OLD(
 
     return idx
 
+    # todo: alternating every other turn as a config param
 def select_next_speaker_with_human_conversation(
     step: int,
     agents: List[DialogueAgent],
     last_speaker_idx: int,
 ) -> int:
     
+    print("Selecting next speaker, step is: ", step)
     # initialize bids
     bids = []
 
@@ -329,7 +331,25 @@ def select_next_speaker_with_human_conversation(
 
         else:
 
-            bid = random.randint(0, 100)
+            if agent.is_human == True:
+
+                last_speaker_is_human = check_last_speaker_is_human(agent)
+
+                if last_speaker_is_human:
+
+                    bid = 0
+
+                else:
+                    # 1 out of 3 times, will_participate = True
+                    bid = 100
+
+            else:
+
+                bid = random.randint(0, 10)
+
+        if step == 1 and agent.is_human == True:
+
+            bid = 100
         
         # append bid to bids
         bids.append(bid)
