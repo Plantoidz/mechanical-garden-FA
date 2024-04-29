@@ -217,14 +217,24 @@ def generate_character_system_message(
         #     Never forget to keep your response to {word_limit} words!
         # """
 
+        # content = f"""{character_header}
+        #     Do not describe unspoken sounds or actions.
+        #     Do not use hashtags (#) or angle brackets (<<, >>)!!!
+        #     Do not change roles!
+        #     Do not speak from the perspective of anyone else.
+        #     Address other participants by name when necessary.
+        #     Stop speaking the moment you finish speaking from your perspective.
+        #     Never forget to keep your response to {word_limit} words!!!
+        # """
+    
         content = f"""{character_header}
+            Do not use the names of the other participants.
             Do not describe unspoken sounds or actions.
             Do not use hashtags (#) or angle brackets (<<, >>)!!!
-            Do not change roles!
-            Do not speak from the perspective of anyone else.
-            Address other participants by name when necessary.
             Stop speaking the moment you finish speaking from your perspective.
             Never forget to keep your response to {word_limit} words!!!
+            And, remember, do not use the names of the other participants.
+
         """
 
     return content
