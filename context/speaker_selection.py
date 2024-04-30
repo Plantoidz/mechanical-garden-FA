@@ -123,14 +123,19 @@ def mock_select_speaker(step: int, agents: List[DialogueAgent]) -> int:
     return 0
 
 # TODO: this a dirty trick (added a default third-arg to select_random_speaker) so that it works in selection_function == 'conversation'
-def select_random_speaker(step: int, agents: List[DialogueAgent], last_speaker_idx: int = 0) -> int:
+def select_random_speaker(step: int, agents: List[DialogueAgent], lastspeaker: int, humanness: int = 0) -> int:
 
-    return random.randint(0, len(agents) - 1)
+    # bids = []
+    # for agent in agents:
+    #     bids[agent] = random.randint(0, len(agents) - 1)
+    #     if(agent.is_human): bids[agent] += humanness
+   return random.randint(0, len(agents) - 1)
 
 def select_next_speaker(
     step: int,
     agents: List[DialogueAgent],
     last_speaker_idx: int,
+    humanness: int = 0,
 ) -> int:
 
     bids = []
@@ -190,6 +195,7 @@ def select_next_speaker_with_human_clone(
     step: int,
     agents: List[DialogueAgent],
     last_speaker_idx: int,
+    humanness: int = 0
 ) -> int:
 
     # initialize bids
@@ -315,6 +321,7 @@ def select_next_speaker_with_human_conversation(
     step: int,
     agents: List[DialogueAgent],
     last_speaker_idx: int,
+    humanness: int = 0,
 ) -> int:
     
     # print("Selecting next speaker, step is: ", step)
@@ -342,11 +349,17 @@ def select_next_speaker_with_human_conversation(
 
                 else:
                     # 1 out of 3 times, will_participate = True
-                    bid = 100
+                    print("checking with humanness = ", humanness)
+                    randi = random.randint(0, 100)
+                    print("random m = ", randi)
+                    will_participate = (randi < (humanness * 100))
+                    print("will_participate = ", will_participate)
+                    if(will_participate == True) : bid = 100 
+                    else: bid = 0
 
             else:
 
-                bid = random.randint(0, 10)
+                bid = random.randint(0, 99)
 
         if step == 1 and agent.is_human == True:
 
@@ -376,6 +389,7 @@ def select_next_speaker_with_human_confession(
     step: int,
     agents: List[DialogueAgent],
     last_speaker_idx: int,
+    humanness: int = 0,
 ) -> int:
 
     return last_speaker_idx
@@ -384,6 +398,7 @@ def select_next_speaker_with_human_debate(
     step: int,
     agents: List[DialogueAgent],
     last_speaker_idx: int,
+    humanness: int = 0,
 ) -> int:
 
     # initialize bids
