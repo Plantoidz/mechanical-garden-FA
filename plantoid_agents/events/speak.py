@@ -8,10 +8,15 @@ import os
 import sys
 import time
 import requests
-# import pygame.mixer as mixer
+import threading
+import keyboard
+from playsound import playsound
+import pygame.mixer as mixer
 import types
+import audioop
 
 from utils.experiments.MultichannelRouter import Iterator, magicstream, setup_magicstream
+from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
 
 from dotenv import load_dotenv
 from elevenlabs.client import ElevenLabs, AsyncElevenLabs
@@ -38,12 +43,16 @@ class Speak:
     A template class for implementing speaking behaviors in an interaction system.
     """
 
-    def __init__(self):
+    def __init__(self, rate: int = 16000, device_index: int = None, chunk: int = 1024, threshold: int = 100):
         """
         Initializes a new instance of the Speak class.
         """
         # Initialization code here (if necessary)
-        pass
+        self.RATE = rate
+        self.CHUNK = chunk
+        self.THRESHOLD = threshold
+        self.device_index = device_index
+        # self.transcription = DeepgramTranscription(sample_rate=self.RATE, device_index=self.device_index, timeout=0.5)
 
     def get_text_to_speech_response(self, text, eleven_voice_id, callback=None):
 
@@ -91,7 +100,7 @@ class Speak:
 
             raise Exception("Error: " + str(status) + ": "+ str(message))
         
-    def stream_text(self, response_stream):
+    def stream_text(self, response_stream, stop_event: threading.Event):
 
         if isinstance(response_stream, str):
             return response_stream
@@ -100,6 +109,11 @@ class Speak:
             if 'choices' in chunk and chunk['choices'][0].get('delta', {}).get('content'):
                 delta = chunk.choices[0].delta
                 text_chunk = delta.content
+
+                if stop_event.is_set():  # Check if stop event has been signaled
+                    print("Stream text - stopped by stop event.")
+                    break  # Exit the loop if the stop event is set
+
                 yield text_chunk
                 print(text_chunk, end='', flush=True)
 
@@ -202,41 +216,96 @@ class Speak:
         use_streaming: bool = True,
     ) -> None:
 
-        # print("use streaming = ", use_streaming)
+        # def trigger_stop_event(stop_event: threading.Event):
+        #     # time.sleep(delay)
 
-        if(use_streaming):
+        #     if use_streaming:
 
-            # generate audio stream   
-            audio_stream = client.generate(
-                text=self.stream_text(response),
-                model="eleven_turbo_v2",
-                voice=voice_id,
-                stream=True
-            )
+        #         time.sleep(2)
+        #         stop_event.set()
 
-            # stop background music callback
-            if callback is not None:
-                callback()
+        stop_event = threading.Event()
+        trigger_thread = threading.Thread(
+            target=self.trigger_stop_event,
+            args=(use_streaming, stop_event,)
+        )
+        trigger_thread.start()
+
+        try:
+
+            if use_streaming:
+
+                # generate audio stream   
+                audio_stream = client.generate(
+                    text=self.stream_text(response, stop_event),
+                    model="eleven_turbo_v2",
+                    voice=voice_id,
+                    stream=True
+                )
+
+                # stop background music callback
+                if callback is not None:
+                    callback()
+                        
+                # stream audio
+                # stream(audio_stream)
                     
-            # stream audio
-            # stream(audio_stream)
-                
-            if use_multichannel:
-                print("\033[90mstreaming on channel",channel_id,"\033[0m\n")
-                magicstream(audio_stream, channel_id)
+                if use_multichannel:
+                    print("\033[90mstreaming on channel",channel_id,"\033[0m\n")
+                    magicstream(audio_stream, channel_id, stop_event)
 
+                else:
+                    stream(audio_stream)
+            
             else:
-                stream(audio_stream)
-        
-        else:
-            audio = client.generate(
-                text=response,
-                model="eleven_turbo_v2",
-                voice=voice_id,
-                stream=False
-            )
-            #todo: implement magicplay
-            play(audio)
+                audio = client.generate(
+                    text=response,
+                    model="eleven_turbo_v2",
+                    voice=voice_id,
+                    stream=False
+                )
+                #todo: implement magicplay
+                play(audio)
+
+        finally:
+            stop_event.set()
+            trigger_thread.join()  # Ensure the interrupt thread is cleaned up properly
+
+    def trigger_stop_event(
+        self,
+        use_streaming: bool,
+        stop_event: threading.Event
+    ):
+        """Listen to the microphone and set the stop_event when noise is detected."""
+
+        if use_streaming:
+            # Initialize PyAudio
+            p = pyaudio.PyAudio()
+
+            # Open stream
+            stream = p.open(format=pyaudio.paInt16,
+                            channels=1,
+                            rate=self.RATE,
+                            input=True,
+                            frames_per_buffer=self.CHUNK,
+                    )
+
+            try:
+                while not stop_event.is_set():
+                    # Read data from the microphone
+                    data = stream.read(self.CHUNK)
+                    # Check the sound level
+                    if audioop.rms(data, 2) > self.THRESHOLD:  # audioop.rms gives the root mean square of the chunk
+                        print("Audio input detected. Stopping streaming.")
+                        stop_event.set()
+                        # playsound(os.getcwd() + "/media/cleanse.mp3", block=False)
+                        break
+            finally:
+                # Clean up the PyAudio stream and instance
+                stream.stop_stream()
+                stream.close()
+                p.terminate()
+                
 
     def speak(
         self,
@@ -284,5 +353,4 @@ class Speak:
                 channel_id,
                 callback=callback,
                 use_streaming=use_streaming,
-
             )
