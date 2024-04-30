@@ -205,6 +205,49 @@ class Speak:
         # )
 
         return voice
+    
+    # def trigger_stop_event(stop_event: threading.Event):
+    #     # time.sleep(delay)
+
+    #     if use_streaming:
+
+    #         time.sleep(2)
+    #         stop_event.set()
+
+    def trigger_stop_event(
+        self,
+        use_streaming: bool,
+        stop_event: threading.Event
+    ):
+        """Listen to the microphone and set the stop_event when noise is detected."""
+
+        if use_streaming:
+            # Initialize PyAudio
+            p = pyaudio.PyAudio()
+
+            # Open stream
+            stream = p.open(format=pyaudio.paInt16,
+                            channels=1,
+                            rate=self.RATE,
+                            input=True,
+                            frames_per_buffer=self.CHUNK,
+                    )
+
+            try:
+                while not stop_event.is_set():
+                    # Read data from the microphone
+                    data = stream.read(self.CHUNK)
+                    # Check the sound level
+                    if audioop.rms(data, 2) > self.THRESHOLD:  # audioop.rms gives the root mean square of the chunk
+                        print("Audio input detected. Stopping streaming.")
+                        stop_event.set()
+                        # playsound(os.getcwd() + "/media/cleanse.mp3", block=False)
+                        break
+            finally:
+                # Clean up the PyAudio stream and instance
+                stream.stop_stream()
+                stream.close()
+                p.terminate()
 
     def stream_audio_response(
         self,
@@ -215,14 +258,6 @@ class Speak:
         use_multichannel: bool = True,
         use_streaming: bool = True,
     ) -> None:
-
-        # def trigger_stop_event(stop_event: threading.Event):
-        #     # time.sleep(delay)
-
-        #     if use_streaming:
-
-        #         time.sleep(2)
-        #         stop_event.set()
 
         stop_event = threading.Event()
         trigger_thread = threading.Thread(
@@ -270,42 +305,6 @@ class Speak:
         finally:
             stop_event.set()
             trigger_thread.join()  # Ensure the interrupt thread is cleaned up properly
-
-    def trigger_stop_event(
-        self,
-        use_streaming: bool,
-        stop_event: threading.Event
-    ):
-        """Listen to the microphone and set the stop_event when noise is detected."""
-
-        if use_streaming:
-            # Initialize PyAudio
-            p = pyaudio.PyAudio()
-
-            # Open stream
-            stream = p.open(format=pyaudio.paInt16,
-                            channels=1,
-                            rate=self.RATE,
-                            input=True,
-                            frames_per_buffer=self.CHUNK,
-                    )
-
-            try:
-                while not stop_event.is_set():
-                    # Read data from the microphone
-                    data = stream.read(self.CHUNK)
-                    # Check the sound level
-                    if audioop.rms(data, 2) > self.THRESHOLD:  # audioop.rms gives the root mean square of the chunk
-                        print("Audio input detected. Stopping streaming.")
-                        stop_event.set()
-                        # playsound(os.getcwd() + "/media/cleanse.mp3", block=False)
-                        break
-            finally:
-                # Clean up the PyAudio stream and instance
-                stream.stop_stream()
-                stream.close()
-                p.terminate()
-                
 
     def speak(
         self,
