@@ -5,9 +5,13 @@ from plantoid_agents.clone_agent import PlantoidCloneAgent
 from elevenlabs import play, stream, save
 from elevenlabs.client import ElevenLabs
 import os
+import keyboard
 from playsound import playsound
 from plantoid_agents.events.speak import Speak
 
+class Interruption:
+    def update(self, forced_speaker_idx):
+        pass  # Implement this method in subclasses
 
 class PlantoidInteraction:
 
@@ -23,6 +27,14 @@ class PlantoidInteraction:
         self.select_next_speaker = selection_function
         self.last_speaker_idx = 0
         self.current_speaker_idx = 0
+        self.listeners = []
+
+    def register_listener(self, listener: Interruption):
+        self.listeners.append(listener)
+
+    def notify_listeners(self, forced_speaker_idx):
+        for listener in self.listeners:
+            listener.update(forced_speaker_idx)
 
     def increment_speaker_idx(self, idx_type: str = "current"):
 
@@ -82,9 +94,17 @@ class PlantoidInteraction:
         self.set_speaker_idx(self.get_first_non_human_idx(), idx_type="last")
         self.inject(speaker.name, intro_message)
 
+    def wait_for_enter(self):
+        print("Press Enter to notify listeners...")
+        keyboard.wait('enter')
+        self.notify_listeners(self.current_speaker_idx)
+
     def step(self) -> tuple[str, str]:
         # 1. choose the next speaker
-        speaker_idx = self.select_next_speaker(self._step, self.agents, self.last_speaker_idx, 0.5) #last arg is humanness % (between 0 and 1)
+        if forced_speaker_idx is not None:
+            speaker_idx = forced_speaker_idx
+        else:
+            speaker_idx = self.select_next_speaker(self._step, self.agents, self.last_speaker_idx)
         self.set_speaker_idx(speaker_idx, idx_type="current")
         speaker = self.agents[speaker_idx]
 
