@@ -2,6 +2,7 @@ import soundcard as sc
 import shutil
 import subprocess
 from typing import Iterator, Union
+import threading
 
 # # Print the name and details of the default speaker
 # def config_confirm 
@@ -16,7 +17,7 @@ from typing import Iterator, Union
 #         return False
 #     return True
 
-def magicstream(audio_stream: Iterator[bytes], number_string: str) -> bytes:
+def magicstream(audio_stream: Iterator[bytes], number_string: str, stop_event: threading.Event) -> bytes:
     channel_map = {
         "0": "FL",
         "1": "FR",
@@ -50,19 +51,21 @@ def magicstream(audio_stream: Iterator[bytes], number_string: str) -> bytes:
 
     audio = b""
 
-    for chunk in audio_stream:
-        if chunk is not None:
-            mpv_process.stdin.write(chunk)  # type: ignore
-            mpv_process.stdin.flush()  # type: ignore
-            audio += chunk
-    if mpv_process.stdin:
-        mpv_process.stdin.close()
-    mpv_process.wait()
-
+    try:
+        for chunk in audio_stream:
+            if stop_event.is_set():
+                print("Magicstream - stopped by stop event.")
+                break
+            if chunk is not None:
+                mpv_process.stdin.write(chunk)  # type: ignore
+                mpv_process.stdin.flush()  # type: ignore
+                audio += chunk
+    finally:
+        if mpv_process.stdin:
+            mpv_process.stdin.close()
+        mpv_process.wait()
 
     return audio
-
-import subprocess
 
 def magicplay(mp3_filepath: str, number_string: str) -> bytes:
     channel_map = {
