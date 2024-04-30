@@ -47,7 +47,7 @@ try:
         data = np.frombuffer(stream.read(CHUNK, exception_on_overflow=False), dtype=np.int16)
         if np.abs(data).max() > THRESHOLD:
             print("Threshold exceeded, playing random MP3.")
-            play_random_mp3('.')  # Adjust path as needed
+            play_random_mp3(os.getcwd()+'media/ambient1.mp3')  # Adjust path as needed
             while pygame.mixer.music.get_busy():
                 pygame.time.Clock().tick(10)
 except KeyboardInterrupt:
