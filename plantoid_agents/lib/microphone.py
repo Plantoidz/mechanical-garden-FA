@@ -197,7 +197,7 @@ class ModifiedMicrophone:
     
     def save_wav_file(self, audio_file_path):
 
-        print("\t\033[90mSaving audio file to:", audio_file_path, "\033[0m")
+        print("\t\033[90mSaving audio file to media/user_audio\033[0m")
 
         with wave.open(audio_file_path, 'wb') as wf:
             wf.setnchannels(self.channels)

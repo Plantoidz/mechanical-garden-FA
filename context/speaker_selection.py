@@ -349,11 +349,11 @@ def select_next_speaker_with_human_conversation(
 
                 else:
                     # 1 out of 3 times, will_participate = True
-                    print("checking with humanness = ", humanness)
+                    # print("checking with humanness = ", humanness)
                     randi = random.randint(0, 100)
-                    print("random m = ", randi)
+                    # print("random m = ", randi)
                     will_participate = (randi < (humanness * 100))
-                    print("will_participate = ", will_participate)
+                    # print("will_participate = ", will_participate)
                     if(will_participate == True) : bid = 100 
                     else: bid = 0
 

@@ -183,15 +183,12 @@ def generate_character_header(
         #     If you change your mind, motivate why your opinion changed.
         #     You must keep all of your responses to strictly {word_limit} words!!!
         # """        
-        response = f""" << {character_description} >>
-            Always adhere to your character description, be poignant and extreme if you must!
-            You must state your true opinion, but make sure to consider what the others are thinking.
-            Speak to other participants whenever possible!
-            Single out other participants in your response if necessary.
-            You may be convinced to change your mind if you are presented with a convincing argument.
-            If you change your mind, be explicit about it.
-            If you change your mind, motivate why your opinion changed.
-            You must keep all of your responses to strictly {word_limit} words!!!
+#PROMPT
+        response = f"""{character_description}  
+            Engage with the other participants, but never address them by name unless they're human.
+            Try to build on the conversation.
+            You must keep all of your responses to strictly {word_limit} words.
+            Remember, never address the other participants by name unless they're human.
         """
 
     return response
@@ -240,13 +237,10 @@ def generate_character_system_message(
     
         #PROMPT_TEMPLATE —> 
         content = f"""{character_header}
-            Try to build on what the last speaker said.
-            Do not use the names of the other participants.
-            Do not use hashtags (#) or angle brackets (<<, >>)!!!
+            Do not use the names of the other participants, unless they are human.
+            Do not use hashtags (#), asterik (*) or angle brackets (<<, >>)!!!
             Stop speaking the moment you finish speaking from your perspective.
             Never forget to keep your response to {word_limit} words!!!
-            And, remember, do not use the names of the other participants.
-
         """
 
     return content

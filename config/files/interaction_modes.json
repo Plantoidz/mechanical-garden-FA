@@ -14,6 +14,13 @@
             "bidding_template": "debate",
             "description": "Multi-participant debate with a moderator, optionally including humans."
         },
+        "doppelganger": {
+            "current_mode": "clone",
+            "agent_type": "clone",
+            "selection_function": "clone",
+            "bidding_template": "clone",
+            "description": "A conversation between a human and a simulated version of that human."
+        },
         "confessional": {
             "current_mode": "confession",
             "agent_type": "debate",
@@ -52,13 +59,6 @@
             "selection_function": "roast",
             "bidding_template": "roast",
             "description": "Several robots take turns interrogating a human."
-        },
-        "doppelganger (WIP)": {
-            "current_mode": "clone",
-            "agent_type": "clone",
-            "selection_function": "clone",
-            "bidding_template": "clone",
-            "description": "A conversation between a human and a simulated version of that human."
         }
     }
 }

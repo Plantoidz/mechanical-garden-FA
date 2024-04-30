@@ -92,7 +92,7 @@ class PlantoidDialogueAgent:
         return self.channel_id
 
     def reset(self):
-        self.message_history = ["Go ahead."]
+        self.message_history = []
         # self.message_history = ["Someone should kick off the discussion."]
 
     def get_human_participation_preference(self) -> bool:
@@ -140,7 +140,7 @@ class PlantoidDialogueAgent:
         # print("use_content:", use_content)
 
         # print("AGENT:", self.name)
-        print("" + GREY + "Character description:" + ENDC)
+        print("" + GREY + "Character description:", self.system_message, ENDC)
         # print("MESSAGE HISTORY:", self.message_history)
         # print("\n\t" + BLUE + "AGENT:" + ENDC, self.name)
         # todo: just print raw system message
