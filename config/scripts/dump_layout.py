@@ -12,24 +12,27 @@ class ModeConfigurator:
 
     def load_json_from_file(self, filename):
         with open(filename, 'r') as file:
-            return json.load(file)
-           
-
+            data = json.load(file)
+            if "characters" in filename: 
+                return data.get("characters", [])  # Safely return the list or an empty list if not found
+            return data  
   
     def dump_layout(self):
-        print(self.characters)  # Add this to check the structure
+        # print("Current characters data:", self.characters)
         for lay in self.layout:
             channel = lay['default_channel']
             for ters in self.characters:
-                if(ters['default_channel'] == channel):
+                if ters['default_channel'] == channel:
                     ters['io'] = lay['io']
                     ters['addr'] = lay['addr']
 
+        # Wrapping the list of characters in a dictionary with the 'characters' key
+        data_to_write = {"characters": self.characters}
+
         with open(self.characters_file, 'w') as file:
-            json.dump(self.characters, file, indent=4)
+            json.dump(data_to_write, file, indent=4)  # Writing the dictionary to file
 
-        print(f"\nConfig {self.characters_file} has been updated with the new layout.")
-
+        print(f"\n\033[32mConfig {self.characters_file} has been updated with the new layout.\033[0m")
 
 def main():
     layout_file = os.getcwd()+'/config/files/working/current_layout.json'

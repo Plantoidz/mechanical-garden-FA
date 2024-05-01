@@ -237,7 +237,7 @@ def generate_character_system_message(
     
         #PROMPT_TEMPLATE —> 
         content = f"""{character_header}
-            Do not use the names of the other participants, unless they are human.
+            Always respond directly, from the perspective of a single participant. 
             Do not use hashtags (#), asterik (*) or angle brackets (<<, >>)!!!
             Stop speaking the moment you finish speaking from your perspective.
             Never forget to keep your response to {word_limit} words!!!

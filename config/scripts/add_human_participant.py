@@ -26,7 +26,7 @@ def append_to_json(character):
             data["characters"] = characters
             file.seek(0)
             json.dump(data, file, indent=4)
-            print("Character added successfully!")
+            print("\033[32mCharacter added successfully!\033[0m")
     except FileNotFoundError:
         print("current_characters.json file not found.")
 

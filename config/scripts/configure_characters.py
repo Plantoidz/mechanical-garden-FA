@@ -22,20 +22,14 @@ class CharacterConfigurator:
         char_classes = None
         with open(self.source_path + "/character_bank.json", 'r') as file:
             return json.load(file)
-        
-
-
- 
 
     def select_character(self, jdump):
-        index = int(input("Enter the number for the character: ")) - 1
+        index = int(input("\nSelect an option:")) - 1
         if 0 <= index < len(jdump):
             return jdump[index]
         else:
             print("Invalid choice!")
             return self.select_character(jdump)
-
-        
 
     def select_character_name(self, defaultname):
         name = input(f"Enter the name of the character (default is {defaultname}): ")
@@ -80,7 +74,7 @@ class CharacterConfigurator:
                     serial_ports.append(port)
 
         print(serial_ports)
-        index = str(input("Enter the Serial port of the character: "))
+        index = str(input("Enter the serial port of the character: "))
         return index
 
     def select_addr(self, io):
@@ -106,7 +100,7 @@ class CharacterConfigurator:
 
 
     def configure_characters(self):
-        num_of_characters = int(input("How many characters do you want to select? "))
+        num_of_characters = int(input("\nHow many characters do you want to select? "))
 
         while num_of_characters <= 0 or num_of_characters > len(self.characters):
 
@@ -118,15 +112,15 @@ class CharacterConfigurator:
 
         for i in range(num_of_characters):
 
-            print(f"\nSelect character {i + 1}:")
+            print(f"\nSelect type for character {i + 1}:\n")
 
 
 
             for k in range(len(self.characters)):
 
-                print(k+1, ". ", self.characters[k]['description'])
+                print(f"{k+1}.", self.characters[k]['description'])
 
-            stimuli = int(input(f"Enter the category of characters: ")) -1
+            stimuli = int(input(f"\nSelect a character:\n")) -1
 
             with open(self.source_path + "/" + self.characters[stimuli]['stimuli'], 'r') as ffile:
                     jdump = json.load(ffile)['characters']
