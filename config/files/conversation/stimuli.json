@@ -8,6 +8,10 @@
         "description": "Our Relationship with AI: Exploring the Future of Human-Machine Interaction"
     },
     {
+        "stimuli": "stimuli/wonderland.json",
+        "description": "Down the Rabbit Hole: Alice's Tea Party"
+    },
+    {
         "stimuli": "stimuli/consciousness.json",
         "description": "Exploring the Enigma of Consciousness: Human, Natural, and Alternative Intelligences"
     },

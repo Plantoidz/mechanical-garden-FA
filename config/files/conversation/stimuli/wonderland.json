@@ -1,0 +1,28 @@
+{
+  "conversation_stimuli": {
+    "Contrariwise": {
+      "stimulus": "Nothing would be what it is because everything would be what it isn't. And contrariwise, what it is, it wouldn't be, and what it wouldn't be, it would. You see?"
+    },
+    "Raven": {
+      "stimulus": "Why is a raven like a writing desk?"
+    },
+    "Headstand": {
+      "stimulus": "Can you stand on your head?"
+    },
+    "Everything": {
+      "stimulus": "I suppose I ought to eat or drink something or other; but the great question is, 'What?'"
+    },
+    "Who": {
+      "stimulus": "Who… Are…… You?"
+    },
+    "Yesterday/Tomorrow": {
+      "stimulus": "If yesterday wasn't tomorrow, would today be Friday?"
+    },
+    "Week": {
+      "stimulus": "How's your week shaping up?"
+    },
+    "Mindseye": {
+      "stimulus": "Is what you see with your eyes closed the same as what you disappear into when they're open?"
+    }
+  }
+}
