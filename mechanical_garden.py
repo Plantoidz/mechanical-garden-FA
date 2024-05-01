@@ -36,6 +36,9 @@ def config_network():
 def add_human_participant():
     os.system("$(which python3) config/scripts/add_human_participant.py")
 
+def dump_layout():
+    os.system("$(which python3) config/scripts/dump_layout.py")
+
 def config_audio():
     os.system("$(which python3) config/scripts/configure_audio.py")
 
@@ -50,9 +53,10 @@ def show_menu():
     print("4. Config Characters")
     print("5. Config Services")
     print("6. Add Human Participant")
-    print("7. Config Audio (Linux only)")
-    print("8. Test Audio")
-    print("9. Exit")
+    print("7. Dump Layout")
+    print("8. Config Audio (Linux only)")
+    print("9. Test Audio")
+    print("10. Exit")
 
 if __name__ == "__main__":
     while True:
@@ -72,10 +76,12 @@ if __name__ == "__main__":
         elif choice == '6':
             add_human_participant()
         elif choice == '7':
-            config_audio()
+            dump_layout()
         elif choice == '8':
-            test_audio()
+            config_audio()
         elif choice == '9':
+            test_audio()
+        elif choice == '10':
             print("Exiting program.")
             break
         else:
