@@ -17,6 +17,7 @@ class ModeConfigurator:
 
   
     def dump_layout(self):
+        print(self.characters)  # Add this to check the structure
         for lay in self.layout:
             channel = lay['default_channel']
             for ters in self.characters:
