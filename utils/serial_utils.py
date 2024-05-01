@@ -1,5 +1,5 @@
 import serial
-import keyboard
+# import keyboard
 import time
 import os, signal
 import random

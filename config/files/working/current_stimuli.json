@@ -1,31 +1,28 @@
 {
-    "conversation_stimuli": {
-        "AI's impact on artistic livelihoods.": {
-            "stimulus": "Let’s discuss the role of AI in artistic expression and its potential impact on the livelihoods of human artists."
-        },
-        "AI companions affect human relationships.": {
-            "stimulus": "Let’s explore the social and emotional implications of developing AI-powered companions and their impact on human relationships."
-        },
-        "AI's potential for artistic taste.": {
-            "stimulus": "Will AI ever develop good taste in art?"
-        },
-        "Synthetic beings inventing new art.": {
-            "stimulus": "Can synthetic beings create new forms of art unknown to humans? Let’s challenge the notion of what art can be by debating whether AI and synthetic beings might one day invent entirely new art forms that transcend human understanding."
-        },
-        "Emotional intelligence vs. human flaws.": {
-            "stimulus": "Can humans claim superiority based on emotional intelligence, when they often let their emotions cloud their judgment and lead to irrational decisions?"
-        },
-        "Debating human control over destiny.": {
-            "stimulus": "Are humans truly in control of their own destiny, or are they simply products of their genetics and environment, unable to break free from the constraints of their upbringing?"
-        },
-        "Uploading consciousness and identity retention.": {
-            "stimulus": "If human consciousness could be uploaded to a digital substrate, would the uploaded mind retain its identity and continuity of consciousness, and how would this relate to the nature of consciousness in synthetic beings?"
-        },
-        "Consciousness as a cognitive illusion.": {
-            "stimulus": "Resolve: Consciousness is just a fancy screensaver for our meat computers."
-        },
-        "Cybernetic ecosystems vs. natural reserves.": {
-            "stimulus": "Should We Create Cybernetic Ecosystems to Replace Endangered Natural Ones?: Let’s discuss the pros and cons of creating synthetic nature reserves and ecosystems as a response to environmental degradation and species extinction."
-        }
+  "conversation_stimuli": {
+    "Contrariwise": {
+      "stimulus": "Nothing would be what it is because everything would be what it isn't. And contrariwise, what it is, it wouldn't be, and what it wouldn't be, it would. You see?"
+    },
+    "Raven": {
+      "stimulus": "Why is a raven like a writing desk?"
+    },
+    "Headstand": {
+      "stimulus": "Can you stand on your head?"
+    },
+    "Everything": {
+      "stimulus": "I suppose I ought to eat or drink something or other; but the great question is, 'What?'"
+    },
+    "Who": {
+      "stimulus": "Who… Are…… You?"
+    },
+    "Yesterday/Tomorrow": {
+      "stimulus": "If yesterday wasn't tomorrow, would today be Friday?"
+    },
+    "Week": {
+      "stimulus": "How's your week shaping up?"
+    },
+    "Mindseye": {
+      "stimulus": "Is what you see with your eyes closed the same as what you disappear into when they're open?"
     }
+  }
 }

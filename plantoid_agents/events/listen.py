@@ -63,7 +63,7 @@ class Listen:
         self,
         timeout: int = 5,
         silence_limit: int = 2,
-        threshold: int = 2000,
+        threshold: int = 900,
         record_seconds: int = 2,
         rate: int = 16000,
         chunk: int = 512,

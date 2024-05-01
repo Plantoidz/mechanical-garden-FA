@@ -18,3 +18,4 @@ with concurrent.futures.ThreadPoolExecutor() as executor:
     futures = [executor.submit(test_api_latency, url) for url in urls]
     for future in concurrent.futures.as_completed(futures):
         print(future.result())
+

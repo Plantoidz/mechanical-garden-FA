@@ -135,7 +135,7 @@ def select_next_speaker(
     step: int,
     agents: List[DialogueAgent],
     last_speaker_idx: int,
-    humanness: int = 0,
+    humanness: int = 1,
 ) -> int:
 
     bids = []
