@@ -1,6 +1,16 @@
 from typing import Callable, List, Union
-
+import sys
 import socket
+import os
+
+
+sys.path.insert(0, '..') 
+
+import serial.tools.list_ports
+import utils.serial_utils
+from utils.serial_utils import send_to_arduino
+
+
 
 # import plantoid_agents.lib.speech as PlantoidSpeech
 from plantoid_agents.events.listen import Listen
@@ -58,6 +68,16 @@ class PlantoidDialogueAgent:
             except Exception as err:
                 print("Failed to connect: ", err)
 
+        if(io == "serial" and addr):
+            print("Serial connection to: ", addr)
+            try:
+                self.socket = utils.serial_utils.setup_serial(addr, 115200)
+                self.callback = self.tunnel_serial
+                self.addr = addr
+            except serial.SerialException:
+                print("Failed to connect to ", addr)
+
+
         #TODO: do not hardcode!
         self.use_model_type = "litellm"
         self.use_streaming = True
@@ -80,7 +100,12 @@ class PlantoidDialogueAgent:
                 print("Failed to connect to", self.addr, "with error:", err)
 
     def tunnel_serial(self, val):
-        return ## TODO, activate the serial communication
+
+        if(self.socket):
+            try:
+                send_to_arduino(self.socket, val) 
+            except serial.SerialException:
+                print("Failed to send msg to ", self.addr)
 
 
     def get_voice_id(self) -> str:
