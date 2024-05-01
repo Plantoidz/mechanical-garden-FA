@@ -44,7 +44,11 @@ class PlantoidClone(PlantoidInteraction):
 
             # 2. next speaker sends message
             message = speaker.send()
-            speaker.speak(self.agents, message)
+            speaker.speak(
+                self.agents,
+                message,  
+                interruption_callback = self.set_agent_interrupted,
+            )
 
         # 3. everyone receives message
         for receiver in self.agents:

@@ -23,7 +23,13 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
         self.timeout_override_seconds = 5
         self.clone_from_single_clip = True
 
-    def speak(self, agents, message: str, use_streaming: bool = True) -> None:
+    def speak(
+        self,
+        agents,
+        message: str,
+        use_streaming: bool = True,
+        interruption_callback: Callable = None,
+    ) -> None:
         """
         Speaks the message using the agent's voice
         """
@@ -39,6 +45,7 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
             self.get_voice_id(),
             self.get_channel_id(),
             voice_set_callback=self.set_create_clone,
+            interruption_callback=interruption_callback,
             clone_voice=self.clone_voice,
             create_clone=self.create_clone,
             use_streaming = use_streaming,

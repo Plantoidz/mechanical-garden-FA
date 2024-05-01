@@ -156,7 +156,7 @@ class PlantoidDialogueAgent:
         )
 
         print("\n" + PURPLE + self.name, 'says:' + ENDC)
-        formatted_message = self.think_module.format_response_type(message)
+        # formatted_message = self.think_module.format_response_type(message)
         # print(formatted_message)
 
         return message
@@ -168,6 +168,7 @@ class PlantoidDialogueAgent:
         use_streaming: bool = True,
         clone_voice: bool = False,
         create_clone: bool = False,
+        interruption_callback: Callable = None,
     ) -> None:
         """
         Speaks the message using the agent's voice
@@ -185,7 +186,8 @@ class PlantoidDialogueAgent:
             message,
             self.get_voice_id(),
             self.get_channel_id(),
-            callback=None, #self.speak_module.stop_background_music,
+            # bg_callback=None, #self.speak_module.stop_background_music,
+            interruption_callback = interruption_callback,
             use_streaming = use_streaming,
             clone_voice = clone_voice,
             create_clone = create_clone,
