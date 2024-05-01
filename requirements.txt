@@ -38,4 +38,5 @@ ollama
 # deepgram
 mpv
 serial
+pyserial
 keyboard
