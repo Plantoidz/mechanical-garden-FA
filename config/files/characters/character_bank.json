@@ -1,34 +1,34 @@
 [
     {
-        "stimuli": "characters/humans.json",
+        "stimuli": "humans.json",
         "description": "Human participants"
     },
     {
-        "stimuli": "characters/classic.json",
+        "stimuli": "classic.json",
         "description": "Classic characters from PLLantation"
     },
     {
-        "stimuli": "characters/gimmick.json",
+        "stimuli": "gimmick.json",
         "description": "Gimmicky characters that play a special diagetic role"
     },
     {
-        "stimuli": "characters/wonderland.json",
+        "stimuli": "wonderland.json",
         "description": "Characters from Alice in Wonderland"
     },
     {
-        "stimuli": "characters/glitch.json",
+        "stimuli": "glitch.json",
         "description": "Glitch compatable hacker themes"
     },
     {
-        "stimuli": "characters/consciousness.json",
+        "stimuli": "consciousness.json",
         "description": "Characters that help explore themes of consciousness, AI sentience and takeover"
     },
     {
-        "stimuli": "characters/political.json",
+        "stimuli": "political.json",
         "description": "Characters that embody political philosophies"
     },
     {
-        "stimuli": "characters/new.json",
+        "stimuli": "new.json",
         "description": "New characters in testing for Fey Arts 24"
     }
 ]
