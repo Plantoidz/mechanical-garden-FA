@@ -217,7 +217,8 @@ class Speak:
     def trigger_stop_event(
         self,
         use_streaming: bool,
-        stop_event: threading.Event
+        stop_event: threading.Event,
+        interruption_callback: Any,
     ):
         """Listen to the microphone and set the stop_event when noise is detected."""
 
@@ -239,9 +240,10 @@ class Speak:
                     data = stream.read(self.CHUNK)
                     # Check the sound level
                     if audioop.rms(data, 2) > self.THRESHOLD:  # audioop.rms gives the root mean square of the chunk
-                        print("Audio input detected. Stopping streaming.")
-                        stop_event.set()
-                        # playsound(os.getcwd() + "/media/cleanse.mp3", block=False)
+                        print("\nAudio input detected. Stopping streaming.")
+                        stop_event.set()  # Signal that the stop condition has been met
+                        if interruption_callback is not None:
+                            interruption_callback(agent_interrupted=True)  # Notify the rest of the application
                         break
             finally:
                 # Clean up the PyAudio stream and instance
@@ -249,12 +251,19 @@ class Speak:
                 stream.close()
                 p.terminate()
 
+                # Ensure the stop_event is set if it hasn't been already
+                if not stop_event.is_set():
+                    stop_event.set()
+                    if interruption_callback is not None:
+                        interruption_callback(agent_interrupted=False)  # No interruption was detected
+
     def stream_audio_response(
         self,
         response: str,
         voice_id: str,
         channel_id: str,
-        callback: Any = None,
+        bg_callback: Any = None,
+        interruption_callback: Any = None,
         use_multichannel: bool = True,
         use_streaming: bool = True,
     ) -> None:
@@ -262,7 +271,7 @@ class Speak:
         stop_event = threading.Event()
         trigger_thread = threading.Thread(
             target=self.trigger_stop_event,
-            args=(use_streaming, stop_event,)
+            args=(use_streaming, stop_event, interruption_callback)
         )
         trigger_thread.start()
 
@@ -279,11 +288,8 @@ class Speak:
                 )
 
                 # stop background music callback
-                if callback is not None:
-                    callback()
-                        
-                # stream audio
-                # stream(audio_stream)
+                if bg_callback is not None:
+                    bg_callback()
                     
                 if use_multichannel:
                     print("\033[90mstreaming on channel",channel_id,"\033[0m\n")
@@ -313,8 +319,9 @@ class Speak:
         response: str,
         voice_id: str,
         channel_id: str,
-        callback: Any = None,
+        bg_callback: Any = None,
         voice_set_callback: Any = None,
+        interruption_callback: Any = None,
         clone_voice: bool = False,
         create_clone: bool = False,
         use_streaming: bool = True,
@@ -341,7 +348,8 @@ class Speak:
                 response,
                 voice,
                 channel_id,
-                callback=callback,
+                bg_callback=bg_callback,
+                interruption_callback=interruption_callback,
                 use_streaming=use_streaming,
             )
 
@@ -350,6 +358,7 @@ class Speak:
                 response,
                 voice_id,
                 channel_id,
-                callback=callback,
+                bg_callback=bg_callback,
+                interruption_callback=interruption_callback,
                 use_streaming=use_streaming,
             )

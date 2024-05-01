@@ -322,6 +322,7 @@ def select_next_speaker_with_human_conversation(
     agents: List[DialogueAgent],
     last_speaker_idx: int,
     humanness: int = 0,
+    agent_interrupted: bool = False,
 ) -> int:
     
     # print("Selecting next speaker, step is: ", step)
@@ -354,8 +355,8 @@ def select_next_speaker_with_human_conversation(
                     # print("random m = ", randi)
                     will_participate = (randi < (humanness * 100))
                     # print("will_participate = ", will_participate)
-                    if(will_participate == True) : bid = 100 
-                    else: bid = 0
+                    
+                    bid = 100 if will_participate == True else 0
 
             else:
 
@@ -363,6 +364,10 @@ def select_next_speaker_with_human_conversation(
 
         if step == 1 and agent.is_human == True:
 
+            bid = 100
+
+        if agent_interrupted and agent.is_human == True:
+                
             bid = 100
         
         # append bid to bids

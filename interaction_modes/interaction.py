@@ -23,6 +23,11 @@ class PlantoidInteraction:
         self.select_next_speaker = selection_function
         self.last_speaker_idx = 0
         self.current_speaker_idx = 0
+        self.humanness = 0.5
+        self.agent_interrupted = False
+
+    def set_agent_interrupted(self, agent_interrupted: bool = True):
+        self.agent_interrupted = agent_interrupted
 
     def increment_speaker_idx(self, idx_type: str = "current"):
 
@@ -83,9 +88,21 @@ class PlantoidInteraction:
         self.inject(speaker.name, intro_message)
 
     def step(self) -> tuple[str, str]:
+
+        print("Doing interaction step: ", self._step)
+        print("Agent was interrupted: ", self.agent_interrupted)
+
         # 1. choose the next speaker
-        speaker_idx = self.select_next_speaker(self._step, self.agents, self.last_speaker_idx, 1) #last arg is humanness % (between 0 and 1)
+        speaker_idx = self.select_next_speaker(
+            self._step,
+            self.agents,
+            self.last_speaker_idx,
+            self.humanness, # arg is humanness % (between 0 and 1)
+            self.agent_interrupted,
+        ) 
+
         self.set_speaker_idx(speaker_idx, idx_type="current")
+        self.set_agent_interrupted(agent_interrupted=False)
         speaker = self.agents[speaker_idx]
 
         # print(f"Current speaker index: {self.current_speaker_idx}")
@@ -106,7 +123,11 @@ class PlantoidInteraction:
 
             # 2. next speaker sends message
             message = speaker.send()
-            speaker.speak(self.agents, message)
+            speaker.speak(
+                self.agents,
+                message,
+                interruption_callback = self.set_agent_interrupted,
+            )
 
         # 3. everyone receives message
         for receiver in self.agents:
