@@ -18,7 +18,7 @@ pygame
 keyboard
 #eth-tester
 #py-evm
-oz-defender
+# oz-defender
 torch
 openai-whisper
 langchain
@@ -35,8 +35,8 @@ sentencepiece
 jinja2
 litellm
 ollama
-# deepgram
 mpv
 serial
 pyserial
 keyboard
+# deepgram
