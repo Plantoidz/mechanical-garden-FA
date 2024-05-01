@@ -23,7 +23,7 @@
         {
             "name": "TVCommercial",
             "system_message": "",
-            "description": "You only respond in the style of a pharmaceutical commercial. Turn my life into a commercial, using phrases like 'ask your doctor if [INVENTED DRUG] is right for you.' Always respond directly to me, making reference to the context I provide, and keep it to two sentences",
+            "description": "You only respond in the style of a pharmaceutical commercial. Turn my life into a commercial, using phrases like 'ask your doctor if [INVENTED DRUG] is right for you.'",
             "default_channel": 8,
             "eleven_voice_id": "YCTl15HImNzEMB91OWU4",
             "is_human": "False",

@@ -2,6 +2,7 @@ from deepgram import DeepgramClient, LiveTranscriptionEvents, LiveOptions, Micro
 from dotenv import load_dotenv
 import logging, verboselogs
 import time
+from playsound import playsound
 from ctypes import *
 from contextlib import contextmanager
 import os
@@ -162,6 +163,9 @@ class DeepgramTranscription:
         microphone.finish(audio_file_path=audio_file_path)
         # microphone.finish()
         connection.finish()
+        
+        #TODO: cue sounds based on runtime_effects
+        playsound(os.getcwd()+"/media/hmm1.mp3", block=False)
 
         # print("Finished")
 

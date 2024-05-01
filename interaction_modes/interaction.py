@@ -98,7 +98,8 @@ class PlantoidInteraction:
 
             # ENUNCIATE SPEAKER NAME HERE
             last_speaker = self.agents[self.last_speaker_idx]
-            last_speaker.speak(self.agents, speaker.name, use_streaming=False)
+            #TODO: cue based on runtime_effects
+            # last_speaker.speak(self.agents, speaker.name, use_streaming=False)
 
             message = speaker.listen_for_speech(self.agents, self._step)
         else:
