@@ -28,7 +28,7 @@ class InteractionManager:
         Retrieves the selection function based on the provided string.
         """
         if selection_function == 'conversation':
-            print("selecting next speaker with human conversation")
+            print("\033[92mLet's have a conversation.\033[94m")
             return speaker_selection.select_next_speaker_with_human_conversation
             # todo: enable this to be a config parameter
             # return speaker_selection.select_random_speaker

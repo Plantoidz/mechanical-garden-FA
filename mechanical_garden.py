@@ -5,7 +5,7 @@ import os
 import utils.config_util as config_util
 
 def run_program():
-    print("\nHello Mechanical Garden!")
+    print("\n\033[94mHello Mechanical Garden!\033[0m")
     
     # instantiate the InteractionManager
     interaction_manager = InteractionManager()
