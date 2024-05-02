@@ -11,7 +11,7 @@ samplerate = 44100
 
 input_queue = multiprocessing.Queue()
 output_queue = multiprocessing.Queue()
-channel_index_value = multiprocessing.Value("channel", 1)
+channel_index_value = multiprocessing.Value("i", 0)
 decoder_child_process = None
 player_child_process = None
 
@@ -48,8 +48,10 @@ def play_audio(channel_index_value, input_queue, output_queue):
 
         samples = samples / (2**15)
         zeros = numpy.zeros(len(samples))
+        # print(f"Number of channels: {default_speaker.channels=}")
         all_channels_signal = [zeros] * default_speaker.channels
         with channel_index_value.get_lock():
+            # print(f"Using channel number {channel_index_value.value}")
             all_channels_signal[channel_index_value.value] = samples
 
         default_speaker.play(numpy.column_stack(all_channels_signal), samplerate=samplerate)
@@ -61,6 +63,7 @@ def magicstream(audio_stream: Iterator[bytes], channel_number: str) -> bytes:
 
     with channel_index_value.get_lock():
         channel_index_value.value = int(channel_number)
+        # print(f"Setting channel number to {channel_index_value.value}")
 
     # Process each chunk of bytes in the audio stream
     for chunk in audio_stream:
