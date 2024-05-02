@@ -16,6 +16,7 @@ import types
 import audioop
 
 from plantoid_agents.lib.MultichannelRouter import Iterator, magicstream, stop_mpv_processes
+from utils.experiments.MultichannelRouter import Iterator, magicstream, setup_magicstream
 from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
 
 from dotenv import load_dotenv
@@ -73,7 +74,7 @@ class Speak:
                 "voice_settings": {
                     "stability": 0,
                     "similarity_boost": 0
-                },
+                }
             },
             headers=headers,
         )
@@ -386,6 +387,8 @@ class Speak:
         use_streaming: bool = True,
 
     ) -> None:
+        if use_streaming:
+            setup_magicstream()
 
         for a in agents:
             if(a.callback): a.callback("<asleep>")
