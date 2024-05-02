@@ -116,6 +116,7 @@ metadata/
 descriptions/
 
 media/user_audio/
+media/runtime_effects/
 # ================================================
 # End of .gitignore
 # ================================================
