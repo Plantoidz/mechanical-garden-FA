@@ -4,9 +4,11 @@ import os
 
 import utils.config_util as config_util
 
+from utils.experiments.MultichannelRouter import setup_magicstream
+
 def run_program():
     print("\n\033[94mHello Mechanical Garden!\033[0m")
-    
+    setup_magicstream()
     # instantiate the InteractionManager
     interaction_manager = InteractionManager()
 

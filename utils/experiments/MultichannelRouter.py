@@ -16,9 +16,23 @@ channel_index_value = multiprocessing.Value("i", 0)
 decoder_child_process = None
 player_child_process = None
 
+def restart_magicstream():
+    cleanup_magicstream()
+    setup_magicstream()
+
+def cleanup_magicstream():
+    global decoder_child_process
+    global player_child_process
+    global input_queue
+    global output_queue
+    while not input_queue.empty():
+        input_queue.get()
+    while not output_queue.empty():
+        output_queue.get()
+    decoder_child_process.kill()
+    player_child_process.kill()
+
 def setup_magicstream():
-    global decoder_child
-    global player_child
     global decoder_child_process
     global player_child_process
     global channel_index_value
@@ -66,14 +80,13 @@ def magicstream(audio_stream: Iterator[bytes], channel_number: str, stop_event: 
         # print(f"Setting channel number to {channel_index_value.value}")
 
     # Process each chunk of bytes in the audio stream
-    try:
-        for chunk in audio_stream:
-            if stop_event.is_set():
-                print("Magicstream - stopped by stop event.")
-                break
-            if chunk is not None:
-                input_queue.put(chunk)
 
-    finally:
-        # TODO kill processes
-        pass
+    for chunk in audio_stream:
+        if stop_event.is_set():
+            print("Magicstream - stopped by stop event.")
+            restart_magicstream()
+            break
+        if chunk is not None:
+            input_queue.put(chunk)
+
+    # Don't kill child processes here because they're expensive to spin up and can be reused
