@@ -15,9 +15,23 @@ channel_index_value = multiprocessing.Value("i", 0)
 decoder_child_process = None
 player_child_process = None
 
+def restart_magicstream():
+    cleanup_magicstream()
+    setup_magicstream()
+
+def cleanup_magicstream():
+    global decoder_child_process
+    global player_child_process
+    global input_queue
+    global output_queue
+    while not input_queue.empty():
+        input_queue.get()
+    while not output_queue.empty():
+        output_queue.get()
+    decoder_child_process.kill()
+    player_child_process.kill()
+
 def setup_magicstream():
-    global decoder_child
-    global player_child
     global decoder_child_process
     global player_child_process
     global channel_index_value

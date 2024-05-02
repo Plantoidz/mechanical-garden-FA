@@ -4,22 +4,36 @@ import os
 
 import utils.config_util as config_util
 
+from utils.experiments.MultichannelRouter import setup_magicstream, cleanup_magicstream
+
+from openai import APIConnectionError
+from httpx import ConnectError as httpxConnectError
+from httpcore import ConnectError as httpcoreConnectError
+from litellm.exceptions import APIError
+
 def run_program():
     print("\n\033[94mHello Mechanical Garden!\033[0m")
-    
-    # instantiate the InteractionManager
-    interaction_manager = InteractionManager()
+    setup_magicstream()
 
-    try:
+    def run():
+        # instantiate the InteractionManager
+        interaction_manager = InteractionManager()
 
         while True:
 
             # start the interaction
             interaction_manager.run_interaction()
 
-    except KeyboardInterrupt:
-        print("Exiting interaction.")
-        pass
+    while True:
+        try:
+            run()
+        except (APIConnectionError, httpxConnectError, httpcoreConnectError, APIError):
+            print("Network error occurred. Recovering...")
+            continue
+        except KeyboardInterrupt:
+            print("Exiting interaction.")
+            cleanup_magicstream()
+            break
 
 def config_mode():
     os.system("$(which python3) config/scripts/configure_modes.py")
