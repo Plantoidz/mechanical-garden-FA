@@ -29,7 +29,6 @@ def setup_magicstream():
     if not decoder_child_process:
         decoder_child_process = multiprocessing.Process(target=decode_audio, args=(channel_index_value, input_queue, output_queue))
         player_child_process = multiprocessing.Process(target=play_audio, args=(channel_index_value, input_queue, output_queue))
-
         decoder_child_process.start()
         player_child_process.start()
 

@@ -47,7 +47,7 @@ class PlantoidClone(PlantoidInteraction):
             speaker.speak(
                 self.agents,
                 message,  
-                interruption_callback = self.set_agent_interrupted,
+                interruption_callback = self.interruption_callback,
             )
 
         # 3. everyone receives message
