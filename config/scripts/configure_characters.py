@@ -39,6 +39,7 @@ class CharacterConfigurator:
     def select_channel_id(self, i):
         index = input(f"Enter the channel ID for the character (default is {i}): ")
         if(not index): index = i
+        index = int(index)
         if 0 <= index < 1000:
             return index
         else:

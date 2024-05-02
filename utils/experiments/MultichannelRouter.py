@@ -1,111 +1,72 @@
-import soundcard as sc
+import soundcard
 import shutil
 import subprocess
+import numpy
+from pydub import AudioSegment
+import io
 from typing import Iterator, Union
+import multiprocessing
 
-# # Print the name and details of the default speaker
-# def config_confirm 
-#     default_speaker = sc.default_speaker()
-#     print("Default Speaker:", default_speaker.name)
-#     print("Speaker ID:", default_speaker.id)
-#     print("Channels Available:", default_speaker.channels)
+samplerate = 44100
 
-# def is_installed(lib_name: str) -> bool:
-#     lib = shutil.which(lib_name)
-#     if lib is None:
-#         return False
-#     return True
+input_queue = multiprocessing.Queue()
+output_queue = multiprocessing.Queue()
+channel_index_value = multiprocessing.Value("i", 0)
+decoder_child_process = None
+player_child_process = None
 
-def magicstream(audio_stream: Iterator[bytes], number_string: str) -> bytes:
-    channel_map = {
-        "0": "FL",
-        "1": "FR",
-        "2": "FC",
-        "3": "BL",
-        "4": "BR",
-        "5": "BC",
-        "6": "SL",
-        "7": "SR"
-    }
+def setup_magicstream():
+    global decoder_child
+    global player_child
+    global decoder_child_process
+    global player_child_process
+    global channel_index_value
 
-    # Get the channel mapping ID based on the input number string
-    channel_map_id = channel_map.get(str(number_string))
-    if channel_map_id is None:
-        raise ValueError("Invalid number string. Make sure all characters have an assigned channel.")
+    print("Setting up magicstream processes.")
 
-    # Build the audio filter string
-    channel_routing_flag = f"--af=lavfi=[pan=octagonal|{channel_map_id}=c0]"
-    mpv_command = [
-        "mpv", "--no-cache", "--no-terminal", 
-        channel_routing_flag,
-        "--audio-channels=octagonal" , 
-        "--", "fd://0"
-    ]
-    mpv_process = subprocess.Popen(
-        mpv_command,
-        stdin=subprocess.PIPE,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-    )
+    # Huge hack just to get the processes working
+    if not decoder_child_process:
+        decoder_child_process = multiprocessing.Process(target=decode_audio, args=(channel_index_value, input_queue, output_queue))
+        player_child_process = multiprocessing.Process(target=play_audio, args=(channel_index_value, input_queue, output_queue))
 
-    audio = b""
+        decoder_child_process.start()
+        player_child_process.start()
 
+def decode_audio(channel_index_value, input_queue, output_queue):
+    while True:
+        input_data = input_queue.get()
+
+        segment = AudioSegment.from_file(io.BytesIO(input_data), format="mp3")
+        samples = numpy.array(segment.get_array_of_samples(), dtype=numpy.float32)
+
+        output_queue.put(samples)
+
+def play_audio(channel_index_value, input_queue, output_queue):
+    while True:
+        samples = output_queue.get()
+        default_speaker = soundcard.default_speaker()
+
+        samples = samples / (2**15)
+        zeros = numpy.zeros(len(samples))
+        # print(f"Number of channels: {default_speaker.channels=}")
+        all_channels_signal = [zeros] * default_speaker.channels
+        with channel_index_value.get_lock():
+            # print(f"Using channel number {channel_index_value.value}")
+            all_channels_signal[channel_index_value.value] = samples
+
+        default_speaker.play(numpy.column_stack(all_channels_signal), samplerate=samplerate)
+
+
+def magicstream(audio_stream: Iterator[bytes], channel_number: str) -> bytes:
+    global input_queue
+    setup_magicstream()
+
+    with channel_index_value.get_lock():
+        channel_index_value.value = int(channel_number)
+        # print(f"Setting channel number to {channel_index_value.value}")
+
+    # Process each chunk of bytes in the audio stream
     for chunk in audio_stream:
         if chunk is not None:
-            mpv_process.stdin.write(chunk)  # type: ignore
-            mpv_process.stdin.flush()  # type: ignore
-            audio += chunk
-    if mpv_process.stdin:
-        mpv_process.stdin.close()
-    mpv_process.wait()
+            input_queue.put(chunk)
 
-
-    return audio
-
-import subprocess
-
-def magicplay(mp3_filepath: str, number_string: str) -> bytes:
-    channel_map = {
-        "0": "FL",
-        "1": "FR",
-        "2": "FC",
-        "3": "BL",
-        "4": "BR",
-        "5": "BC",
-        "6": "SL",
-        "7": "SR"
-    }
-
-    # Get the channel mapping ID based on the input number string
-    channel_map_id = channel_map.get(str(number_string))
-    if channel_map_id is None:
-        raise ValueError("Channel map id error.")
-
-    # Build the audio filter string
-    channel_routing_flag = f"--af=lavfi=[pan=octagonal|{channel_map_id}=c0]"
-    mpv_command = [
-        "mpv", "--no-cache", "--no-terminal",
-        channel_routing_flag,
-        "--audio-channels=octagonal",
-        mp3_filepath  # Directly using the MP3 file path
-    ]
-    
-    # Execute the MPV process
-    mpv_process = subprocess.Popen(
-        mpv_command,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.DEVNULL,
-    )
-
-    # Read the processed audio data
-    audio_data = b""
-    while True:
-        chunk = mpv_process.stdout.read(1024)  # Read data chunk by chunk
-        if not chunk:
-            break
-        audio_data += chunk
-
-    # Ensure the MPV process is properly cleaned up
-    mpv_process.wait()
-
-    return audio_data
