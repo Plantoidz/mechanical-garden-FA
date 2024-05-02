@@ -11,7 +11,7 @@ import requests
 # import pygame.mixer as mixer
 import types
 
-from utils.experiments.MultichannelRouter import Iterator, magicstream
+from utils.experiments.MultichannelRouter import Iterator, magicstream, setup_magicstream
 
 from dotenv import load_dotenv
 from elevenlabs.client import ElevenLabs, AsyncElevenLabs
@@ -252,6 +252,8 @@ class Speak:
         use_streaming: bool = True,
 
     ) -> None:
+        if use_streaming:
+            setup_magicstream()
 
         for a in agents:
             if(a.callback): a.callback("<asleep>")

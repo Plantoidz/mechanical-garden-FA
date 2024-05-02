@@ -9,6 +9,27 @@ import multiprocessing
 
 samplerate = 44100
 
+input_queue = multiprocessing.Queue()
+output_queue = multiprocessing.Queue()
+decoder_child_process = None
+player_child_process = None
+
+def setup_magicstream():
+    global decoder_child
+    global player_child
+    global decoder_child_process
+    global player_child_process
+
+    print("Setting up magicstream processes.")
+
+    # Huge hack just to get the processes working
+    if not decoder_child_process:
+        decoder_child_process = multiprocessing.Process(target=decode_audio, args=(input_queue, output_queue))
+        player_child_process = multiprocessing.Process(target=play_audio, args=(input_queue, output_queue))
+
+        decoder_child_process.start()
+        player_child_process.start()
+
 def decode_audio(input_queue, output_queue):
     while True:
         input_data = input_queue.get()
@@ -31,24 +52,13 @@ def play_audio(input_queue, output_queue):
 
 
 def magicstream(audio_stream: Iterator[bytes], number_string: str) -> bytes:
-    input_queue = multiprocessing.Queue()
-    output_queue = multiprocessing.Queue()
+    global input_queue
+    setup_magicstream()
 
-    decoder_child = multiprocessing.Process(target=decode_audio, args=(input_queue, output_queue))
-    decoder_child.start()
-    
-    player_child = multiprocessing.Process(target=play_audio, args=(input_queue, output_queue))
-    player_child.start()
-
-    try:
-        # Process each chunk of bytes in the audio stream
-        for chunk in audio_stream:
-            if chunk is not None:
-                input_queue.put(chunk)
-    finally:
-        # TODO: THESE DON'T EXIT YET
-        decoder_child.join()
-        player_child.join()
+    # Process each chunk of bytes in the audio stream
+    for chunk in audio_stream:
+        if chunk is not None:
+            input_queue.put(chunk)
 
 def magicplay(mp3_filepath: str, number_string: str) -> bytes:
     channel_map = {
