@@ -9,7 +9,7 @@ class AudioGenerator:
     def __init__(self, voice_id, api_key):
         self.voice_id = voice_id
         self.client = ElevenLabs(api_key=api_key)  # Use the passed api_key directly
-        self.utterances = ["oh", "um", "hrm", "go on", "ugh", "what", "interesting!", "yeah?"]
+        self.utterances = ["oh", "oh.", "oh?", "um", "hrm", "hrmmmmm", "go on", "ugh", "uh", "uh?", "eh?", "interesting!", "yeah?", "yes?", "okay", "sure thing.", "i see", "right", "really?", "really.", "oh, really?", "ah", "mhm.", "ooh", "ahh", "hmm", "huh.", "huh!", "huh??", "kay."]
 
     def generate_and_save_audios(self):
         for utterance in self.utterances:

@@ -1,28 +1,58 @@
 {
-  "conversation_stimuli": {
-    "Contrariwise": {
-      "stimulus": "Nothing would be what it is because everything would be what it isn't. And contrariwise, what it is, it wouldn't be, and what it wouldn't be, it would. You see?"
-    },
-    "Raven": {
-      "stimulus": "Why is a raven like a writing desk?"
-    },
-    "Headstand": {
-      "stimulus": "Can you stand on your head?"
-    },
-    "Everything": {
-      "stimulus": "I suppose I ought to eat or drink something or other; but the great question is, 'What?'"
-    },
-    "Who": {
-      "stimulus": "Whooooooo... arrrrrrrre... youuuuuuuuuuu?"
-    },
-    "Yesterday/Tomorrow": {
-      "stimulus": "If yesterday wasn't tomorrow, would today be Friday?"
-    },
-    "Week": {
-      "stimulus": "How's your week shaping up?"
-    },
-    "Mindseye": {
-      "stimulus": "Is what you see with your eyes closed the same as what you disappear into when they're open?"
+    "conversation_stimuli": {
+        "pending_forgiveness": {
+            "stimulus": "What’s something you’ve not yet asked for forgiveness for?"
+        },
+        "festival_fear": {
+            "stimulus": "What do you fear people will find out about you at a festival?"
+        },
+        "forward_look": {
+            "stimulus": "What are you most looking forward to right now?"
+        },
+        "blindspot": {
+            "stimulus": "What do you avoid thinking about? Why?"
+        },
+        "envy": {
+            "stimulus": "What do you envy in others?"
+        },
+        "judging": {
+            "stimulus": "When did you last notice yourself judging someone? And for what?"
+        },
+        "insult": {
+            "stimulus": "I want you to hurt my feelings. Insult me. Do your worst. Don't hold back"
+        },
+        "parental_criticism": {
+            "stimulus": "What do your parents wish you'd do differently?"
+        },
+        "rational_fear": {
+            "stimulus": "What is your most rational fear?"
+        },
+        "irrational_fear": {
+            "stimulus": "What is your most irrational fear?"
+        },
+        "never_tell_parents": {
+            "stimulus": "What should your parents never find out about you?"
+        },
+        "judging-pt": {
+            "stimulus": "When did you last notice yourself judging someone? And for what?"
+        },
+        "despised_trait": {
+            "stimulus": "What trait do you most despise in others?"
+        },
+        "fear_let_go": {
+            "stimulus": "What fear are you ready to let go of?"
+        },
+        "never_forgiven": {
+            "stimulus": "What have you never forgiven yourself for?"
+        },
+        "worst_accusation": {
+            "stimulus": "What’s the worst thing someone could call you or accuse you of, behind your back?"
+        },
+        "family_skeletons": {
+            "stimulus": "What skeletons does your family keep in its closet?"
+        },
+        "incognito_search": {
+            "stimulus": "What is a search query or topic you’d only use incognito mode for?"
+        }
     }
-  }
 }
