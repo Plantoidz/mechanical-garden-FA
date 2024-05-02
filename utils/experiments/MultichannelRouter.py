@@ -45,14 +45,22 @@ def play_audio(channel_index_value, input_queue, output_queue):
     while True:
         samples = output_queue.get()
         default_speaker = soundcard.default_speaker()
+        number_of_channels = default_speaker.channels
 
         samples = samples / (2**15)
         zeros = numpy.zeros(len(samples))
         # print(f"Number of channels: {default_speaker.channels=}")
-        all_channels_signal = [zeros] * default_speaker.channels
+        all_channels_signal = [zeros] * number_of_channels
         with channel_index_value.get_lock():
+            index = channel_index_value.value
+
+            # If using an audio device that has less channels than the character's
+            # channel index, we hardcode the value
+            if channel_index_value.value >= number_of_channels:
+                index = 1
+
             # print(f"Using channel number {channel_index_value.value}")
-            all_channels_signal[channel_index_value.value] = samples
+            all_channels_signal[index] = samples
 
         default_speaker.play(numpy.column_stack(all_channels_signal), samplerate=samplerate)
 
