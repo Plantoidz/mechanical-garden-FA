@@ -1,28 +1,25 @@
 {
   "conversation_stimuli": {
-    "Contrariwise": {
-      "stimulus": "Nothing would be what it is because everything would be what it isn't. And contrariwise, what it is, it wouldn't be, and what it wouldn't be, it would. You see?"
-    },
-    "Raven": {
-      "stimulus": "Why is a raven like a writing desk?"
-    },
-    "Headstand": {
-      "stimulus": "Can you stand on your head?"
-    },
     "Everything": {
       "stimulus": "I suppose I ought to eat or drink something or other; but the great question is, 'What?'"
     },
-    "Who": {
-      "stimulus": "Whooooooo... arrrrrrrre... youuuuuuuuuuu?"
+    "Tea": {
+      "stimulus": "Pray, whom would you fancy for a chat over a cup of tea in the curious lands of Wonderland?"
     },
-    "Yesterday/Tomorrow": {
-      "stimulus": "If yesterday wasn't tomorrow, would today be Friday?"
+    "Unbirthday": {
+        "stimulus": "Today is your unbirthday! How do you plan to celebrate it?"
     },
-    "Week": {
-      "stimulus": "How's your week shaping up?"
+    "Cat": {
+        "stimulus": "Should you vanish like the Cheshire Cat, to which place would you reappear first, and why?"
     },
-    "Mindseye": {
-      "stimulus": "Is what you see with your eyes closed the same as what you disappear into when they're open?"
+    "Dream": {
+        "stimulus": "Where do you wander in your slumber's embrace?"
+    },
+    "Flavor": {
+        "stimulus": "Conjure a tea that mirrors thy temperament, what shall it be named?"
+    },
+    "Rabbit": {
+        "stimulus": "If time teased you as it does the White Rabbit, for what occasion would you perpetually be tardy?"
     }
   }
 }
