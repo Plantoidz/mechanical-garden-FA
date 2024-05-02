@@ -64,10 +64,18 @@ class DeepgramTranscription:
                     self.final_result = ' '.join(self.is_finals)
                     # print(f"Deepgram Utterance End: {self.final_result}")
                     print(f"\033[90m\tSpeech Final: {self.final_result}\033[0m")
+                    # self.transcription_complete = True
+                    # return
+
             else:
                 print(f"\033[90m\tAlmost Final: {self.sentence}\033[0m")
+                # self.transcription_complete = True
+                # return
+
         else:
             print(f"\033[90m\tInterim Results: {self.sentence}\033[0m")
+            # self.transcription_complete = True
+            # return
 
     def on_metadata(self, *args, **kwargs):
         metadata = kwargs['metadata'] 
@@ -77,6 +85,7 @@ class DeepgramTranscription:
         print(f"\033[91m\tDeepgram is listening...\033[0m")
 
     def on_utterance_end(self, *args, **kwargs):
+        print(f"\033[91m\tDeepgram Utterance End\033[0m")
         if len(self.is_finals) > 0:
             self.final_result = ' '.join(self.is_finals)
             # print(f"Deepgram Utterance End: {self.final_result}")
@@ -174,6 +183,7 @@ class DeepgramTranscription:
     
     def get_sentence(self):
         # print("Sending final result:", self.final_result)
+        print("Deepgram Sentence:", self.sentence)
         return self.sentence
 
 # todo: implement saving

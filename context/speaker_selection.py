@@ -368,7 +368,7 @@ def select_next_speaker_with_human_conversation(
 
         if agent_interrupted and agent.is_human == True:
                 
-            bid = 100
+            bid = 0 # this is 0 if the humans interruption message was added to msg history, 100 otherwise
         
         # append bid to bids
         bids.append(bid)

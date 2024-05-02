@@ -15,7 +15,7 @@ import pygame.mixer as mixer
 import types
 import audioop
 
-from utils.experiments.MultichannelRouter import Iterator, magicstream
+from plantoid_agents.lib.MultichannelRouter import Iterator, magicstream, stop_mpv_processes
 from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
 
 from dotenv import load_dotenv
@@ -42,7 +42,7 @@ class Speak:
     A template class for implementing speaking behaviors in an interaction system.
     """
 
-    def __init__(self, rate: int = 16000, device_index: int = None, chunk: int = 1024, threshold: int = 100):
+    def __init__(self, rate: int = 16000, device_index: int = None, chunk: int = 512, threshold: int = 1000):
         """
         Initializes a new instance of the Speak class.
         """
@@ -51,7 +51,7 @@ class Speak:
         self.CHUNK = chunk
         self.THRESHOLD = threshold
         self.device_index = device_index
-        # self.transcription = DeepgramTranscription(sample_rate=self.RATE, device_index=self.device_index, timeout=0.5)
+        # self.transcription = DeepgramTranscription(sample_rate=self.RATE, device_index=self.device_index, timeout=2)
 
     def get_text_to_speech_response(self, text, eleven_voice_id, callback=None):
 
@@ -238,11 +238,14 @@ class Speak:
                     # Read data from the microphone
                     data = stream.read(self.CHUNK)
                     # Check the sound level
+                    # print(audioop.findmax(data, 2))
                     if audioop.rms(data, 2) > self.THRESHOLD:  # audioop.rms gives the root mean square of the chunk
                         print("\nAudio input detected. Stopping streaming.")
                         stop_event.set()  # Signal that the stop condition has been met
+                        stop_mpv_processes()
                         if interruption_callback is not None:
-                            interruption_callback(agent_interrupted=True)  # Notify the rest of the application
+                            interruption_callback(True, "Ben", "Test message.")  # Notify the rest of the application
+                            # playsound(os.getcwd() + "/media/cleanse.mp3", block=False)
                         break
             finally:
                 # Clean up the PyAudio stream and instance
@@ -253,8 +256,34 @@ class Speak:
                 # Ensure the stop_event is set if it hasn't been already
                 if not stop_event.is_set():
                     stop_event.set()
-                    if interruption_callback is not None:
-                        interruption_callback(agent_interrupted=False)  # No interruption was detected
+                    # if interruption_callback is not None:
+                    #     interruption_callback(agent_interrupted=False)  # No interruption was detected
+
+    def shadow_listener(
+        self,
+        use_streaming: bool,
+        stop_event: threading.Event,
+        audio_detected_event: threading.Event,
+        interruption_callback: Any
+    ):
+        """Listen to the microphone and set the stop_event when noise is detected."""
+
+        if use_streaming:
+
+            transcription = DeepgramTranscription(sample_rate=self.RATE, device_index=self.device_index, timeout=2)
+            transcription.reset()
+            transcription.start_listening(step=None)
+            utterance = transcription.get_final_result()
+            print("Shadow Listener - Utterance: ", utterance)
+            # time.sleep(5)
+            audio_detected_event.set()
+            stop_event.set()
+            stop_mpv_processes()
+
+            if interruption_callback is not None:
+                interruption_callback(True, "Ben", utterance)  # Notify the rest of the application
+                playsound(os.getcwd() + "/media/cleanse.mp3", block=False)
+
 
     def stream_audio_response(
         self,
@@ -268,11 +297,18 @@ class Speak:
     ) -> None:
 
         stop_event = threading.Event()
-        trigger_thread = threading.Thread(
-            target=self.trigger_stop_event,
-            args=(use_streaming, stop_event, interruption_callback)
+        audio_detected_event = threading.Event()
+
+        # trigger_thread = threading.Thread(
+        #     target=self.trigger_stop_event,
+        #     args=(use_streaming, stop_event, interruption_callback)
+        # )
+        shadow_listener_thread = threading.Thread(
+            target=self.shadow_listener,
+            args=(use_streaming, stop_event, audio_detected_event, interruption_callback)
         )
-        trigger_thread.start()
+        shadow_listener_thread.start()
+        # trigger_thread.start()
 
         try:
 
@@ -309,7 +345,9 @@ class Speak:
 
         finally:
             stop_event.set()
-            trigger_thread.join()  # Ensure the interrupt thread is cleaned up properly
+            audio_detected_event.set()
+            shadow_listener_thread.join()
+            # trigger_thread.join()  # Ensure the interrupt thread is cleaned up properly
 
     def speak(
         self,

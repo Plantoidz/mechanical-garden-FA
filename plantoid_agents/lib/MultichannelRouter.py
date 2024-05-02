@@ -20,12 +20,17 @@ import threading
 mpv_processes = []
 
 def stop_mpv_processes():
+    global mpv_processes
+    print("Stopping MPV processes...")
     for process in mpv_processes:
         if process.poll() is None:
             process.terminate()
             process.wait()
 
+    mpv_processes = []
+
 def magicstream(audio_stream: Iterator[bytes], number_string: str, stop_event: threading.Event) -> bytes:
+    global mpv_processes  # Declare mpv_processes as global within the function
     channel_map = {
         "0": "FL",
         "1": "FR",
@@ -66,14 +71,29 @@ def magicstream(audio_stream: Iterator[bytes], number_string: str, stop_event: t
             if stop_event.is_set():
                 print("Magicstream - stopped by stop event.")
                 break
+
+            # Check if the mpv process has unexpectedly exited
+            if mpv_process.poll() is not None:
+                print(f"MPV process terminated unexpectedly with status {mpv_process.poll()}.")
+                break
+
             if chunk is not None:
                 mpv_process.stdin.write(chunk)  # type: ignore
                 mpv_process.stdin.flush()  # type: ignore
                 audio += chunk
+
+    except BrokenPipeError:
+        print("Broken pipe error occurred.")
+        pass
+
     finally:
-        if mpv_process.stdin:
-            mpv_process.stdin.close()
-        mpv_process.wait()
+        if mpv_process.poll() is None:
+            print("Closing MPV process...")
+            if mpv_process.stdin:
+                mpv_process.stdin.close()
+            mpv_process.wait()
+            mpv_processes = []
+
 
     return audio
 
