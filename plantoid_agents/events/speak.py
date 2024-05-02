@@ -64,7 +64,7 @@ class Speak:
                 "voice_settings": {
                     "stability": 0,
                     "similarity_boost": 0
-                },
+                }
             },
             headers=headers,
         )

@@ -1,48 +1,54 @@
-import soundcard as sc
+import soundcard
 import shutil
 import subprocess
-import numpy as np
+import numpy
 from pydub import AudioSegment
 import io
 from typing import Iterator, Union
+import multiprocessing
+
+samplerate = 44100
+
+def decode_audio(input_queue, output_queue):
+    while True:
+        input_data = input_queue.get()
+
+        segment = AudioSegment.from_file(io.BytesIO(input_data), format="mp3")
+        samples = numpy.array(segment.get_array_of_samples(), dtype=numpy.float32)
+
+        output_queue.put(samples)
+
+def play_audio(input_queue, output_queue):
+    while True:
+        samples = output_queue.get()
+
+        samples = samples / (2**15)
+        zeros = numpy.zeros(len(samples))
+        all_channels_signal = [zeros] * 2
+        all_channels_signal[1] = samples
+
+        soundcard.default_speaker().play(numpy.column_stack(all_channels_signal), samplerate=samplerate)
+
 
 def magicstream(audio_stream: Iterator[bytes], number_string: str) -> bytes:
-    # Select the default speaker
-    default_speaker = sc.default_speaker()
-    channels_total = default_speaker.channels  # Number of channels
+    input_queue = multiprocessing.Queue()
+    output_queue = multiprocessing.Queue()
 
-    # Collect all audio bytes to return
-    audio = b""
-
-    # Process each chunk of bytes in the audio stream
-    for chunk in audio_stream:
-        if chunk is not None:
-            ### Attempt 1, works but sped up audio
-            # Convert bytes to an AudioSegment
-            # Assuming the audio format is MP3; change 'format="mp3"' if different
-            segment = AudioSegment.from_file(io.BytesIO(chunk), format="mp3")
-
-            # Get raw audio data as numpy array
-            samples = np.array(segment.get_array_of_samples(), dtype=np.float32)
-
-            # Normalize the samples to the range -1.0 to 1.0
-            samples = samples / (2**15)
-
-            # Create a silence signal for other channels
-            zeros = np.zeros(len(samples))
+    decoder_child = multiprocessing.Process(target=decode_audio, args=(input_queue, output_queue))
+    decoder_child.start()
     
-            # Create a multi-channel signal with silence on every channel except the target one
-            all_channels_signal = [zeros] * channels_total
-            all_channels_signal[int(number_string)] = samples
+    player_child = multiprocessing.Process(target=play_audio, args=(input_queue, output_queue))
+    player_child.start()
 
-            # Play samples through the default speaker
-            default_speaker.play(np.column_stack(all_channels_signal), samplerate=segment.frame_rate)
-
-            # Store original audio bytes
-            audio += chunk
-
-    return audio
-
+    try:
+        # Process each chunk of bytes in the audio stream
+        for chunk in audio_stream:
+            if chunk is not None:
+                input_queue.put(chunk)
+    finally:
+        # TODO: THESE DON'T EXIT YET
+        decoder_child.join()
+        player_child.join()
 
 def magicplay(mp3_filepath: str, number_string: str) -> bytes:
     channel_map = {
