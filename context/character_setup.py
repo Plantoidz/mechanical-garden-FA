@@ -185,10 +185,10 @@ def generate_character_header(
         # """        
 #PROMPT
         response = f"""{character_description}  
-            Engage with the other participants, but never address them by name unless they're human.
-            Try to build on the conversation.
-            You must keep all of your responses to strictly {word_limit} words.
-            Remember, never address the other participants by name unless they're human.
+        Try to build on the last message in the conversation.
+        Never address the other participants by name unless they're human.
+        You must keep all of your responses to strictly {word_limit} words.
+        Remember, never address the other participants by name unless they're human.
         """
 
     return response
@@ -237,7 +237,8 @@ def generate_character_system_message(
     
         #PROMPT_TEMPLATE —> 
         content = f"""{character_header}
-            Do not use the names of the other participants, unless they are human.
+            Always respond directly, from the perspective of a single participant. 
+            Return only dialogue, never describe unspoken sounds or actions.
             Do not use hashtags (#), asterik (*) or angle brackets (<<, >>)!!!
             Stop speaking the moment you finish speaking from your perspective.
             Never forget to keep your response to {word_limit} words!!!

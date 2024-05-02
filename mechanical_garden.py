@@ -5,7 +5,7 @@ import os
 import utils.config_util as config_util
 
 def run_program():
-    print("\nHello Mechanical Garden!")
+    print("\n\033[94mHello Mechanical Garden!\033[0m")
     
     # instantiate the InteractionManager
     interaction_manager = InteractionManager()
@@ -36,6 +36,12 @@ def config_network():
 def add_human_participant():
     os.system("$(which python3) config/scripts/add_human_participant.py")
 
+def dump_layout():
+    os.system("$(which python3) config/scripts/dump_layout.py")
+
+def generate_runtime_effects():
+    os.system("$(which python3) config/scripts/generate_runtime_effects.py")
+
 def config_audio():
     os.system("$(which python3) config/scripts/configure_audio.py")
 
@@ -48,11 +54,13 @@ def show_menu():
     print("2. Check Config")
     print("3. Config Mode")
     print("4. Config Characters")
-    print("5. Config Services")
-    print("6. Add Human Participant")
-    print("7. Config Audio (Linux only)")
-    print("8. Test Audio")
-    print("9. Exit")
+    print("5. Add Human Participant")
+    print("6. Dump Layout")
+    print("7. Generate Runtime Effects")
+    print("8. Config Services")
+    print("9. Config Audio Devices")
+    print("10. Test Audio")
+    print("11. Exit")
 
 if __name__ == "__main__":
     while True:
@@ -68,14 +76,18 @@ if __name__ == "__main__":
         elif choice == '4':
             config_characters()
         elif choice == '5':
-            config_services()
-        elif choice == '6':
             add_human_participant()
+        elif choice == '6':
+            dump_layout()
         elif choice == '7':
-            config_audio()
+            generate_runtime_effects()
         elif choice == '8':
-            test_audio()
+            config_services()
         elif choice == '9':
+            config_audio()
+        elif choice == '10':
+            test_audio()
+        elif choice == '11':
             print("Exiting program.")
             break
         else:

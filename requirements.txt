@@ -8,17 +8,11 @@ soundcard
 numpy
 nltk
 speechrecognition
-#scipy
 pyserial
 playsound
-#mutagen
-#regex_spm
 toml
 pygame
 keyboard
-#eth-tester
-#py-evm
-oz-defender
 torch
 openai-whisper
 langchain
@@ -35,7 +29,17 @@ sentencepiece
 jinja2
 litellm
 ollama
-# deepgram
 mpv
 serial
+pyserial
 keyboard
+pyaudio
+mpv
+# deepgram
+#scipy
+#mutagen
+#regex_spm
+#eth-tester
+#py-evm
+#oz-defender
+

@@ -30,6 +30,7 @@ load_dotenv()
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 ELEVENLABS_API_KEY = os.environ.get("ELEVENLABS_API_KEY")
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 
 client = ElevenLabs(
   api_key=ELEVENLABS_API_KEY
@@ -261,6 +262,7 @@ class Speak:
 
     def shadow_listener(
         self,
+        agent: Any,
         use_streaming: bool,
         stop_event: threading.Event,
         audio_detected_event: threading.Event,
@@ -281,12 +283,32 @@ class Speak:
             stop_mpv_processes()
 
             if interruption_callback is not None:
-                interruption_callback(True, "Ben", utterance)  # Notify the rest of the application
-                playsound(os.getcwd() + "/media/cleanse.mp3", block=False)
+                interruption_callback(True, agent.name, utterance)  # Notify the rest of the application
+                runtime_effect = self.select_random_runtime_effect(agent.get_voice_id())
+                # print("Runtime effect: ", runtime_effect)
+                playsound(runtime_effect, block=False)
 
+    def select_random_runtime_effect(self, voice_id):
+        """
+        Selects a random file from the specified directory.
+        """
+        directory = os.getcwd() + "/media/runtime_effects"
+        prefix = f"{voice_id}_"
+        
+        # List all files that start with the given voice ID
+        files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f)) and f.startswith(prefix)]
+        
+        # Check if there are any matching files
+        if not files:
+            return None  # Return None or raise an Exception if no matching files are found
+
+        # Randomly select a file
+        random_file = random.choice(files)
+        return os.path.join(directory, random_file)
 
     def stream_audio_response(
         self,
+        agent: Any,
         response: str,
         voice_id: str,
         channel_id: str,
@@ -305,7 +327,7 @@ class Speak:
         # )
         shadow_listener_thread = threading.Thread(
             target=self.shadow_listener,
-            args=(use_streaming, stop_event, audio_detected_event, interruption_callback)
+            args=(agent, use_streaming, stop_event, audio_detected_event, interruption_callback)
         )
         shadow_listener_thread.start()
         # trigger_thread.start()
@@ -380,6 +402,7 @@ class Speak:
             )
 
             self.stream_audio_response(
+                agent,
                 response,
                 voice,
                 channel_id,
@@ -390,6 +413,7 @@ class Speak:
 
         else:
             self.stream_audio_response(
+                agent,
                 response,
                 voice_id,
                 channel_id,

@@ -7,7 +7,7 @@ def config_confirm():
     print("Speaker ID:", default_speaker.id)
     print("Channels Available:", default_speaker.channels)
 
-def tone(frequency=440, duration=0.5, samplerate=44100):
+def tone(frequency=440, duration=4, samplerate=44100):
     """Generate a simple sinusoidal waveform with fade-in and fade-out."""
     t = np.arange(int(samplerate * duration)) / samplerate
     waveform = 0.5 * np.sin(2 * np.pi * frequency * t)

@@ -1,5 +1,5 @@
 import serial
-import keyboard
+# import keyboard
 import time
 import os, signal
 import random
@@ -33,8 +33,8 @@ def send_to_arduino(ser, string_to_send):
     if ser is None:
         raise Exception('Serial cannot be None!')
 
-    start_marker = '<'
-    end_marker = '>'
+    start_marker = '' # '<'
+    end_marker = '' # '>'
 
     string_with_markers = start_marker + string_to_send + end_marker
 

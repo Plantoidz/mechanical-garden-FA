@@ -9,27 +9,27 @@ import serial.tools.list_ports
 # from utils.serial_utils import send_to_arduino
 
 class CharacterConfigurator:
-    def __init__(self, source_file, destination_file):
-        self.source_file = source_file
+    def __init__(self, source_path, destination_file):
+        self.source_path = source_path
         self.destination_file = destination_file
         self.characters = self.load_characters()
 
-    def load_characters(self):
-        with open(self.source_file, 'r') as file:
+    def load_characters_old(self):
+        with open(self.source_path, 'r') as file:
             return json.load(file)['characters']
+        
+    def load_characters(self):
+        char_classes = None
+        with open(self.source_path + "/character_bank.json", 'r') as file:
+            return json.load(file)
 
-    def display_menu(self):
-        for i, character in enumerate(self.characters, start=1):
-            print(f"{i}. {character['name']}")
-
-    def select_character(self):
-        index = int(input("Enter the number for the character: ")) - 1
-        if 0 <= index < len(self.characters):
-            return self.characters[index]
+    def select_character(self, jdump):
+        index = int(input("\nSelect an option:")) - 1
+        if 0 <= index < len(jdump):
+            return jdump[index]
         else:
             print("Invalid choice!")
-            return self.select_character()
-        
+            return self.select_character(jdump)
 
     def select_character_name(self, defaultname):
         name = input(f"Enter the name of the character (default is {defaultname}): ")
@@ -74,7 +74,7 @@ class CharacterConfigurator:
                     serial_ports.append(port)
 
         print(serial_ports)
-        index = str(input("Enter the Serial port of the character: "))
+        index = str(input("Enter the serial port of the character: "))
         return index
 
     def select_addr(self, io):
@@ -93,9 +93,17 @@ class CharacterConfigurator:
       
 
 
+    def display_menu(self, jdump):
+            for i, character in enumerate(jdump, start=1):
+                print(f"{i}. {character['name']}")
+
+
+
     def configure_characters(self):
-        num_of_characters = int(input("How many characters do you want to select? "))
+        num_of_characters = int(input("\nHow many characters do you want to select? "))
+
         while num_of_characters <= 0 or num_of_characters > len(self.characters):
+
             print("Invalid number. Please enter a number between 1 and the total number of characters.")
             num_of_characters = int(input("How many characters do you want to select? "))
 
@@ -103,27 +111,42 @@ class CharacterConfigurator:
         selected_characters_map = {}
 
         for i in range(num_of_characters):
-            print(f"\nSelect character {i + 1}:")
-            self.display_menu()
-            choice = self.select_character()
 
-            name = self.select_character_name(choice['name'])
-            choice['name'] = name
+            print(f"\nSelect type for character {i + 1}:\n")
 
-            selected_characters_map[name] = i  # Mapping name to the default channel
-            # channel_id = int(self.select_channel_id(i))
 
-            channel_id = self.select_channel_id(i)
-            
-            choice['default_channel'] = channel_id
 
-            comm_io = self.select_comm_io()
-            choice['io'] = comm_io
+            for k in range(len(self.characters)):
 
-            addr = self.select_addr(comm_io)
-            choice['addr'] = addr
+                print(f"{k+1}.", self.characters[k]['description'])
 
-            selected_characters.append(choice)
+            stimuli = int(input(f"\nSelect a character:\n")) -1
+
+            with open(self.source_path + "/" + self.characters[stimuli]['stimuli'], 'r') as ffile:
+                    jdump = json.load(ffile)['characters']
+        
+
+
+                    self.display_menu(jdump)
+                    choice = self.select_character(jdump)
+
+                    name = self.select_character_name(choice['name'])
+                    choice['name'] = name
+
+                    selected_characters_map[name] = i  # Mapping name to the default channel
+                    # channel_id = int(self.select_channel_id(i))
+
+                    channel_id = self.select_channel_id(i)
+                    
+                    choice['default_channel'] = channel_id
+
+                    comm_io = self.select_comm_io()
+                    choice['io'] = comm_io
+
+                    addr = self.select_addr(comm_io)
+                    choice['addr'] = addr
+
+                    selected_characters.append(choice)
 
        
         # for character in selected_characters:
@@ -138,7 +161,7 @@ class CharacterConfigurator:
         print(f"\nConfig saved to {self.destination_file} with the {num_of_characters} selected characters only.")
 
 def main():
-    source_path = os.getcwd()+'/config/files/characters.json'
+    source_path = os.getcwd()+'/config/files/characters/'
     destination_path = os.getcwd()+'/config/files/working/current_characters.json'
     configurator = CharacterConfigurator(source_path, destination_path)
     configurator.configure_characters()

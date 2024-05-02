@@ -116,6 +116,7 @@ metadata/
 descriptions/
 
 media/user_audio/
+media/runtime_effects/
 # ================================================
 # End of .gitignore
 # ================================================
@@ -124,4 +125,9 @@ media/user_audio/
 utils/experiments/streaming_e2e_test.py
 utils/experiments/streaming_e2e_test.py
 utils/experiments/streaming_e2e_test_BAK.py
+config/files/working/current_characters.json
+config/files/working/current_stimuli.json
+config/files/working/current_characters.json
+config/files/working/current_stimuli.json
+config/files/working/current_stimuli.json
 config/files/working/current_characters.json
