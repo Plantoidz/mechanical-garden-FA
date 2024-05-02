@@ -35,7 +35,7 @@ pyserial
 keyboard
 pyaudio
 mpv
-# deepgram
+deepgram-sdk
 #scipy
 #mutagen
 #regex_spm
