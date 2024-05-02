@@ -4,6 +4,10 @@
         "description": "An open-ended invitation to have a conversation"
     },
     {
+        "stimuli": "stimuli/openended.json",
+        "description": "Being vulnerable and sharing with machines"
+    },
+    {
         "stimuli": "stimuli/relationship.json",
         "description": "Our Relationship with AI: Exploring the Future of Human-Machine Interaction"
     },

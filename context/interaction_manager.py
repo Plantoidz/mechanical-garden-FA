@@ -182,7 +182,7 @@ class InteractionManager:
         interaction_description: str,
         interaction_addendum: List[str],
         use_message_type: str = 'raw',
-        word_limit: int = 75, # TODO: move to config
+        word_limit: int = 50, # TODO: move to config
     ):
         
         character_name = character['name']

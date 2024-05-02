@@ -31,7 +31,7 @@ def magicstream(audio_stream: Iterator[bytes], number_string: str) -> bytes:
     # Get the channel mapping ID based on the input number string
     channel_map_id = channel_map.get(str(number_string))
     if channel_map_id is None:
-        raise ValueError("Invalid number string. Must be a number from 0 to 7.")
+        raise ValueError("Invalid number string. Make sure all characters have an assigned channel.")
 
     # Build the audio filter string
     channel_routing_flag = f"--af=lavfi=[pan=octagonal|{channel_map_id}=c0]"
@@ -79,7 +79,7 @@ def magicplay(mp3_filepath: str, number_string: str) -> bytes:
     # Get the channel mapping ID based on the input number string
     channel_map_id = channel_map.get(str(number_string))
     if channel_map_id is None:
-        raise ValueError("Invalid number string. Must be a number from 0 to 7.")
+        raise ValueError("Channel map id error.")
 
     # Build the audio filter string
     channel_routing_flag = f"--af=lavfi=[pan=octagonal|{channel_map_id}=c0]"
