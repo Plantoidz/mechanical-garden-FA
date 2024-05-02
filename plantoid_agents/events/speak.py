@@ -15,8 +15,7 @@ import pygame.mixer as mixer
 import types
 import audioop
 
-from plantoid_agents.lib.MultichannelRouter import Iterator, magicstream, stop_mpv_processes
-from utils.experiments.MultichannelRouter import Iterator, magicstream, setup_magicstream
+from plantoid_agents.lib.MultichannelRouter import Iterator, magicstream, setup_magicstream
 from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
 
 from dotenv import load_dotenv
@@ -244,7 +243,8 @@ class Speak:
                     if audioop.rms(data, 2) > self.THRESHOLD:  # audioop.rms gives the root mean square of the chunk
                         print("\nAudio input detected. Stopping streaming.")
                         stop_event.set()  # Signal that the stop condition has been met
-                        stop_mpv_processes()
+                        # TODO: impleemnt equivalent
+                        #stop_mpv_processes()
                         if interruption_callback is not None:
                             interruption_callback(True, "Ben", "Test message.")  # Notify the rest of the application
                             # playsound(os.getcwd() + "/media/cleanse.mp3", block=False)
@@ -281,7 +281,8 @@ class Speak:
             # time.sleep(5)
             audio_detected_event.set()
             stop_event.set()
-            stop_mpv_processes()
+            # TODO: impleemnt equivalent
+            # stop_mpv_processes()
 
             if interruption_callback is not None:
                 interruption_callback(True, agent.name, utterance)  # Notify the rest of the application
