@@ -13,7 +13,7 @@ class AudioGenerator:
 
     def generate_and_save_audios(self):
         for utterance in self.utterances:
-            filepath = os.path.join(os.getcwd(), f'media/user_audio/{self.voice_id}_{utterance}.mp3')
+            filepath = os.path.join(os.getcwd(), f'media/runtime_effects/{self.voice_id}_{utterance}.mp3')
             if not os.path.exists(filepath):  # Check if the file already exists
                 audio = self.client.generate(
                     text=utterance,
