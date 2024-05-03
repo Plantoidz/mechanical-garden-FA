@@ -105,10 +105,10 @@ class Listen:
 
     def play_speech_acknowledgement(self, voice_id: str) -> None:
         random_effect = random.choice([
-            'oh', 'oh.', 'oh?', 'um', 'hrm', 'hrmmmmm',
-            'interesting!', 'okay', 'i see', 'right', 'really?',
-            'really.', 'oh, really?', 'ah', 'mhm.', 'ooh',
-            'ahh', 'hmm', 'huh.', 'huh!', 'huh??', 'kay.'
+            'oh', 'um', 'hrm', 'hrmmmmm',
+            'okay', 'i see', 'right',
+             'ah', 'mhm.', 'ooh', # 'oh, really?'
+            'ahh', 'hmm', 
         ])
 
         file_path = os.path.join(os.getcwd(), "media/runtime_effects", f"{voice_id}_{random_effect}.mp3")

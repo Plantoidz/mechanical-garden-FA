@@ -18,7 +18,7 @@ import audioop
 from plantoid_agents.lib.MultichannelRouter import Iterator, magicstream, setup_magicstream
 from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
 from utils.config_util import read_services_config
-# from plantoid_agents.lib.MultichannelRouter import Iterator, magicstream, setup_magicstream
+# from utils.experiments.MultichannelRouter import Iterator, magicstream, setup_magicstream
 
 from dotenv import load_dotenv
 from elevenlabs.client import ElevenLabs, AsyncElevenLabs
