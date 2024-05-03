@@ -187,7 +187,7 @@ class PlantoidDialogueAgent:
             message,
             self.get_voice_id(),
             self.get_channel_id(),
-            callback=None, #self.speak_module.stop_background_music,
+            bg_callback=None, #self.speak_module.stop_background_music,
             use_streaming = use_streaming,
             clone_voice = clone_voice,
             create_clone = create_clone,

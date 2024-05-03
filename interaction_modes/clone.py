@@ -16,14 +16,12 @@ class PlantoidClone(PlantoidInteraction):
     def enunciate(self, intro_message: str):
         # playsound(os.getcwd()+"../media/cleanse.mp3")
         print('\n\033[94m' + 'Enunciating: ' + '\033[0m' + '\033[92m' +  f'\n{intro_message}'  + '\033[0m')
-        # speaker = self.agents[self.last_speaker_idx]
-        # speaker.speak(
-        #     self.agents,
-        #     intro_message,
-        #     use_streaming=False,
-        #     clone_voice = False,
-        #     create_clone = False,
-        # )
+
+        speaker = self.agents[self.get_first_non_human_idx()]
+        speaker.speak(self.agents, intro_message, use_streaming=False)
+
+        self.set_speaker_idx(self.get_first_non_human_idx(), idx_type="last")
+        self.inject(speaker.name, intro_message)
 
     def step(self) -> tuple[str, str]:
         # 1. choose the next speaker

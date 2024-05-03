@@ -21,6 +21,7 @@ from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
 from dotenv import load_dotenv
 from elevenlabs.client import ElevenLabs, AsyncElevenLabs
 from elevenlabs import stream, Voice, VoiceSettings, play
+from utils.util import str_to_bool
 
 # https://elevenlabs.io/docs/api-reference/edit-voice
 
@@ -51,6 +52,8 @@ class Speak:
 
         # Initialization code here (if necessary)
         self.elevenlabs_model_type = services["speech_synthesis_model"]
+        self.use_interruption = str_to_bool(services["use_interruption"])
+        self.use_multichannel = str_to_bool(services["use_multichannel"])
 
     def get_text_to_speech_response(self, text, eleven_voice_id, callback=None):
 
@@ -302,7 +305,7 @@ class Speak:
         channel_id: str,
         bg_callback: Any = None,
         interruption_callback: Any = None,
-        use_multichannel: bool = True,
+        # use_multichannel: bool = False,
         use_streaming: bool = True,
     ) -> None:
 
@@ -336,7 +339,7 @@ class Speak:
                 if bg_callback is not None:
                     bg_callback()
                     
-                if use_multichannel:
+                if self.use_multichannel:
                     print("\033[90mstreaming on channel",channel_id,"\033[0m\n")
                     magicstream(audio_stream, channel_id)
 
@@ -366,7 +369,7 @@ class Speak:
         response: str,
         voice_id: str,
         channel_id: str,
-        callback: Any = None,
+        bg_callback: Any = None,
         voice_set_callback: Any = None,
         clone_voice: bool = False,
         create_clone: bool = False,
@@ -391,19 +394,21 @@ class Speak:
             )
 
             self.stream_audio_response(
+                agent,
                 response,
                 voice,
                 channel_id,
-                callback=callback,
+                bg_callback=bg_callback,
                 use_streaming=use_streaming,
             )
 
         else:
             self.stream_audio_response(
+                agent,
                 response,
                 voice_id,
                 channel_id,
-                callback=callback,
+                bg_callback=bg_callback,
                 use_streaming=use_streaming,
 
             )

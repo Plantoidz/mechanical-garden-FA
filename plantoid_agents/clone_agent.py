@@ -33,8 +33,8 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
         # self.speak_module.stop_background_music()
 
         self.speak_module.speak(
-            self,
             agents,
+            self,
             message,
             self.get_voice_id(),
             self.get_channel_id(),
