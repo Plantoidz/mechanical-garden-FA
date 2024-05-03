@@ -466,10 +466,13 @@ class Listen:
         return utterance
     
     def recognize_speech_whisper_google(self, timeout_override: str = None):
+        try:
+            self.listen_for_speech_google()
+        except sr.exceptions.WaitTimeoutError:
+            print("\t\033[91mTimeout reached. Stopping the recording...\033[0m")
+            return ""
 
-        self.listen_for_speech_google()
         utterance = self.recognize_whisper()
-
         return utterance
     
     def recognize_speech_deepgram(self, step: int = 0):
