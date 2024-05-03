@@ -8,8 +8,9 @@ import traceback
 
 from dotenv import load_dotenv
 
+from utils.config_util import read_services_config
 from config.scripts.default_prompt_config import default_chat_completion_config, default_completion_config
-from utils.util import load_config, str_to_bool
+# from utils.util import load_config, str_to_bool
 
 
 from langchain_community.chat_models import ChatLiteLLM, ChatOpenAI
@@ -48,10 +49,13 @@ class Think:
         """
         Initializes a new instance of the Think class.
         """
-        self.llm_config = "gpt-4-turbo" # "ollama_chat/llama3"
+        services = read_services_config()
+
         self.langchain_model = get_llm()
         self.ai_chat_model = AIChat
         self.litellm_model = completion
+        self.model_type = services["language_model"]
+        self.use_model_api = services["language_model_api"]
 
     def stream_text(self, response_stream):
 
@@ -103,7 +107,7 @@ class Think:
         if streaming:
 
             response_stream = self.litellm_model(
-                model=self.llm_config, 
+                model=self.model_type, 
                 messages=messages, 
                 stream=True
             )
@@ -115,7 +119,7 @@ class Think:
         else:
 
             response = self.litellm_model(
-                model=self.llm_config, 
+                model=self.model_type, 
                 messages=messages, 
                 stream=False
             )
@@ -130,7 +134,7 @@ class Think:
         ai_chat = self.ai_chat_model(
             system=system_message,
             api_key=OPENAI_API_KEY,
-            model="gpt-4-turbo", # "gpt-3.5-turbo"
+            model=self.model_type, # "gpt-3.5-turbo"
             console=False,
             params = {"temperature": 0.5}#, "max_tokens": 3}
         )
@@ -150,58 +154,58 @@ class Think:
 
         return message.content
     
-    def think(self, agent, system_message: str, use_content: str, use_model: str, use_streaming: bool) -> str:
+    def think(self, agent, system_message: str, use_content: str, use_streaming: bool) -> str:
         
      #   traceback.print_stack()
         if(agent.callback): agent.callback("<thinking>")
 
-        if use_model == 'simpleAIChat':
+        if self.use_model_api == 'simpleAIChat':
             message = self.think_simpleAIChat(system_message, use_content)
 
-        if use_model == 'langchain':
+        if self.use_model_api == 'langchain':
             message = self.think_langchain(system_message, use_content)
 
-        if use_model == 'litellm':
+        if self.use_model_api == 'litellm':
             message = self.think_litellm(system_message, use_content, use_streaming)
 
         return message
 
-    def GPTmagic_manual(self, prompt, call_type='chat_completion') -> str: 
+    # def GPTmagic_manual(self, prompt, call_type='chat_completion') -> str: 
 
-        # allowable kwargs
-        allowable_call_types = ['chat_completion', 'completion']
+    #     # allowable kwargs
+    #     allowable_call_types = ['chat_completion', 'completion']
 
-        assert call_type in allowable_call_types, "The provided call type is not implemented"
+    #     assert call_type in allowable_call_types, "The provided call type is not implemented"
 
-        if call_type == 'chat_completion':
+    #     if call_type == 'chat_completion':
 
-            # Prepare the GPT magic
-            config = default_chat_completion_config(model="gpt-4")
+    #         # Prepare the GPT magic
+    #         config = default_chat_completion_config(model="gpt-4")
 
-            # Generate the response from the GPT model
-            response = openai.ChatCompletion.create(messages=[{
-                "role": "user",
-                "content": prompt,
-            }], **config)
+    #         # Generate the response from the GPT model
+    #         response = openai.ChatCompletion.create(messages=[{
+    #             "role": "user",
+    #             "content": prompt,
+    #         }], **config)
 
-            message = response.choices[0].message.content
-            print('gpt response:', message)
+    #         message = response.choices[0].message.content
+    #         print('gpt response:', message)
 
-            return message
+    #         return message
         
-        if call_type == 'completion':
-            # # The GPT-3.5 model ID you want to use
-            # model_id = "text-davinci-003"
+    #     if call_type == 'completion':
+    #         # # The GPT-3.5 model ID you want to use
+    #         # model_id = "text-davinci-003"
 
-            # # The maximum number of tokens to generate in the response
-            # max_tokens = 1024
+    #         # # The maximum number of tokens to generate in the response
+    #         # max_tokens = 1024
 
-            config = default_completion_config()
+    #         config = default_completion_config()
 
-            # Generate the response from the GPT-3.5 model
-            response = openai.Completion.create(
-                prompt=prompt,
-                **config,
-            )
+    #         # Generate the response from the GPT-3.5 model
+    #         response = openai.Completion.create(
+    #             prompt=prompt,
+    #             **config,
+    #         )
 
-            return response
+    #         return response

@@ -11,7 +11,9 @@ import requests
 # import pygame.mixer as mixer
 import types
 
+from utils.config_util import read_services_config
 from utils.experiments.MultichannelRouter import Iterator, magicstream, setup_magicstream
+# from plantoid_agents.lib.MultichannelRouter import Iterator, magicstream, setup_magicstream
 
 from dotenv import load_dotenv
 from elevenlabs.client import ElevenLabs, AsyncElevenLabs
@@ -42,8 +44,10 @@ class Speak:
         """
         Initializes a new instance of the Speak class.
         """
+        services = read_services_config()
+
         # Initialization code here (if necessary)
-        pass
+        self.elevenlabs_model_type = services["speech_synthesis_model"]
 
     def get_text_to_speech_response(self, text, eleven_voice_id, callback=None):
 
@@ -209,7 +213,7 @@ class Speak:
             # generate audio stream   
             audio_stream = client.generate(
                 text=self.stream_text(response),
-                model="eleven_turbo_v2",
+                model=self.elevenlabs_model_type,
                 voice=voice_id,
                 stream=True
             )
@@ -231,7 +235,7 @@ class Speak:
         else:
             audio = client.generate(
                 text=response,
-                model="eleven_turbo_v2",
+                model=self.elevenlabs_model_type,
                 voice=voice_id,
                 stream=False
             )

@@ -23,6 +23,7 @@ from ctypes import *
 from contextlib import contextmanager
 from collections import deque
 
+from utils.config_util import read_services_config
 from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
 
 # from whisper_mic.whisper_mic import WhisperMic
@@ -73,6 +74,9 @@ class Listen:
         """
         Initializes a new instance of the Listen class.
         """
+
+        services = read_services_config()
+
         self.FORMAT = pyaudio.paInt16
         self.CHANNELS = channels
         self.RATE = rate
@@ -83,6 +87,7 @@ class Listen:
         self.THRESHOLD = threshold
         self.device_index = device_index
         self.transcription = DeepgramTranscription(sample_rate=self.RATE, device_index=self.device_index)
+        self.tts_model_type = services["speech_recognition_model"]
 
     #todo: revisit cue sounds and background music
     def play_speech_indicator(self) -> None:
@@ -408,10 +413,15 @@ class Listen:
         return utterance
     
     def listen(self, characters, timeout_override: str = None, step: int = 0) -> Any:
-        # return self.recognize_speech_whisper_manual(timeout_override)
+
+        # print("TTS MODEL TYPE:", self.tts_model_type)
         for character in characters:
             if(character.callback): character.callback("<listening>")
 
-        return self.recognize_speech_deepgram(step=step)
+        if self.tts_model_type == "whisper":
+            return self.recognize_speech_whisper_manual(timeout_override)
+
+        if self.tts_model_type == "deepgram":
+            return self.recognize_speech_deepgram(step=step)
 
     # More methods can be added here as needed
