@@ -81,12 +81,11 @@ def magicstream(audio_stream: Iterator[bytes], channel_number: str, stop_event: 
         # print(f"Setting channel number to {channel_index_value.value}")
 
     # Process each chunk of bytes in the audio stream
-    try:
-        for chunk in audio_stream:
-            if stop_event.is_set():
-                print("Magicstream - stopped by stop event.")
-                break
-            if chunk is not None:
-                input_queue.put(chunk)
+    for chunk in audio_stream:
+        if stop_event.is_set():
+            print("Magicstream - stopped by stop event.")
+            break
+        if chunk is not None:
+            input_queue.put(chunk)
 
     done_event.wait()
