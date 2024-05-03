@@ -1,7 +1,7 @@
 {
     "conversation_stimuli": {
         "Exploring AI sentience, processing capabilities": {
-            "stimulus": "Les grands modèles de langage manifestent-ils un quelconque degré de conscience, ou sont-ils simplement des systèmes de traitement d'informations sophistiqués ?"
+            "stimulus": "Les LLM manifestent-ils un quelconque degré de conscience, ou sont-ils simplement des systèmes de traitement d'informations sophistiqués ?"
         },
         "Sentience spectrum, AI's potential position": {
             "stimulus": "La conscience peut-elle être mesurée sur un spectre, et si oui, où se situeraient les grands modèles de langage ?"
