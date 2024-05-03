@@ -118,6 +118,7 @@ class PlantoidDialogueAgent:
 
         self.listen_module.play_speech_indicator()
         user_message = self.listen_module.listen(agents, step=step)
+        self.listen_module.play_speech_acknowledgement(self.get_voice_id())
 
         print("\n\033[92m" +"Human said:\033[0m\n" + user_message)
 

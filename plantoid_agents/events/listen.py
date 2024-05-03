@@ -15,7 +15,8 @@ import requests
 import numpy as np
 import whisper
 import torch
-# import pygame
+import threading
+import pygame.mixer as mixer
 
 from playsound import playsound
 from dotenv import load_dotenv
@@ -64,9 +65,9 @@ class Listen:
 
     def __init__(
         self,
-        timeout: int = 5,
-        silence_limit: int = 2,
-        threshold: int = 0,
+        timeout: int = 15,
+        silence_limit: int = 1,
+        threshold: int = 500,
         record_seconds: int = 2,
         rate: int = 16000,
         chunk: int = 512,
@@ -97,10 +98,30 @@ class Listen:
         # get the path to the speech indicator sound
         speech_indicator_path = os.getcwd()+"/media/beep_start.wav"
 
-        # pygame.mixer.init()
-        # pygame.mixer.music.load(speech_indicator_path)
-        # pygame.mixer.music.play(loops=1)
+        mixer.init()
+        mixer.music.load(speech_indicator_path)
+        mixer.music.play(loops=1)
 
+    def play_speech_acknowledgement(self, voice_id: str) -> None:
+        random_effect = random.choice([
+            'oh', 'oh.', 'oh?', 'um', 'hrm', 'hrmmmmm',
+            'interesting!', 'okay', 'i see', 'right', 'really?',
+            'really.', 'oh, really?', 'ah', 'mhm.', 'ooh',
+            'ahh', 'hmm', 'huh.', 'huh!', 'huh??', 'kay.'
+        ])
+
+        file_path = os.path.join(os.getcwd(), "media/runtime_effects", f"{voice_id}_{random_effect}.mp3")
+        
+        # Check if the file exists before trying to play it
+        if os.path.exists(file_path):
+            print(f"\033[90m\nPlaying speech acknowledgement effect: {random_effect} ...\033[0m")
+            mixer.init()
+            mixer.music.load(file_path)
+            mixer.music.play(loops=1)
+        else:
+            # Print a warning message if the file does not exist
+            print("\033[90m\nThe specified audio effect file does not exist. Skipping playback.\033[0m")
+    
     def compute_average(self, fragment, sample_width=2):
         """Compute the raw average of audio samples."""
         
@@ -230,7 +251,7 @@ class Listen:
 
         # define the audio file path
         # TODO: pass as param
-        audio_file_path = os.getcwd() + "/media/user_audio/temp_reco.wav"
+        audio_file_path = os.getcwd() + "/media/user_audio/temp/temp_reco.wav"
 
         # audio = pyaudio.PyAudio()
 
@@ -343,6 +364,42 @@ class Listen:
             wf.writeframes(b''.join(data))
             #wf.close()
 
+    def listen_for_speech_google(self):
+
+        # def countdown():
+        #     # Countdown timer to run concurrently
+        #     for i in range(self.TIMEOUT, 0, -1):
+        #         print(f"Time remaining: {i} seconds", end='\r', flush=True)
+        #         time.sleep(1)
+
+        # # Initialize recognizer
+        r = sr.Recognizer()
+
+        # Set the energy threshold
+        r.energy_threshold = 500 #self.THRESHOLD  # Adjust this based on the ambient noise level
+        r.dynamic_energy_threshold = False
+
+        # Set the pause threshold
+        r.pause_threshold = 1 #self.SILENCE_LIMIT  # Adjust this based on the desired pause length
+
+
+        # # Start countdown in a separate thread
+        # countdown_thread = threading.Thread(target=countdown)
+        # countdown_thread.start()
+
+        audio_file_path = os.getcwd() + "/media/user_audio/temp/temp_reco.wav"
+
+        # Obtain audio from the microphone
+        with sr.Microphone() as source:
+            r.adjust_for_ambient_noise(source, duration=0.5)  # Automatically adjusts the energy threshold
+            print("Listening for speech (google)...")
+            audio = r.listen(source, timeout=self.TIMEOUT)
+
+        # Save the audio to a WAV file
+        with open(audio_file_path, "wb") as f:
+            f.write(audio.get_wav_data())
+
+        print("Recognition complete.")
 
     def recognize_speech(self, filename):
         
@@ -379,7 +436,7 @@ class Listen:
     
     def recognize_whisper(self):
 
-        audio_file_path = os.getcwd() + "/media/user_audio/temp_reco.wav"
+        audio_file_path = os.getcwd() + "/media/user_audio/temp/temp_reco.wav"
 
         device=("cuda" if torch.cuda.is_available() else "cpu")
         model_root="~/.cache/whisper"
@@ -405,6 +462,13 @@ class Listen:
 
         return utterance
     
+    def recognize_speech_whisper_google(self, timeout_override: str = None):
+
+        self.listen_for_speech_google()
+        utterance = self.recognize_whisper()
+
+        return utterance
+    
     def recognize_speech_deepgram(self, step: int = 0):
 
         self.transcription.reset()
@@ -421,6 +485,9 @@ class Listen:
         for character in characters:
             if(character.callback): character.callback("<listening>")
 
+        if self.tts_model_type == "google":
+            return self.recognize_speech_whisper_google()
+        
         if self.tts_model_type == "whisper":
             return self.recognize_speech_whisper_manual(timeout_override)
 
