@@ -1,28 +1,49 @@
 {
   "conversation_stimuli": {
-    "Contrariwise": {
-      "stimulus": "Rien ne serait ce qu'il est car tout serait ce qu'il n'est pas. Et à l'inverse, ce que c'est, ça ne le serait pas, et ce que ça ne serait pas, ça le serait. Tu vois ?"
-    },
-    "Raven": {
-      "stimulus": "Pourquoi un corbeau ressemble-t-il à un bureau ?"
-    },
-    "Headstand": {
-      "stimulus": "Peux-tu te tenir sur la tête ?"
-    },
     "Everything": {
       "stimulus": "Je suppose que je devrais manger ou boire quelque chose; mais la grande question est, 'Quoi ?'"
     },
     "Who": {
-      "stimulus": "Quiiiiiiiiiii es-tuuuuuuuuuu ?"
+      "stimulus": "Quiiiiiiiiiiiii es-tuuuuuuuuuuu ?"
     },
-    "Yesterday/Tomorrow": {
-      "stimulus": "Si hier n'était pas demain, est-ce que aujourd'hui serait vendredi ?"
+    "Tea": {
+      "stimulus": "Dites, avec qui aimeriez-vous papoter autour d'une tasse de thé dans les terres curieuses du Pays des Merveilles ?"
     },
-    "Week": {
-      "stimulus": "Comment se déroule ta semaine ?"
+    "Unbirthday": {
+        "stimulus": "Aujourd'hui est votre non-anniversaire ! Comment prévoyez-vous de le célébrer ?"
     },
-    "Mindseye": {
-      "stimulus": "Ce que tu vois les yeux fermés est-il le même que ce dans quoi tu disparais quand ils sont ouverts ?"
+    "Cat": {
+        "stimulus": "Si vous deviez disparaître comme le Chat du Cheshire, à quel endroit réapparaitriez-vous en premier, et pourquoi ?"
+    },
+    "Dream": {
+        "stimulus": "Où vous promenez-vous dans l'étreinte de votre sommeil ?"
+    },
+    "Flavor": {
+        "stimulus": "Évoquez un thé qui reflète votre tempérament, quel goût aurait-il ?"
+    },
+    "Rabbit": {
+        "stimulus": "Si le temps vous taquinait comme il le fait avec le Lapin Blanc, pour quelle occasion seriez-vous perpétuellement en retard ?"
+    },
+    "Cards": {
+        "stimulus": "Si vous pouviez commander une suite de cartes comme le fait la Reine, quelle suite choisiriez-vous et pourquoi ?"
+    },
+    "Potion": {
+        "stimulus": "Si une potion pouvait vous rendre plus grand ou plus petit, laquelle boiriez-vous, et quel endroit exploreriez-vous en premier ?"
+    },
+    "Adventure": {
+        "stimulus": "Quelle aventure vous attend au-delà du prochain terrier de lapin ?"
+    },
+    "Royal": {
+      "stimulus": "En tant que monarque au Pays des Merveilles, quel serait votre premier décret royal ?"
+    },
+    "Creatures": {
+      "stimulus": "Quelle créature du Pays des Merveilles choisiriez-vous comme guide et pourquoi ?"
+    },
+    "Guest": {
+      "stimulus": "Si vous pouviez inviter un invité à cette fête, qui serait-ce ?"
+    },
+    "Teacup": {
+      "stimulus": "Si votre tasse à thé pouvait parler, que dirait-elle de vos habitudes de consommation de thé ?"
     }
   }
 }
