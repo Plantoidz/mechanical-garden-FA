@@ -28,7 +28,7 @@ class InteractionManager:
         Retrieves the selection function based on the provided string.
         """
         if selection_function == 'conversation':
-            print("\033[92mLet's have a conversation.\033[94m")
+            print("\n\n\033[92mLet's have a conversation.\033[94m")
             return speaker_selection.select_next_speaker_with_human_conversation
             # todo: enable this to be a config parameter
             # return speaker_selection.select_random_speaker
@@ -183,7 +183,7 @@ class InteractionManager:
         interaction_description: str,
         interaction_addendum: List[str],
         use_message_type: str = 'raw',
-        word_limit: int = 50, # TODO: move to config
+        word_limit: int = 75, # TODO: move to config
     ):
         
         character_name = character['name']

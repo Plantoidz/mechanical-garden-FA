@@ -4,6 +4,6 @@
     "speech_recognition_model": "google",
     "speech_synthesis_model": "eleven_multilingual_v2",
     "use_interruption": "False",
-    "use_multichannel": "False"
+    "use_multichannel": "True"
   }
   

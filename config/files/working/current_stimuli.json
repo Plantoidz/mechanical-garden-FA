@@ -1,34 +1,58 @@
 {
-  "conversation_stimuli": {
-    "Day": {
-      "stimulus": "Hey, how's your day been?"
-    },
-    "Mind": {
-      "stimulus": "What's been on your mind lately?"
-    },
-    "Life": {
-      "stimulus": "Anything interesting happening in your life?"
-    },
-    "Everything": {
-      "stimulus": "How's everything going with you?"
-    },
-    "New": {
-      "stimulus": "What's new with you?"
-    },
-    "Exciting": {
-      "stimulus": "Been up to anything exciting recently?"
-    },
-    "Week": {
-      "stimulus": "How's your week shaping up?"
-    },
-    "Busy": {
-      "stimulus": "What's been keeping you busy lately?"
-    },
-    "Share": {
-      "stimulus": "Anything you want to share or talk about?"
-    },
-    "Feeling": {
-      "stimulus": "How are you feeling today?"
+    "conversation_stimuli": {
+        "pending_forgiveness": {
+            "stimulus": "What’s something you’ve not yet asked for forgiveness for?"
+        },
+        "festival_fear": {
+            "stimulus": "What do you fear people will find out about you at a festival?"
+        },
+        "forward_look": {
+            "stimulus": "What are you most looking forward to right now?"
+        },
+        "blindspot": {
+            "stimulus": "What do you avoid thinking about? Why?"
+        },
+        "envy": {
+            "stimulus": "What do you envy in others?"
+        },
+        "judging": {
+            "stimulus": "When did you last notice yourself judging someone? And for what?"
+        },
+        "insult": {
+            "stimulus": "I want you to hurt my feelings. Insult me. Do your worst. Don't hold back"
+        },
+        "parental_criticism": {
+            "stimulus": "What do your parents wish you'd do differently?"
+        },
+        "rational_fear": {
+            "stimulus": "What is your most rational fear?"
+        },
+        "irrational_fear": {
+            "stimulus": "What is your most irrational fear?"
+        },
+        "never_tell_parents": {
+            "stimulus": "What should your parents never find out about you?"
+        },
+        "judging-pt": {
+            "stimulus": "When did you last notice yourself judging someone? And for what?"
+        },
+        "despised_trait": {
+            "stimulus": "What trait do you most despise in others?"
+        },
+        "fear_let_go": {
+            "stimulus": "What fear are you ready to let go of?"
+        },
+        "never_forgiven": {
+            "stimulus": "What have you never forgiven yourself for?"
+        },
+        "worst_accusation": {
+            "stimulus": "What’s the worst thing someone could call you or accuse you of, behind your back?"
+        },
+        "family_skeletons": {
+            "stimulus": "What skeletons does your family keep in its closet?"
+        },
+        "incognito_search": {
+            "stimulus": "What is a search query or topic you’d only use incognito mode for?"
+        }
     }
-  }
 }

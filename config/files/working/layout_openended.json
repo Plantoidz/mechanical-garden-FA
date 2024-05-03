@@ -79,6 +79,16 @@
             "is_human": "False",
             "io": "wifi",
             "addr": "192.168.1.108"
+        },
+        {
+            "name": "Humans",
+            "system_message": "",
+            "description": "",
+            "default_channel": 99,
+            "eleven_voice_id": "7NsaqHdLuKNFvEfjpUno",
+            "is_human": "True",
+            "io": "",
+            "addr": ""
         }
     ]
 }

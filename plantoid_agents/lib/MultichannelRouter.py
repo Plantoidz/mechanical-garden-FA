@@ -33,7 +33,7 @@ def setup_magicstream():
 
     # Huge hack just to get the processes working
     if not decoder_child_process:
-        print("Setting up magicstream child processes.")
+        # print("Setting up magicstream child processes.")
         decoder_child_process = multiprocessing.Process(target=decode_audio, args=(channel_index_value, input_queue, output_queue))
         player_child_process = multiprocessing.Process(target=play_audio, args=(start_event, stream_input_event, done_event, channel_index_value, input_queue, output_queue))
 
@@ -45,7 +45,7 @@ def start_timer(start_event):
     start_event.set()
 
 def decode_audio(channel_index_value, input_queue, output_queue):
-    print("Starting magicstream audio decoder process")
+    # print("Starting magicstream audio decoder process")
     while True:
         input_data = input_queue.get()
 
@@ -60,7 +60,7 @@ def decode_audio(channel_index_value, input_queue, output_queue):
             print(f"Audio decoder exception occurred: \n{e}")
 
 def play_audio(start_event, stream_input_event, done_event, channel_index_value, input_queue, output_queue):
-    print("Starting magicstream audio playback process")
+    # print("Starting magicstream audio playback process")
     collected_samples = []
     iterations_without_playing = SAMPLE_LOOP_NOOP_ITERATIONS
     
@@ -104,7 +104,7 @@ def play_audio(start_event, stream_input_event, done_event, channel_index_value,
                     if channel_index_value.value >= number_of_channels:
                         index = 1
 
-                    # print(f"Using channel number {channel_index_value.value}")
+                    # print(f"Speaking on channel {channel_index_value.value}")
                     all_channels_signal[index] = samples
 
                 # print("Playing chunk.")
@@ -129,7 +129,7 @@ def magicstream(audio_stream: Iterator[bytes], channel_number: str) -> bytes:
 
     setup_magicstream()
 
-    print("starting magicstream playback")
+    # print("starting magicstream playback")
     done_event.clear()
     stream_input_event.set()
 
@@ -152,4 +152,4 @@ def magicstream(audio_stream: Iterator[bytes], channel_number: str) -> bytes:
     # Wait until the audio play process is done playing audio
     done_event.wait()
 
-    print("magicstream complete!")
+    # print("magicstream complete!")
