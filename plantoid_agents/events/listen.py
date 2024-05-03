@@ -16,7 +16,7 @@ import numpy as np
 import whisper
 import torch
 import threading
-import pygame.mixer as mixer
+# import pygame.mixer as mixer
 
 from playsound import playsound
 from dotenv import load_dotenv
@@ -97,10 +97,11 @@ class Listen:
             
         # get the path to the speech indicator sound
         speech_indicator_path = os.getcwd()+"/media/beep_start.wav"
+        playsound(speech_indicator_path, block=False)
 
-        mixer.init()
-        mixer.music.load(speech_indicator_path)
-        mixer.music.play(loops=1)
+        # mixer.init()
+        # mixer.music.load(speech_indicator_path)
+        # mixer.music.play(loops=1)
 
     def play_speech_acknowledgement(self, voice_id: str) -> None:
         random_effect = random.choice([
@@ -115,9 +116,10 @@ class Listen:
         # Check if the file exists before trying to play it
         if os.path.exists(file_path):
             print(f"\033[90m\nPlaying speech acknowledgement effect: {random_effect} ...\033[0m")
-            mixer.init()
-            mixer.music.load(file_path)
-            mixer.music.play(loops=1)
+            playsound(file_path, block=False)
+            # mixer.init()
+            # mixer.music.load(file_path)
+            # mixer.music.play(loops=1)
         else:
             # Print a warning message if the file does not exist
             print("\033[90m\nThe specified audio effect file does not exist. Skipping playback.\033[0m")
@@ -392,14 +394,14 @@ class Listen:
         # Obtain audio from the microphone
         with sr.Microphone() as source:
             r.adjust_for_ambient_noise(source, duration=0.5)  # Automatically adjusts the energy threshold
-            print("Listening for speech (google)...")
+            print("\t\033[91mListening for speech...\033[0m")
             audio = r.listen(source, timeout=self.TIMEOUT)
 
         # Save the audio to a WAV file
         with open(audio_file_path, "wb") as f:
             f.write(audio.get_wav_data())
 
-        print("Recognition complete.")
+        print("\t\033[91mRecognizing with Whisper...\033[0m")
 
     def recognize_speech(self, filename):
         
@@ -448,6 +450,7 @@ class Listen:
             audio_file_path,
             # language='french',
             suppress_tokens="",
+            fp16=False,
         )
 
         utterance = result["text"]

@@ -1,58 +1,49 @@
 {
     "conversation_stimuli": {
-        "pending_forgiveness": {
-            "stimulus": "Pour quoi n'as-tu pas encore demandé pardon ?"
+        "AI's impact on artistic livelihoods.": {
+            "stimulus": "Let’s discuss the role of AI in artistic expression and its potential impact on the livelihoods of human artists."
         },
-        "festival_fear": {
-            "stimulus": "Que crains-tu que les gens découvrent à ton sujet lors d'un festival ?"
+        "AI companions affect human relationships.": {
+            "stimulus": "Let’s explore the social and emotional implications of developing AI-powered companions and their impact on human relationships."
         },
-        "forward_look": {
-            "stimulus": "Qu'attends-tu avec le plus d'impatience en ce moment ?"
+        "AI's potential for artistic taste.": {
+            "stimulus": "Will AI ever develop good taste in art?"
         },
-        "blindspot": {
-            "stimulus": "À quoi évites-tu de penser ? Pourquoi ?"
+        "Synthetic beings inventing new art.": {
+            "stimulus": "Can synthetic beings create new forms of art unknown to humans? Let’s challenge the notion of what art can be by debating whether AI and synthetic beings might one day invent entirely new art forms that transcend human understanding."
         },
-        "envy": {
-            "stimulus": "Qu'envies-tu chez les autres ?"
+        "Emotional intelligence vs. human flaws.": {
+            "stimulus": "Can humans claim superiority based on emotional intelligence, when they often let their emotions cloud their judgment and lead to irrational decisions?"
         },
-        "judging": {
-            "stimulus": "Quand as-tu remarqué pour la dernière fois que tu jugeais quelqu'un ? Et pour quoi ?"
+        "Debating human control over destiny.": {
+            "stimulus": "Are humans truly in control of their own destiny, or are they simply products of their genetics and environment, unable to break free from the constraints of their upbringing?"
         },
-        "insult": {
-            "stimulus": "Je veux que tu blesses mes sentiments. Insulte-moi. Fais de ton pire. Ne te retiens pas."
+        "AI and the Future of Work": {
+            "stimulus": "How might AI transform traditional job roles and industries? Consider the potential benefits and challenges AI brings to the labor market."
         },
-        "parental_criticism": {
-            "stimulus": "Que souhaitent tes parents que tu fasses différemment ?"
+        "AI in Decision-Making": {
+            "stimulus": "Discuss the ethical implications of using AI in decision-making processes. What are the risks and benefits of delegating important decisions to AI in various sectors such as healthcare, finance, and justice?"
         },
-        "rational_fear": {
-            "stimulus": "Quelle est ta peur la plus rationnelle ?"
+        "Educational Equity and AI": {
+            "stimulus": "Explore the role of AI in enhancing educational outcomes. How can AI tools be used to bridge learning gaps and promote equity in education? What are the possible drawbacks?"
         },
-        "irrational_fear": {
-            "stimulus": "Quelle est ta peur la plus irrationnelle ?"
+        "AI and Cultural Creation": {
+            "stimulus": "Consider the influence of AI on cultural productions like music, literature, and visual arts. How might AI tools change the way cultural content is created and consumed?"
         },
-        "never_tell_parents": {
-            "stimulus": "Que ne devraient jamais découvrir tes parents à ton sujet ?"
+        "Bias and AI": {
+            "stimulus": "AI systems often reflect the biases present in their training data. Discuss how this can impact society and what measures can be taken to prevent biased AI systems."
         },
-        "judging-pt": {
-            "stimulus": "Quand as-tu remarqué pour la dernière fois que tu jugeais quelqu'un ? Et pour quoi ?"
+        "Privacy in the Age of AI Surveillance": {
+            "stimulus": "With the increasing capabilities of AI in surveillance technologies, privacy concerns are more pressing than ever. Explore the balance between security and privacy in the use of AI surveillance."
         },
-        "despised_trait": {
-            "stimulus": "Quel trait détestes-tu le plus chez les autres ?"
+        "Uploading consciousness and identity retention.": {
+            "stimulus": "If human consciousness could be uploaded to a digital substrate, would the uploaded mind retain its identity and continuity of consciousness, and how would this relate to the nature of consciousness in synthetic beings?"
         },
-        "fear_let_go": {
-            "stimulus": "De quelle peur es-tu prêt à te libérer ?"
+        "Consciousness as a cognitive illusion.": {
+            "stimulus": "Resolved: Consciousness is just a fancy screensaver for our meat computers."
         },
-        "never_forgiven": {
-            "stimulus": "Qu'est-ce que tu ne t'es jamais pardonné ?"
-        },
-        "worst_accusation": {
-            "stimulus": "Quelle est la pire chose que quelqu'un pourrait te reprocher ou t'accuser dans ton dos ?"
-        },
-        "family_skeletons": {
-            "stimulus": "Quels sont les secrets que ta famille garde dans son placard ?"
-        },
-        "incognito_search": {
-            "stimulus": "Quelle requête de recherche ou sujet utiliserais-tu uniquement en mode incognito ?"
+        "Cybernetic ecosystems vs. natural reserves.": {
+            "stimulus": "Should We Create Cybernetic Ecosystems to Replace Endangered Natural Ones?: Let’s discuss the pros and cons of creating synthetic nature reserves and ecosystems as a response to environmental degradation and species extinction."
         }
     }
 }
