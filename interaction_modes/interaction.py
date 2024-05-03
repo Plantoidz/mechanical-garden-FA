@@ -104,6 +104,8 @@ class PlantoidInteraction:
             # last_speaker.speak(self.agents, speaker.name, use_streaming=False)
 
             message = speaker.listen_for_speech(self.agents, self._step)
+            self.log_conversation(speaker, message)
+
         else:
 
             # 2. next speaker sends message
@@ -121,7 +123,7 @@ class PlantoidInteraction:
 
         return speaker.name, message
     
-    def log_conversation(self, speaker: PlantoidDialogueAgent, message: str):
+    def log_conversation(self, agent: PlantoidDialogueAgent, message: str):
         # print(f"{speaker.name} says: {message}")
         # Log file directory path
         log_dir = os.path.join(os.getcwd(), "logs/conversation_history")
@@ -132,8 +134,10 @@ class PlantoidInteraction:
         # Path for the log file
         log_file_path = os.path.join(log_dir, f"interaction_{self.interaction_timestamp}.log")
 
+        formatted_message = agent.think_module.format_response_type(message)
+
         with open(log_file_path, "a") as f:
-            f.write(f"{datetime.now()} - {speaker.name} says: {message}\n")
+            f.write(f"{datetime.now()} - {agent.name} says: {formatted_message}\n")
 
     def log_agents(self):
 
@@ -147,10 +151,10 @@ class PlantoidInteraction:
         log_file_path = os.path.join(log_dir, f"interaction_{self.interaction_timestamp}.log")
 
         attributes = [
-            'name', '__class__.__name__', 'is_human', 'system_message',
-            'bidding_template', 'prefix', 'eleven_voice_id', 'channel_id',
+            'name', '__class__.__name__', 'is_human', # 'system_message'
+            'prefix', 'eleven_voice_id', 'channel_id', # 'bidding_template',
             'tunnel', 'socket', 'callback', 'addr', 'use_model_type',
-            'use_streaming', '__dict__'
+            'use_streaming', # '__dict__'
         ]
 
         # Write to the log file
@@ -160,6 +164,6 @@ class PlantoidInteraction:
                     # Using getattr to check and retrieve the attribute value
                     value = getattr(agent, attr, None)
                     if value is not None:  # Only write if the attribute exists
-                        f.write(f"{value}\n")
+                        f.write(f"{attr}: {value}\n")
                 f.write("\n")
             f.write("========================================\n")
