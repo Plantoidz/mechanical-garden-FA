@@ -10,13 +10,10 @@ import time
 import requests
 # import pygame.mixer as mixer
 import types
-import audioop
-import threading
 
 from utils.config_util import read_services_config
 # from utils.experiments.MultichannelRouter import Iterator, magicstream, setup_magicstream
 from plantoid_agents.lib.MultichannelRouter import Iterator, magicstream, setup_magicstream
-from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
 
 from dotenv import load_dotenv
 from elevenlabs.client import ElevenLabs, AsyncElevenLabs
@@ -198,101 +195,6 @@ class Speak:
         # )
 
         return voice
-    
-    def trigger_stop_event(
-        self,
-        use_streaming: bool,
-        stop_event: threading.Event,
-        interruption_callback: Any,
-    ):
-        """Listen to the microphone and set the stop_event when noise is detected."""
-
-        if use_streaming:
-            # Initialize PyAudio
-            p = pyaudio.PyAudio()
-
-            # Open stream
-            stream = p.open(format=pyaudio.paInt16,
-                            channels=1,
-                            rate=self.RATE,
-                            input=True,
-                            frames_per_buffer=self.CHUNK,
-                    )
-
-            try:
-                while not stop_event.is_set():
-                    # Read data from the microphone
-                    data = stream.read(self.CHUNK)
-                    # Check the sound level
-                    # print(audioop.findmax(data, 2))
-                    if audioop.rms(data, 2) > self.THRESHOLD:  # audioop.rms gives the root mean square of the chunk
-                        print("\nAudio input detected. Stopping streaming.")
-                        stop_event.set()  # Signal that the stop condition has been met
-                        # TODO: impleemnt equivalent
-                        #stop_mpv_processes()
-                        if interruption_callback is not None:
-                            interruption_callback(True, "Ben", "Test message.")  # Notify the rest of the application
-                            # playsound(os.getcwd() + "/media/cleanse.mp3", block=False)
-                        break
-            finally:
-                # Clean up the PyAudio stream and instance
-                stream.stop_stream()
-                stream.close()
-                p.terminate()
-
-                # Ensure the stop_event is set if it hasn't been already
-                if not stop_event.is_set():
-                    stop_event.set()
-                    # if interruption_callback is not None:
-                    #     interruption_callback(agent_interrupted=False)  # No interruption was detected
-
-    def shadow_listener(
-        self,
-        agent: Any,
-        use_streaming: bool,
-        stop_event: threading.Event,
-        audio_detected_event: threading.Event,
-        interruption_callback: Any
-    ):
-        """Listen to the microphone and set the stop_event when noise is detected."""
-
-        if self.use_interruption and use_streaming:
-
-            transcription = DeepgramTranscription(sample_rate=self.RATE, device_index=self.device_index, timeout=2)
-            transcription.reset()
-            transcription.start_listening(step=None)
-            utterance = transcription.get_final_result()
-            print("Shadow Listener - Utterance: ", utterance)
-            # time.sleep(5)
-            audio_detected_event.set()
-            stop_event.set()
-            # TODO: impleemnt equivalent
-            # stop_mpv_processes()
-
-            if interruption_callback is not None:
-                interruption_callback(True, agent.name, utterance)  # Notify the rest of the application
-                # runtime_effect = self.select_random_runtime_effect(agent.get_voice_id())
-                # # print("Runtime effect: ", runtime_effect)
-                # playsound(runtime_effect, block=False)
-
-    def select_random_runtime_effect(self, voice_id):
-        """
-        Selects a random file from the specified directory.
-        """
-        directory = os.getcwd() + "/media/runtime_effects"
-        prefix = f"{voice_id}_"
-        
-        # List all files that start with the given voice ID
-        files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f)) and f.startswith(prefix)]
-        
-        # Check if there are any matching files
-        if not files:
-            return None  # Return None or raise an Exception if no matching files are found
-
-        # Randomly select a file
-        random_file = random.choice(files)
-        return os.path.join(directory, random_file)
-
 
     def stream_audio_response(
         self,
