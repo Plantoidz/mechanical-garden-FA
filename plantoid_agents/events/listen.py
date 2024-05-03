@@ -387,7 +387,7 @@ class Listen:
 
         result = audio_model.transcribe(
             audio_file_path,
-            language='english',
+            # language='french',
             suppress_tokens="",
         )
 
