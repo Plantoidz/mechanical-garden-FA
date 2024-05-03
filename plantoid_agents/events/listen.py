@@ -450,6 +450,7 @@ class Listen:
             audio_file_path,
             # language='french',
             suppress_tokens="",
+            fp16=False,
         )
 
         utterance = result["text"]
