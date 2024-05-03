@@ -296,49 +296,68 @@ class Speak:
 
     def stream_audio_response(
         self,
+        agent: Any,
         response: str,
         voice_id: str,
         channel_id: str,
-        callback: Any = None,
+        bg_callback: Any = None,
+        interruption_callback: Any = None,
         use_multichannel: bool = True,
         use_streaming: bool = True,
     ) -> None:
 
-        # print("use streaming = ", use_streaming)
+        stop_event = threading.Event()
+        audio_detected_event = threading.Event()
 
-        if(use_streaming):
+        # trigger_thread = threading.Thread(
+        #     target=self.trigger_stop_event,
+        #     args=(use_streaming, stop_event, interruption_callback)
+        # )
+        shadow_listener_thread = threading.Thread(
+            target=self.shadow_listener,
+            args=(agent, use_streaming, stop_event, audio_detected_event, interruption_callback)
+        )
+        shadow_listener_thread.start()
+        # trigger_thread.start()
 
-            # generate audio stream   
-            audio_stream = client.generate(
-                text=self.stream_text(response),
-                model=self.elevenlabs_model_type,
-                voice=voice_id,
-                stream=True
-            )
+        try:
 
-            # stop background music callback
-            if callback is not None:
-                callback()
+            if use_streaming:
+
+                # generate audio stream   
+                audio_stream = client.generate(
+                    text=self.stream_text(response),
+                    model=self.elevenlabs_model_type,
+                    voice=voice_id,
+                    stream=True
+                )
+
+                # stop background music callback
+                if bg_callback is not None:
+                    bg_callback()
                     
-            # stream audio
-            # stream(audio_stream)
-                
-            if use_multichannel:
-                print("\033[90mstreaming on channel",channel_id,"\033[0m\n")
-                magicstream(audio_stream, channel_id)
+                if use_multichannel:
+                    print("\033[90mstreaming on channel",channel_id,"\033[0m\n")
+                    magicstream(audio_stream, channel_id)
 
+                else:
+                    stream(audio_stream)
+            
             else:
-                stream(audio_stream)
-        
-        else:
-            audio = client.generate(
-                text=response,
-                model=self.elevenlabs_model_type,
-                voice=voice_id,
-                stream=False
-            )
-            #todo: implement magicplay
-            play(audio)
+                audio = client.generate(
+                    text=response,
+                    model=self.elevenlabs_model_type,
+                    voice=voice_id,
+                    stream=False
+                )
+                #todo: implement magicplay
+                play(audio)
+
+        finally:
+            stop_event.set()
+            audio_detected_event.set()
+            shadow_listener_thread.join()
+            # trigger_thread.join()  # Ensure the interrupt thread is cleaned up properly
 
     def speak(
         self,
