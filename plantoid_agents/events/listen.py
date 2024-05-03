@@ -115,7 +115,7 @@ class Listen:
         
         # Check if the file exists before trying to play it
         if os.path.exists(file_path):
-            print(f"\033[90m\nPlaying speech acknowledgement effect: {random_effect} ...\033[0m")
+            print(f"\n\033[94m{random_effect}\033[0m")
             playsound(file_path, block=False)
             # mixer.init()
             # mixer.music.load(file_path)
