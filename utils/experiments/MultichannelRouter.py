@@ -22,7 +22,7 @@ def setup_magicstream():
     global player_child_process
     global channel_index_value
 
-    print("Setting up magicstream processes.")
+    # print("Setting up magicstream processes.")
 
     # Huge hack just to get the processes working
     if not decoder_child_process:

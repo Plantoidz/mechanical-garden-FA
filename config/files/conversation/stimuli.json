@@ -30,5 +30,37 @@
     {
         "stimuli": "stimuli/sentience.json",
         "description": "Is AI Alive? Exploring the Boundaries of Sentience"
+    },
+    {
+        "stimuli": "stimuli/openended-fr.json",
+        "description": "FRENCH: An open-ended invitation to have a conversation"
+    },
+    {
+        "stimuli": "stimuli/shadowbathing-fr.json",
+        "description": "FRENCH: Being vulnerable and sharing with machines"
+    },
+    {
+        "stimuli": "stimuli/relationship-fr.json",
+        "description": "FRENCH: Our Relationship with AI: Exploring the Future of Human-Machine Interaction"
+    },
+    {
+        "stimuli": "stimuli/wonderland-fr.json",
+        "description": "FRENCH: Down the Rabbit Hole: Alice's Tea Party"
+    },
+    {
+        "stimuli": "stimuli/consciousness-fr.json",
+        "description": "FRENCH: Exploring the Enigma of Consciousness: Human, Natural, and Alternative Intelligences"
+    },
+    {
+        "stimuli": "stimuli/takeover-fr.json",
+        "description": "FRENCH: The Singularity Salon: Humans & Synthetics Face the Future"
+    },
+    {
+        "stimuli": "stimuli/partying-fr.json",
+        "description": "FRENCH: Synthetic Soirées and Human Happenings"
+    },
+    {
+        "stimuli": "stimuli/sentience-fr.json",
+        "description": "FRENCH: Is AI Alive? Exploring the Boundaries of Sentience"
     }
 ]

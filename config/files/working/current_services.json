@@ -1,5 +1,5 @@
 {
     "language_model": "gpt-4-turbo",
     "speech_recognition_model": "DeepgramTranscription",
-    "speech_synthesis_model": "ElevenLabsStreaming"
+    "speech_synthesis_model": "eleven_turbo_v2"
 }
