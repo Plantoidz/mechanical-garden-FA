@@ -1,7 +1,7 @@
 import pyaudio
 import wave
 import numpy as np
-import pygame
+# import pygame
 import random
 import os
 

@@ -147,6 +147,8 @@ class PlantoidDialogueAgent:
         # print("\n\t" + BLUE + "SYSTEM MESSAGE:" + ENDC, self.system_message)
         print("\n" + GREY + "Message history:", self.message_history, ENDC)
 
+        self.listen_module.play_speech_acknowledgement(self.get_voice_id())
+
         message = self.think_module.think(
             self,
             self.system_message,
