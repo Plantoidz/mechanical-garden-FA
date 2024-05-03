@@ -12,8 +12,9 @@ import requests
 import types
 
 from utils.config_util import read_services_config
+## TODO fix multichannel router
 # from utils.experiments.MultichannelRouter import Iterator, magicstream, setup_magicstream
-from plantoid_agents.lib.MultichannelRouter import Iterator, magicstream, setup_magicstream
+from plantoid_agents.lib.MultichannelRouter_BAK import Iterator, magicstream
 
 from dotenv import load_dotenv
 from elevenlabs.client import ElevenLabs, AsyncElevenLabs
@@ -256,17 +257,16 @@ class Speak:
         use_streaming: bool = True,
 
     ) -> None:
-        if use_streaming:
-            setup_magicstream()
+        ## TODO fix multichannel router
+        # if use_streaming:
+        #     setup_magicstream()
 
         for a in agents:
             if(a.callback): a.callback("<asleep>")
 
         if(agent.callback): agent.callback("<speaking>")
 
-
         if clone_voice:
-
             voice = self.clone_voice(
                 create_clone=create_clone,
                 cloned_voice_id=voice_id,

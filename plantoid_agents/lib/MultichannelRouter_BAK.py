@@ -29,7 +29,7 @@ def stop_mpv_processes():
 
     mpv_processes = []
 
-def magicstream(audio_stream: Iterator[bytes], number_string: str, stop_event: threading.Event) -> bytes:
+def magicstream(audio_stream: Iterator[bytes], number_string: str) -> bytes:
     global mpv_processes  # Declare mpv_processes as global within the function
     channel_map = {
         "0": "FL",
