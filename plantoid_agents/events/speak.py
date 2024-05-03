@@ -8,16 +8,23 @@ import os
 import sys
 import time
 import requests
-# import pygame.mixer as mixer
+import threading
+import keyboard
+from playsound import playsound
+import pygame.mixer as mixer
 import types
+import audioop
 
+from plantoid_agents.lib.MultichannelRouter import Iterator, magicstream, setup_magicstream
+from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
 from utils.config_util import read_services_config
-from utils.experiments.MultichannelRouter import Iterator, magicstream, setup_magicstream
 # from plantoid_agents.lib.MultichannelRouter import Iterator, magicstream, setup_magicstream
 
 from dotenv import load_dotenv
 from elevenlabs.client import ElevenLabs, AsyncElevenLabs
 from elevenlabs import stream, Voice, VoiceSettings, play
+
+from utils.util import str_to_bool
 
 # https://elevenlabs.io/docs/api-reference/edit-voice
 
@@ -40,14 +47,20 @@ class Speak:
     A template class for implementing speaking behaviors in an interaction system.
     """
 
-    def __init__(self):
+    def __init__(self, rate: int = 16000, device_index: int = None, chunk: int = 512, threshold: int = 1000):
         """
         Initializes a new instance of the Speak class.
         """
         services = read_services_config()
 
         # Initialization code here (if necessary)
+        self.RATE = rate
+        self.CHUNK = chunk
+        self.THRESHOLD = threshold
+        self.device_index = device_index
+        # self.transcription = DeepgramTranscription(sample_rate=self.RATE, device_index=self.device_index, timeout=2)
         self.elevenlabs_model_type = services["speech_synthesis_model"]
+        self.use_interruption = str_to_bool(services["use_interruption"])
 
     def get_text_to_speech_response(self, text, eleven_voice_id, callback=None):
 
@@ -95,7 +108,7 @@ class Speak:
 
             raise Exception("Error: " + str(status) + ": "+ str(message))
         
-    def stream_text(self, response_stream):
+    def stream_text(self, response_stream, stop_event: threading.Event):
 
         if isinstance(response_stream, str):
             return response_stream
@@ -104,6 +117,11 @@ class Speak:
             if 'choices' in chunk and chunk['choices'][0].get('delta', {}).get('content'):
                 delta = chunk.choices[0].delta
                 text_chunk = delta.content
+
+                if stop_event.is_set():  # Check if stop event has been signaled
+                    print("Stream text - stopped by stop event.")
+                    break  # Exit the loop if the stop event is set
+
                 yield text_chunk
                 print(text_chunk, end='', flush=True)
 
@@ -195,52 +213,173 @@ class Speak:
         # )
 
         return voice
+    
+    # def trigger_stop_event(stop_event: threading.Event):
+    #     # time.sleep(delay)
+
+    #     if use_streaming:
+
+    #         time.sleep(2)
+    #         stop_event.set()
+
+    def trigger_stop_event(
+        self,
+        use_streaming: bool,
+        stop_event: threading.Event,
+        interruption_callback: Any,
+    ):
+        """Listen to the microphone and set the stop_event when noise is detected."""
+
+        if use_streaming:
+            # Initialize PyAudio
+            p = pyaudio.PyAudio()
+
+            # Open stream
+            stream = p.open(format=pyaudio.paInt16,
+                            channels=1,
+                            rate=self.RATE,
+                            input=True,
+                            frames_per_buffer=self.CHUNK,
+                    )
+
+            try:
+                while not stop_event.is_set():
+                    # Read data from the microphone
+                    data = stream.read(self.CHUNK)
+                    # Check the sound level
+                    # print(audioop.findmax(data, 2))
+                    if audioop.rms(data, 2) > self.THRESHOLD:  # audioop.rms gives the root mean square of the chunk
+                        print("\nAudio input detected. Stopping streaming.")
+                        stop_event.set()  # Signal that the stop condition has been met
+                        # TODO: impleemnt equivalent
+                        #stop_mpv_processes()
+                        if interruption_callback is not None:
+                            interruption_callback(True, "Ben", "Test message.")  # Notify the rest of the application
+                            # playsound(os.getcwd() + "/media/cleanse.mp3", block=False)
+                        break
+            finally:
+                # Clean up the PyAudio stream and instance
+                stream.stop_stream()
+                stream.close()
+                p.terminate()
+
+                # Ensure the stop_event is set if it hasn't been already
+                if not stop_event.is_set():
+                    stop_event.set()
+                    # if interruption_callback is not None:
+                    #     interruption_callback(agent_interrupted=False)  # No interruption was detected
+
+    def shadow_listener(
+        self,
+        agent: Any,
+        use_streaming: bool,
+        stop_event: threading.Event,
+        audio_detected_event: threading.Event,
+        interruption_callback: Any
+    ):
+        """Listen to the microphone and set the stop_event when noise is detected."""
+
+        if self.use_interruption and use_streaming:
+
+            transcription = DeepgramTranscription(sample_rate=self.RATE, device_index=self.device_index, timeout=2)
+            transcription.reset()
+            transcription.start_listening(step=None)
+            utterance = transcription.get_final_result()
+            print("Shadow Listener - Utterance: ", utterance)
+            # time.sleep(5)
+            audio_detected_event.set()
+            stop_event.set()
+            # TODO: impleemnt equivalent
+            # stop_mpv_processes()
+
+            if interruption_callback is not None:
+                interruption_callback(True, agent.name, utterance)  # Notify the rest of the application
+                # runtime_effect = self.select_random_runtime_effect(agent.get_voice_id())
+                # # print("Runtime effect: ", runtime_effect)
+                # playsound(runtime_effect, block=False)
+
+    def select_random_runtime_effect(self, voice_id):
+        """
+        Selects a random file from the specified directory.
+        """
+        directory = os.getcwd() + "/media/runtime_effects"
+        prefix = f"{voice_id}_"
+        
+        # List all files that start with the given voice ID
+        files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f)) and f.startswith(prefix)]
+        
+        # Check if there are any matching files
+        if not files:
+            return None  # Return None or raise an Exception if no matching files are found
+
+        # Randomly select a file
+        random_file = random.choice(files)
+        return os.path.join(directory, random_file)
 
     def stream_audio_response(
         self,
+        agent: Any,
         response: str,
         voice_id: str,
         channel_id: str,
-        callback: Any = None,
-        use_multichannel: bool = False,
+        bg_callback: Any = None,
+        interruption_callback: Any = None,
+        use_multichannel: bool = True,
         use_streaming: bool = True,
     ) -> None:
 
-        # print("use streaming = ", use_streaming)
+        stop_event = threading.Event()
+        audio_detected_event = threading.Event()
 
-        if(use_streaming):
+        # trigger_thread = threading.Thread(
+        #     target=self.trigger_stop_event,
+        #     args=(use_streaming, stop_event, interruption_callback)
+        # )
+        shadow_listener_thread = threading.Thread(
+            target=self.shadow_listener,
+            args=(agent, use_streaming, stop_event, audio_detected_event, interruption_callback)
+        )
+        shadow_listener_thread.start()
+        # trigger_thread.start()
 
-            # generate audio stream   
-            audio_stream = client.generate(
-                text=self.stream_text(response),
-                model=self.elevenlabs_model_type,
-                voice=voice_id,
-                stream=True
-            )
+        try:
 
-            # stop background music callback
-            if callback is not None:
-                callback()
+            if use_streaming:
+
+                # generate audio stream   
+                audio_stream = client.generate(
+                    text=self.stream_text(response, stop_event),
+                    model="eleven_turbo_v2",
+                    voice=voice_id,
+                    stream=True
+                )
+
+                # stop background music callback
+                if bg_callback is not None:
+                    bg_callback()
                     
-            # stream audio
-            # stream(audio_stream)
-                
-            if use_multichannel:
-                print("\033[90mstreaming on channel",channel_id,"\033[0m\n")
-                magicstream(audio_stream, channel_id)
+                if use_multichannel:
+                    print("\033[90mstreaming on channel",channel_id,"\033[0m\n")
+                    magicstream(audio_stream, channel_id, stop_event)
 
+                else:
+                    stream(audio_stream)
+            
             else:
-                stream(audio_stream)
-        
-        else:
-            audio = client.generate(
-                text=response,
-                model=self.elevenlabs_model_type,
-                voice=voice_id,
-                stream=False
-            )
-            #todo: implement magicplay
-            play(audio)
+                audio = client.generate(
+                    text=response,
+                    model="eleven_turbo_v2",
+                    voice=voice_id,
+                    stream=False
+                )
+                #todo: implement magicplay
+                play(audio)
+
+        finally:
+            stop_event.set()
+            audio_detected_event.set()
+            shadow_listener_thread.join()
+            # trigger_thread.join()  # Ensure the interrupt thread is cleaned up properly
 
     def speak(
         self,
@@ -249,8 +388,9 @@ class Speak:
         response: str,
         voice_id: str,
         channel_id: str,
-        callback: Any = None,
+        bg_callback: Any = None,
         voice_set_callback: Any = None,
+        interruption_callback: Any = None,
         clone_voice: bool = False,
         create_clone: bool = False,
         use_streaming: bool = True,
@@ -274,19 +414,22 @@ class Speak:
             )
 
             self.stream_audio_response(
+                agent,
                 response,
                 voice,
                 channel_id,
-                callback=callback,
+                bg_callback=bg_callback,
+                interruption_callback=interruption_callback,
                 use_streaming=use_streaming,
             )
 
         else:
             self.stream_audio_response(
+                agent,
                 response,
                 voice_id,
                 channel_id,
-                callback=callback,
+                bg_callback=bg_callback,
+                interruption_callback=interruption_callback,
                 use_streaming=use_streaming,
-
             )

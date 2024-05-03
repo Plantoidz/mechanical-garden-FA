@@ -32,6 +32,7 @@ class DeepgramTranscription:
         self.deepgram = DeepgramClient()
         self.is_finals = []
         self.final_result = ""
+        self.sentence = ""
         self.transcription_complete = False  # New flag for completion
         self.sample_rate = sample_rate
         self.channels = channels
@@ -44,6 +45,7 @@ class DeepgramTranscription:
         """
         self.is_finals = []
         self.final_result = ""
+        self.sentence = ""
         self.transcription_complete = False
         
     def on_message(self, *args, **kwargs):
@@ -52,22 +54,30 @@ class DeepgramTranscription:
             result = args[0]  # Assuming result is the first positional argument
 
         # print("result is", result)
-        sentence = result.channel.alternatives[0].transcript
-        if not sentence:
+        self.sentence = result.channel.alternatives[0].transcript
+        if not self.sentence:
             return
 
         if result.is_final:
-            self.is_finals.append(sentence)
+            self.is_finals.append(self.sentence)
 
             if result.speech_final:
                 if len(self.is_finals) > 0:
                     self.final_result = ' '.join(self.is_finals)
                     # print(f"Deepgram Utterance End: {self.final_result}")
                     print(f"\033[90m\tSpeech Final: {self.final_result}\033[0m")
+                    # self.transcription_complete = True
+                    # return
+
             else:
-                print(f"\033[90m\tAlmost Final: {sentence}\033[0m")
+                print(f"\033[90m\tAlmost Final: {self.sentence}\033[0m")
+                # self.transcription_complete = True
+                # return
+
         else:
-            print(f"\033[90m\tInterim Results: {sentence}\033[0m")
+            print(f"\033[90m\tInterim Results: {self.sentence}\033[0m")
+            # self.transcription_complete = True
+            # return
 
     def on_metadata(self, *args, **kwargs):
         metadata = kwargs['metadata'] 
@@ -77,6 +87,7 @@ class DeepgramTranscription:
         print(f"\033[91m\tDeepgram is listening...\033[0m")
 
     def on_utterance_end(self, *args, **kwargs):
+        print(f"\033[91m\tDeepgram Utterance End\033[0m")
         if len(self.is_finals) > 0:
             self.final_result = ' '.join(self.is_finals)
             # print(f"Deepgram Utterance End: {self.final_result}")
@@ -170,5 +181,10 @@ class DeepgramTranscription:
     def get_final_result(self):
         # print("Sending final result:", self.final_result)
         return self.final_result
+    
+    def get_sentence(self):
+        # print("Sending final result:", self.final_result)
+        print("Deepgram Sentence:", self.sentence)
+        return self.sentence
 
 # todo: implement saving

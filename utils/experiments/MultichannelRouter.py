@@ -6,6 +6,7 @@ from pydub import AudioSegment
 import io
 from typing import Iterator, Union
 import multiprocessing
+import threading
 import time
 
 samplerate = 44100
@@ -99,7 +100,7 @@ def play_audio(stream_input_event, done_event, channel_index_value, input_queue,
             if output_queue.empty() and not stream_input_event.is_set():
                 done_event.set()
 
-def magicstream(audio_stream: Iterator[bytes], channel_number: str) -> bytes:
+def magicstream(audio_stream: Iterator[bytes], channel_number: str, stop_event: threading.Event) -> bytes:
     global input_queue
     global done_event
     global stream_input_event
@@ -116,6 +117,9 @@ def magicstream(audio_stream: Iterator[bytes], channel_number: str) -> bytes:
 
     # Process each chunk of bytes in the audio stream
     for chunk in audio_stream:
+        if stop_event.is_set():
+            print("Magicstream - stopped by stop event.")
+            break
         if chunk is not None:
             input_queue.put(chunk)
 
