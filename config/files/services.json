@@ -1,7 +1,10 @@
 {
   "language_models": [
     {"name": "OpenAI GPT-4-Turbo", "llm_config": "gpt-4-turbo"},
-    {"name": "Anthropic Claude3 Haiku", "llm_config": "claude-3-haiku-20240307"},
+    {"name": "OpenAI GPT-4", "llm_config": "gpt-4"},
+    {"name": "Anthropic Claude3 Haiku (Fast)", "llm_config": "claude-3-haiku-20240307"},
+    {"name": "Anthropic Claude3 Sonnet (Balanced)", "llm_config": "claude-3-sonnet-20240229"},
+    {"name": "Anthropic Claude3 Opus (Smart)", "llm_config": "claude-3-opus-20240229"},
     {"name": "Google Gemini Pro", "llm_config": "gemini/gemini-pro"},
     {"name": "HuggingFace [WIP]", "llm_config": "huggingface/<model_name>"},
     {"name": "Ollama Llama3", "llm_config": "ollama_chat/llama3"},
@@ -9,19 +12,10 @@
   ],
   "speech_recognition_models": [
     {"name": "DeepGram", "speech_recognition_config": "DeepgramTranscription"},
-    {"name": "Whisper-Mic", "speech_recognition_config": "WhisperMicTranscription"},
-    {"name": "HuggingFace STT endpoint [WIP]", "speech_recognition_config": "HuggingFaceTranscription"},
-    {"name": "Google Speech Recognition [SR]", "speech_recognition_config": "SRTranscription"}
+    {"name": "DeepGram Multilingual", "speech_recognition_config": "DeepgramTranscription"}
   ],
   "speech_synthesis_models": [
-    {"name": "ElevenLabs Turbo/Streaming", "speech_synthesis_config": "ElevenLabsStreaming"},
-    {"name": "ElevenLabs Multilingual/Streaming", "speech_synthesis_config": "ElevenLabsMultiLingualStreaming"},
-    {"name": "ElevenLabs Multilingual", "speech_synthesis_config": "ElevenLabsMultiLingual"},
-    {"name": "DeepGram Aura", "speech_synthesis_config": "DeepGramAura"},
-    {"name": "PlayHT", "speech_synthesis_config": "PlayHT"},
-    {"name": "PicoTTS [WIP]", "speech_synthesis_config": "PicoTTS"},
-    {"name": "HuggingFace TTS endpoint [WIP]", "speech_synthesis_config": "HuggingFaceSynthesis"},
-    {"name": "Voicecraft [WIP]", "speech_synthesis_config": "Voicecraft"},
-    {"name": "StyleTTS2 [WIP]", "speech_synthesis_config": "StyleTTS2"}
+    {"name": "ElevenLabs Turbo", "speech_synthesis_config": "eleven_turbo_v2"},
+    {"name": "ElevenLabs Multilingual", "speech_synthesis_config": "eleven_multilingual_v2"}
   ]
 }

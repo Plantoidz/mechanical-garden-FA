@@ -5,6 +5,7 @@ from plantoid_agents.clone_agent import PlantoidCloneAgent
 from elevenlabs import play, stream, save
 from elevenlabs.client import ElevenLabs
 import os
+from datetime import datetime
 from playsound import playsound
 from plantoid_agents.events.speak import Speak
 
@@ -32,6 +33,7 @@ class PlantoidInteraction:
     def interruption_callback(self, agent_interrupted, speaker_name, message):
         self.set_agent_interrupted(agent_interrupted)
         self.inject(speaker_name, message)
+        self.interaction_timestamp = datetime.now()
 
     def increment_speaker_idx(self, idx_type: str = "current"):
 
@@ -123,7 +125,8 @@ class PlantoidInteraction:
             playsound(os.getcwd() + "/media/cleanse.mp3", block=False)
 
             message = speaker.listen_for_speech(self.agents, self._step)
-            
+            self.log_conversation(speaker, message)
+
         else:
 
             # 2. next speaker sends message
@@ -133,6 +136,7 @@ class PlantoidInteraction:
                 message,
                 interruption_callback = self.interruption_callback,
             )
+            self.log_conversation(speaker, message)
 
         # 3. everyone receives message
         for receiver in self.agents:
@@ -144,28 +148,47 @@ class PlantoidInteraction:
 
         return speaker.name, message
     
-    def log_conversation(self, log_file_path: str, speaker: PlantoidDialogueAgent, message: str):
-        print(f"{speaker.name} says: {message}")
-        with open(log_file_path, "a") as f:
-            f.write(f"{speaker.name} says: {message}\n")
+    def log_conversation(self, agent: PlantoidDialogueAgent, message: str):
+        # print(f"{speaker.name} says: {message}")
+        # Log file directory path
+        log_dir = os.path.join(os.getcwd(), "logs/conversation_history")
 
-    def log_agents(self, log_file_path: str):
+        # Create the directory if it does not exist, do nothing if it exists
+        os.makedirs(log_dir, exist_ok=True)
+
+        # Path for the log file
+        log_file_path = os.path.join(log_dir, f"interaction_{self.interaction_timestamp}.log")
+
+        formatted_message = agent.think_module.format_response_type(message)
+
+        with open(log_file_path, "a") as f:
+            f.write(f"{datetime.now()} - {agent.name} says: {formatted_message}\n")
+
+    def log_agents(self):
+
+        # Log file directory path
+        log_dir = os.path.join(os.getcwd(), "logs/conversation_history")
+
+        # Create the directory if it does not exist, do nothing if it exists
+        os.makedirs(log_dir, exist_ok=True)
+
+        # Path for the log file
+        log_file_path = os.path.join(log_dir, f"interaction_{self.interaction_timestamp}.log")
+
+        attributes = [
+            'name', '__class__.__name__', 'is_human', # 'system_message'
+            'prefix', 'eleven_voice_id', 'channel_id', # 'bidding_template',
+            'tunnel', 'socket', 'callback', 'addr', 'use_model_type',
+            'use_streaming', # '__dict__'
+        ]
+
+        # Write to the log file
         with open(log_file_path, "w") as f:
             for agent in self.agents:
-                f.write(f"{agent.name}\n")
-                f.write(f"{agent.__class__.__name__}\n")
-                f.write(f"{agent.name}")
-                f.write(f"{agent.is_human}")
-                f.write(f"{agent.system_message}")
-                f.write(f"{agent.bidding_template}")
-                f.write(f"{agent.prefix}")
-                f.write(f"{agent.eleven_voice_id}")
-                f.write(f"{agent.channel_id}")
-                f.write(f"{agent.tunnel}")
-                f.write(f"{agent.socket}")
-                f.write(f"{agent.callback}")
-                f.write(f"{agent.addr}")
-                f.write(f"{agent.use_model_type}")
-                f.write(f"{agent.use_streaming}")
-                f.write(f"{agent.__dict__}\n")
+                for attr in attributes:
+                    # Using getattr to check and retrieve the attribute value
+                    value = getattr(agent, attr, None)
+                    if value is not None:  # Only write if the attribute exists
+                        f.write(f"{attr}: {value}\n")
                 f.write("\n")
+            f.write("========================================\n")

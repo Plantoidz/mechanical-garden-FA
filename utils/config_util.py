@@ -26,6 +26,14 @@ def read_addendum_config(interaction_mode):
     
     return mode_config
 
+def read_services_config():
+    config_path = os.getcwd()+f'/config/files/working/current_services.json'
+
+    with open(config_path, 'r') as file:
+        mode_config = json.load(file)
+    
+    return mode_config
+
 # ANSI color codes
 COLORS = {"green": "\033[32m", "red": "\033[31m", "yellow": "\033[33m", "blue": "\033[34m", "green": "\033[32m", "reset": "\033[0m"
 }

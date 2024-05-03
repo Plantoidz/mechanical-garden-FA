@@ -17,6 +17,8 @@ import audioop
 
 from plantoid_agents.lib.MultichannelRouter import Iterator, magicstream, setup_magicstream
 from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
+from utils.config_util import read_services_config
+# from plantoid_agents.lib.MultichannelRouter import Iterator, magicstream, setup_magicstream
 
 from dotenv import load_dotenv
 from elevenlabs.client import ElevenLabs, AsyncElevenLabs
@@ -47,12 +49,15 @@ class Speak:
         """
         Initializes a new instance of the Speak class.
         """
+        services = read_services_config()
+
         # Initialization code here (if necessary)
         self.RATE = rate
         self.CHUNK = chunk
         self.THRESHOLD = threshold
         self.device_index = device_index
         # self.transcription = DeepgramTranscription(sample_rate=self.RATE, device_index=self.device_index, timeout=2)
+        self.elevenlabs_model_type = services["speech_synthesis_model"]
 
     def get_text_to_speech_response(self, text, eleven_voice_id, callback=None):
 

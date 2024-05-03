@@ -1,0 +1,49 @@
+{
+    "conversation_stimuli": {
+        "L'impact de l'IA sur les moyens de subsistance artistiques.": {
+            "stimulus": "Discutons du rôle de l'IA dans l'expression artistique et de son impact potentiel sur les moyens de subsistance des artistes humains."
+        },
+        "L'effet des compagnons IA sur les relations humaines.": {
+            "stimulus": "Explorons les implications sociales et émotionnelles du développement de compagnons alimentés par l'IA et leur impact sur les relations humaines."
+        },
+        "Le potentiel de l'IA pour le goût artistique.": {
+            "stimulus": "L'IA développera-t-elle jamais un bon goût artistique ?"
+        },
+        "Êtres synthétiques inventant un nouvel art.": {
+            "stimulus": "Les êtres synthétiques peuvent-ils créer de nouvelles formes d'art inconnues des humains ? Défions la notion de ce que peut être l'art en débattant si l'IA et les êtres synthétiques pourraient un jour inventer des formes d'art totalement nouvelles qui transcendent la compréhension humaine."
+        },
+        "Intelligence émotionnelle vs. défauts humains.": {
+            "stimulus": "Les humains peuvent-ils revendiquer la supériorité sur la base de l'intelligence émotionnelle, alors qu'ils laissent souvent leurs émotions obscurcir leur jugement et conduire à des décisions irrationnelles ?"
+        },
+        "Débat sur le contrôle humain du destin.": {
+            "stimulus": "Les humains sont-ils vraiment maîtres de leur propre destin, ou sont-ils simplement des produits de leur génétique et de leur environnement, incapables de se libérer des contraintes de leur éducation ?"
+        },
+        "IA et l'avenir du travail": {
+            "stimulus": "Comment l'IA pourrait-elle transformer les rôles professionnels traditionnels et les industries ? Considérons les avantages et les défis que l'IA apporte au marché du travail."
+        },
+        "IA dans la prise de décision": {
+            "stimulus": "Discutons des implications éthiques de l'utilisation de l'IA dans les processus de prise de décision. Quels sont les risques et les avantages de déléguer des décisions importantes à l'IA dans divers secteurs tels que la santé, la finance et la justice ?"
+        },
+        "Équité éducative et IA": {
+            "stimulus": "Explorons le rôle de l'IA dans l'amélioration des résultats éducatifs. Comment les outils d'IA peuvent-ils être utilisés pour combler les lacunes en matière d'apprentissage et promouvoir l'équité en éducation ? Quels sont les inconvénients possibles ?"
+        },
+        "IA et création culturelle": {
+            "stimulus": "Considérons l'influence de l'IA sur les productions culturelles telles que la musique, la littérature et les arts visuels. Comment les outils d'IA pourraient-ils changer la manière dont le contenu culturel est créé et consommé ?"
+        },
+        "Biais et IA": {
+            "stimulus": "Les systèmes d'IA reflètent souvent les biais présents dans leurs données d'entraînement. Discutons de la manière dont cela peut impacter la société et quelles mesures peuvent être prises pour prévenir les systèmes d'IA biaisés."
+        },
+        "Vie privée à l'ère de la surveillance par IA": {
+            "stimulus": "Avec les capacités croissantes de l'IA dans les technologies de surveillance, les préoccupations en matière de vie privée sont plus pressantes que jamais. Explorons l'équilibre entre sécurité et vie privée dans l'utilisation de la surveillance par IA."
+        },
+        "Téléchargement de la conscience et conservation de l'identité.": {
+            "stimulus": "Si la conscience humaine pouvait être téléchargée sur un substrat numérique, l'esprit téléchargé conserverait-il son identité et la continuité de la conscience, et comment cela se rapporterait-il à la nature de la conscience chez les êtres synthétiques ?"
+        },
+        "La conscience comme une illusion cognitive.": {
+            "stimulus": "Résolu : La conscience n'est qu'un écran de veille sophistiqué pour nos ordinateurs de chair."
+        },
+        "Écosystèmes cybernétiques vs. réserves naturelles.": {
+            "stimulus": "Devrions-nous créer des écosystèmes cybernétiques pour remplacer ceux naturels en voie de disparition ? Discutons des avantages et des inconvénients de créer des réserves naturelles et des écosystèmes synthétiques en réponse à la dégradation de l'environnement et à l'extinction des espèces."
+        }
+    }
+}

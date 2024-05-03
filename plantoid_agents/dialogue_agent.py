@@ -59,7 +59,7 @@ class PlantoidDialogueAgent:
                 print("Failed to connect: ", err)
 
         #TODO: do not hardcode!
-        self.use_model_type = "litellm"
+        # self.use_model_type = "litellm"
         self.use_streaming = True
 
 
@@ -151,7 +151,7 @@ class PlantoidDialogueAgent:
             self,
             self.system_message,
             use_content,
-            self.use_model_type,
+            # self.use_model_type,
             self.use_streaming,
         )
 

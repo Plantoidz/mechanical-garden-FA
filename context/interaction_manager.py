@@ -11,7 +11,7 @@ from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
 from plantoid_agents.debate_agent import PlantoidDebateAgent
 from plantoid_agents.clone_agent import PlantoidCloneAgent
 
-from utils.config_util import read_character_config, read_interaction_mode_config, read_addendum_config
+from utils.config_util import read_character_config, read_interaction_mode_config, read_addendum_config, read_services_config
 from utils.util import str_to_bool
 import context.character_setup as character_setup # TODO: roll this into context config
 import context.speaker_selection as speaker_selection # TODO: roll this into context config
@@ -146,6 +146,7 @@ class InteractionManager:
         """
         mode_config = read_interaction_mode_config()
         character_config = read_character_config()
+        services_config = read_services_config()
 
         use_interaction_mode = mode_config['current_mode']
         use_agent_type = mode_config['agent_type']
@@ -283,6 +284,7 @@ class InteractionManager:
         )
 
         simulator.reset()
+        simulator.log_agents()
         simulator.enunciate(interaction_description)
 
         n = 0

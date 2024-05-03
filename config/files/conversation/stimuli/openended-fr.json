@@ -1,0 +1,34 @@
+{
+  "conversation_stimuli": {
+    "Day": {
+      "stimulus": "Salut, comment s'est passée ta journée ?"
+    },
+    "Mind": {
+      "stimulus": "Qu'est-ce qui te préoccupe ces derniers temps ?"
+    },
+    "Life": {
+      "stimulus": "Quelque chose d'intéressant se passe-t-il dans ta vie ?"
+    },
+    "Everything": {
+      "stimulus": "Comment ça va pour toi en ce moment ?"
+    },
+    "New": {
+      "stimulus": "Quoi de neuf chez toi ?"
+    },
+    "Exciting": {
+      "stimulus": "Tu as fait quelque chose d'excitant récemment ?"
+    },
+    "Week": {
+      "stimulus": "Comment se présente ta semaine ?"
+    },
+    "Busy": {
+      "stimulus": "Qu'est-ce qui t'occupe ces derniers temps ?"
+    },
+    "Share": {
+      "stimulus": "Y a-t-il quelque chose que tu veux partager ou dont tu veux parler ?"
+    },
+    "Feeling": {
+      "stimulus": "Comment te sens-tu aujourd'hui ?"
+    }
+  }
+}
