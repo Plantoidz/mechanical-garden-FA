@@ -14,6 +14,7 @@ output_queue = multiprocessing.Queue()
 channel_index_value = multiprocessing.Value("i", 0)
 decoder_child_process = None
 player_child_process = None
+done_event = multiprocessing.Event()
 
 def setup_magicstream():
     global decoder_child
@@ -21,13 +22,14 @@ def setup_magicstream():
     global decoder_child_process
     global player_child_process
     global channel_index_value
+    global done_event
 
     # print("Setting up magicstream processes.")
 
     # Huge hack just to get the processes working
     if not decoder_child_process:
         decoder_child_process = multiprocessing.Process(target=decode_audio, args=(channel_index_value, input_queue, output_queue))
-        player_child_process = multiprocessing.Process(target=play_audio, args=(channel_index_value, input_queue, output_queue))
+        player_child_process = multiprocessing.Process(target=play_audio, args=(done_event, channel_index_value, input_queue, output_queue))
 
         decoder_child_process.start()
         player_child_process.start()
@@ -41,7 +43,7 @@ def decode_audio(channel_index_value, input_queue, output_queue):
 
         output_queue.put(samples)
 
-def play_audio(channel_index_value, input_queue, output_queue):
+def play_audio(done_event, channel_index_value, input_queue, output_queue):
     while True:
         samples = output_queue.get()
         default_speaker = soundcard.default_speaker()
@@ -64,11 +66,15 @@ def play_audio(channel_index_value, input_queue, output_queue):
 
         default_speaker.play(numpy.column_stack(all_channels_signal), samplerate=samplerate)
 
+        if output_queue.empty():
+            done_event.set()
 
 def magicstream(audio_stream: Iterator[bytes], channel_number: str) -> bytes:
     global input_queue
     setup_magicstream()
 
+    done_event.clear()
+    
     with channel_index_value.get_lock():
         channel_index_value.value = int(channel_number)
         # print(f"Setting channel number to {channel_index_value.value}")
@@ -78,3 +84,4 @@ def magicstream(audio_stream: Iterator[bytes], channel_number: str) -> bytes:
         if chunk is not None:
             input_queue.put(chunk)
 
+    done_event.wait()
