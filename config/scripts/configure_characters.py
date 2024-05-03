@@ -24,7 +24,12 @@ class CharacterConfigurator:
             return json.load(file)
 
     def select_character(self, jdump):
-        index = int(input("\nSelect an option:")) - 1
+        while True:
+            index = input("\nSelect an option:")
+            if index:
+                index = int(index) - 1
+                break
+
         if 0 <= index < len(jdump):
             return jdump[index]
         else:
@@ -121,7 +126,7 @@ class CharacterConfigurator:
 
                 print(f"{k+1}.", self.characters[k]['description'])
 
-            stimuli = int(input(f"\nSelect a character:\n")) -1
+            stimuli = int(input(f"\nSelect a character: ")) -1
 
             with open(self.source_path + "/" + self.characters[stimuli]['stimuli'], 'r') as ffile:
                     jdump = json.load(ffile)['characters']
