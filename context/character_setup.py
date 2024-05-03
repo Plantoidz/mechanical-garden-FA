@@ -185,11 +185,11 @@ def generate_character_header(
         # """        
 #PROMPT
         response = f"""{character_description}  
+        Your job is to engage the Humans in the conversation.
         Try to build on the last message in the conversation.
         Respond in the right language.
-        Never address the other participants by name unless they're human.
+        Never address the other participants by name. Only address the Humans.
         You must keep all of your responses to strictly {word_limit} words.
-        Remember, never address the other participants by name unless they're human.
         """
 
     return response

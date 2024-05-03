@@ -43,8 +43,8 @@ def decode_audio(channel_index_value, input_queue, output_queue):
             samples = numpy.array(segment.get_array_of_samples(), dtype=numpy.float32)
 
             output_queue.put(samples)
-        except:
-            print("EXCEPTION")
+        except Exception as e:
+            print(f"EXCEPTION {e}")
 
 def play_audio(done_event, channel_index_value, input_queue, output_queue):
     while True:

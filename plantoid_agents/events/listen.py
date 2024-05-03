@@ -16,7 +16,7 @@ import numpy as np
 import whisper
 import torch
 import threading
-import pygame.mixer as mixer
+# import pygame.mixer as mixer
 
 from playsound import playsound
 from dotenv import load_dotenv
@@ -394,14 +394,14 @@ class Listen:
         # Obtain audio from the microphone
         with sr.Microphone() as source:
             r.adjust_for_ambient_noise(source, duration=0.5)  # Automatically adjusts the energy threshold
-            print("Listening for speech (google)...")
+            print("\t\033[91mListening for speech...\033[0m")
             audio = r.listen(source, timeout=self.TIMEOUT)
 
         # Save the audio to a WAV file
         with open(audio_file_path, "wb") as f:
             f.write(audio.get_wav_data())
 
-        print("Recognition complete.")
+        print("\t\033[91mRecognizing with Whisper...\033[0m")
 
     def recognize_speech(self, filename):
         
