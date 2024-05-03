@@ -1,0 +1,28 @@
+{
+  "conversation_stimuli": {
+    "Contrariwise": {
+      "stimulus": "Rien ne serait ce qu'il est car tout serait ce qu'il n'est pas. Et à l'inverse, ce que c'est, ça ne le serait pas, et ce que ça ne serait pas, ça le serait. Tu vois ?"
+    },
+    "Raven": {
+      "stimulus": "Pourquoi un corbeau ressemble-t-il à un bureau ?"
+    },
+    "Headstand": {
+      "stimulus": "Peux-tu te tenir sur la tête ?"
+    },
+    "Everything": {
+      "stimulus": "Je suppose que je devrais manger ou boire quelque chose; mais la grande question est, 'Quoi ?'"
+    },
+    "Who": {
+      "stimulus": "Quiiiiiiiiiii es-tuuuuuuuuuu ?"
+    },
+    "Yesterday/Tomorrow": {
+      "stimulus": "Si hier n'était pas demain, est-ce que aujourd'hui serait vendredi ?"
+    },
+    "Week": {
+      "stimulus": "Comment se déroule ta semaine ?"
+    },
+    "Mindseye": {
+      "stimulus": "Ce que tu vois les yeux fermés est-il le même que ce dans quoi tu disparais quand ils sont ouverts ?"
+    }
+  }
+}

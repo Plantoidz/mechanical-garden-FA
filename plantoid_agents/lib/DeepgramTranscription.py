@@ -2,6 +2,7 @@ from deepgram import DeepgramClient, LiveTranscriptionEvents, LiveOptions, Micro
 from dotenv import load_dotenv
 import logging, verboselogs
 import time
+import random
 from playsound import playsound
 from ctypes import *
 from contextlib import contextmanager
@@ -164,11 +165,18 @@ class DeepgramTranscription:
         # microphone.finish()
         connection.finish()
         
-        #TODO: cue sounds based on runtime_effects
-        playsound(os.getcwd()+"/media/hmm1.mp3", block=False)
+        #TODO: cue sounds based on pre-generated runtime_effects
+        #TODO: should this be a callback to listen.py?
+        # try:
+        #     random_effect = random.choice([
+        #         'oh', 'oh.', 'oh?', 'um', 'hrm', 'hrmmmmm', 'interesting!', 'okay', 'i see', 'right', 'really?', 'really.', 'oh, really?', 'ah', 'mhm.', 'ooh', 'ahh', 'hmm', 'huh.', 'huh!', 'huh??', 'kay.'
+        #     ])
 
-        # print("Finished")
-
+        #     file_path = os.path.join(os.getcwd(), "media", "runtime_effects", f"wyZnrAs18zdIj8UgFSV8_{random_effect}.mp3")
+        #     playsound(file_path, block=False)
+        # # TODO: don't crash if the file isn't there
+        # except FileNotFoundError:
+        #     print("\033[90m\nThis effect wasn't generated at runtime.\033[0m")
 
     def get_final_result(self):
         # print("Sending final result:", self.final_result)

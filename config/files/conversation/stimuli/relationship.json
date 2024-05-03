@@ -18,11 +18,29 @@
         "Debating human control over destiny.": {
             "stimulus": "Are humans truly in control of their own destiny, or are they simply products of their genetics and environment, unable to break free from the constraints of their upbringing?"
         },
+        "AI and the Future of Work": {
+            "stimulus": "How might AI transform traditional job roles and industries? Consider the potential benefits and challenges AI brings to the labor market."
+        },
+        "AI in Decision-Making": {
+            "stimulus": "Discuss the ethical implications of using AI in decision-making processes. What are the risks and benefits of delegating important decisions to AI in various sectors such as healthcare, finance, and justice?"
+        },
+        "Educational Equity and AI": {
+            "stimulus": "Explore the role of AI in enhancing educational outcomes. How can AI tools be used to bridge learning gaps and promote equity in education? What are the possible drawbacks?"
+        },
+        "AI and Cultural Creation": {
+            "stimulus": "Consider the influence of AI on cultural productions like music, literature, and visual arts. How might AI tools change the way cultural content is created and consumed?"
+        },
+        "Bias and AI": {
+            "stimulus": "AI systems often reflect the biases present in their training data. Discuss how this can impact society and what measures can be taken to prevent biased AI systems."
+        },
+        "Privacy in the Age of AI Surveillance": {
+            "stimulus": "With the increasing capabilities of AI in surveillance technologies, privacy concerns are more pressing than ever. Explore the balance between security and privacy in the use of AI surveillance."
+        },
         "Uploading consciousness and identity retention.": {
             "stimulus": "If human consciousness could be uploaded to a digital substrate, would the uploaded mind retain its identity and continuity of consciousness, and how would this relate to the nature of consciousness in synthetic beings?"
         },
         "Consciousness as a cognitive illusion.": {
-            "stimulus": "Resolve: Consciousness is just a fancy screensaver for our meat computers."
+            "stimulus": "Resolved: Consciousness is just a fancy screensaver for our meat computers."
         },
         "Cybernetic ecosystems vs. natural reserves.": {
             "stimulus": "Should We Create Cybernetic Ecosystems to Replace Endangered Natural Ones?: Let’s discuss the pros and cons of creating synthetic nature reserves and ecosystems as a response to environmental degradation and species extinction."
