@@ -1,3 +1,4 @@
+from typing import Optional
 from deepgram import DeepgramClient, LiveTranscriptionEvents, LiveOptions, Microphone
 from dotenv import load_dotenv
 import logging, verboselogs
@@ -25,6 +26,15 @@ def ignoreStderr():
     finally:
         os.dup2(old_stderr, 2)
         os.close(old_stderr)
+
+from dataclasses import dataclass, field
+from dataclasses_json import dataclass_json, config
+@dataclass_json
+@dataclass
+class MyLiveOptions(LiveOptions):
+    detect_language: Optional[str] = field(
+        default=True
+    )
 
 class DeepgramTranscription:
     def __init__(self, sample_rate: int = 48000, device_index: int = None, channels: int = 1, timeout: int = 5):
@@ -109,7 +119,7 @@ class DeepgramTranscription:
         connection.on(LiveTranscriptionEvents.Error, self.on_error)
         connection.on(LiveTranscriptionEvents.Unhandled, self.on_unhandled)
 
-        options = LiveOptions(
+        options = MyLiveOptions(
             model="nova-2",
             language="en-US",
             smart_format=True,
