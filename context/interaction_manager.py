@@ -284,6 +284,7 @@ class InteractionManager:
         )
 
         simulator.reset()
+        simulator.log_agents()
         simulator.enunciate(interaction_description)
 
         n = 0
