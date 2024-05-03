@@ -97,10 +97,11 @@ class Listen:
             
         # get the path to the speech indicator sound
         speech_indicator_path = os.getcwd()+"/media/beep_start.wav"
+        playsound(speech_indicator_path, block=False)
 
-        mixer.init()
-        mixer.music.load(speech_indicator_path)
-        mixer.music.play(loops=1)
+        # mixer.init()
+        # mixer.music.load(speech_indicator_path)
+        # mixer.music.play(loops=1)
 
     def play_speech_acknowledgement(self, voice_id: str) -> None:
         random_effect = random.choice([
@@ -115,9 +116,10 @@ class Listen:
         # Check if the file exists before trying to play it
         if os.path.exists(file_path):
             print(f"\033[90m\nPlaying speech acknowledgement effect: {random_effect} ...\033[0m")
-            mixer.init()
-            mixer.music.load(file_path)
-            mixer.music.play(loops=1)
+            playsound(file_path, block=False)
+            # mixer.init()
+            # mixer.music.load(file_path)
+            # mixer.music.play(loops=1)
         else:
             # Print a warning message if the file does not exist
             print("\033[90m\nThe specified audio effect file does not exist. Skipping playback.\033[0m")
