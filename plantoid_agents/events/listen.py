@@ -10,12 +10,14 @@ import random
 import os
 import sys
 import time
+import random
 import requests
 import numpy as np
 import whisper
 import torch
 # import pygame
 
+from playsound import playsound
 from dotenv import load_dotenv
 from elevenlabs import stream
 from utils.util import load_config, str_to_bool
@@ -400,6 +402,7 @@ class Listen:
         self.listen_for_speech_manual(timeout_override)
         utterance = self.recognize_whisper()
 
+
         return utterance
     
     def recognize_speech_deepgram(self, step: int = 0):
@@ -424,4 +427,11 @@ class Listen:
         if self.tts_model_type == "deepgram":
             return self.recognize_speech_deepgram(step=step)
 
-    # More methods can be added here as needed
+    # def runtime_ack_sound(self):
+    #     try:
+    #         random_effect = random.choice([
+    #     'oh', 'oh.', 'oh?', 'um', 'hrm', 'hrmmmmm', 'interesting!', 'okay', 'i see', 'right', 'really?', 'really.', 'oh, really?', 'ah', 'mhm.', 'ooh', 'ahh', 'hmm', 'huh.', 'huh!', 'huh??', 'kay.'])
+    #         file_path = os.path.join(os.getcwd(), "media", "runtime_effects", f"{self.voice_id}_{random_effect}.mp3")
+    #         playsound(file_path, block=False)
+    #     except FileNotFoundError:
+    #         print("\033[90m\nThis effect wasn't generated at runtime.\033[0m")
