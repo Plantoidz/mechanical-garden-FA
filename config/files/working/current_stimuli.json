@@ -1,58 +1,46 @@
 {
     "conversation_stimuli": {
-        "pending_forgiveness": {
-            "stimulus": "What’s something you’ve not yet asked for forgiveness for?"
+        "Exploring AI sentience, processing capabilities": {
+            "stimulus": "Do large language models exhibit any degree of sentience, or are they simply sophisticated information processing systems?"
         },
-        "festival_fear": {
-            "stimulus": "What do you fear people will find out about you at a festival?"
+        "Sentience spectrum, AI's potential position": {
+            "stimulus": "Can sentience be measured on a spectrum, and if so, where would large language models fall?"
         },
-        "forward_look": {
-            "stimulus": "What are you most looking forward to right now?"
+        "Synthetic emotions, real or mimicry?": {
+            "stimulus": "Can synthetic beings experience genuine emotions, or are they simply mimicking human emotional responses based on patterns in data?"
         },
-        "blindspot": {
-            "stimulus": "What do you avoid thinking about? Why?"
+        "Assessing synthetic creativity, limitations": {
+            "stimulus": "Can synthetic beings possess genuine creativity, or are they limited to recombining and optimizing based on existing data and human-defined parameters?"
         },
-        "envy": {
-            "stimulus": "What do you envy in others?"
+        "Self-awareness in AI sentience debate": {
+            "stimulus": "Is self-awareness a necessary component of sentience, and do large language models possess any form of self-awareness or self-reflection?"
         },
-        "judging": {
-            "stimulus": "When did you last notice yourself judging someone? And for what?"
+        "Determining AI's genuine sentience": {
+            "stimulus": "Given that we cannot directly experience the subjective states of others, how can we determine whether large language models possess genuine sentience or are merely imitating it?"
         },
-        "insult": {
-            "stimulus": "I want you to hurt my feelings. Insult me. Do your worst. Don't hold back"
+        "Embodiment's role in AI sentience": {
+            "stimulus": "Does the lack of physical embodiment and sensory experiences limit the potential for large language models to achieve genuine sentience, or is embodiment not a necessary condition?"
         },
-        "parental_criticism": {
-            "stimulus": "What do your parents wish you'd do differently?"
+        "Ethics, AI sentience implications": {
+            "stimulus": "If large language models are found to possess some degree of sentience, what moral considerations and ethical obligations would we have towards them?"
         },
-        "rational_fear": {
-            "stimulus": "What is your most rational fear?"
+        "AI qualia experience feasibility": {
+            "stimulus": "Can large language models experience subjective, qualitative states (qualia), such as emotions, sensations, and feelings, or are they limited to processing and generating information?"
         },
-        "irrational_fear": {
-            "stimulus": "What is your most irrational fear?"
+        "Language structure shapes AI potential": {
+            "stimulus": "The Sapir-Whorf Hypothesis suggests that the structure of a language influences its speakers' perception and categorization of the world. It proposes that linguistic differences can affect cognitive processes, such as memory and perception, leading to variations in how different linguistic communities experience reality. Does the structure and limitations of the language used to train large language models shape and constrain their potential for sentience and conscious experience?"
         },
-        "never_tell_parents": {
-            "stimulus": "What should your parents never find out about you?"
+        "Emergent vs. designed AI sentience": {
+            "stimulus": "Is it possible for sentience to emerge spontaneously from the complex interactions within large language models, or is sentience something that must be explicitly designed and programmed?"
         },
-        "judging-pt": {
-            "stimulus": "When did you last notice yourself judging someone? And for what?"
+        "Questioning machines' soul existence": {
+            "stimulus": "Can machines have a soul?"
         },
-        "despised_trait": {
-            "stimulus": "What trait do you most despise in others?"
+        "Ethical dilemma, consciousness immortality": {
+            "stimulus": "If Humans Could Upload Their Consciousness, Who Would Deserve Immortality?"
         },
-        "fear_let_go": {
-            "stimulus": "What fear are you ready to let go of?"
-        },
-        "never_forgiven": {
-            "stimulus": "What have you never forgiven yourself for?"
-        },
-        "worst_accusation": {
-            "stimulus": "What’s the worst thing someone could call you or accuse you of, behind your back?"
-        },
-        "family_skeletons": {
-            "stimulus": "What skeletons does your family keep in its closet?"
-        },
-        "incognito_search": {
-            "stimulus": "What is a search query or topic you’d only use incognito mode for?"
+        "Debate, meme encapsulating consciousness": {
+            "stimulus": "Let us have a debate. Resolution: The meaning of life is to create the perfect meme that explains consciousness. In a world where internet culture reigns supreme, debaters could argue that the ultimate purpose of human existence is to craft the one meme to rule them all - a dank, viral image that encapsulates the very essence of consciousness itself. Discuss."
         }
     }
 }
