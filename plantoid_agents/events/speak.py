@@ -24,6 +24,8 @@ from dotenv import load_dotenv
 from elevenlabs.client import ElevenLabs, AsyncElevenLabs
 from elevenlabs import stream, Voice, VoiceSettings, play
 
+from utils.util import str_to_bool
+
 # https://elevenlabs.io/docs/api-reference/edit-voice
 
 
@@ -58,6 +60,7 @@ class Speak:
         self.device_index = device_index
         # self.transcription = DeepgramTranscription(sample_rate=self.RATE, device_index=self.device_index, timeout=2)
         self.elevenlabs_model_type = services["speech_synthesis_model"]
+        self.use_interruption = str_to_bool(services["use_interruption"])
 
     def get_text_to_speech_response(self, text, eleven_voice_id, callback=None):
 
@@ -276,7 +279,7 @@ class Speak:
     ):
         """Listen to the microphone and set the stop_event when noise is detected."""
 
-        if use_streaming:
+        if self.use_interruption and use_streaming:
 
             transcription = DeepgramTranscription(sample_rate=self.RATE, device_index=self.device_index, timeout=2)
             transcription.reset()
@@ -291,9 +294,9 @@ class Speak:
 
             if interruption_callback is not None:
                 interruption_callback(True, agent.name, utterance)  # Notify the rest of the application
-                runtime_effect = self.select_random_runtime_effect(agent.get_voice_id())
-                # print("Runtime effect: ", runtime_effect)
-                playsound(runtime_effect, block=False)
+                # runtime_effect = self.select_random_runtime_effect(agent.get_voice_id())
+                # # print("Runtime effect: ", runtime_effect)
+                # playsound(runtime_effect, block=False)
 
     def select_random_runtime_effect(self, voice_id):
         """

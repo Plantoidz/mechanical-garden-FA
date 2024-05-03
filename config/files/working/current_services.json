@@ -2,5 +2,6 @@
     "language_model": "gpt-4-turbo",
     "language_model_api": "litellm",
     "speech_recognition_model": "google",
-    "speech_synthesis_model": "eleven_multilingual_v2"
+    "speech_synthesis_model": "eleven_multilingual_v2",
+    "use_interruption": "True"
 }
