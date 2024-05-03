@@ -38,10 +38,13 @@ def decode_audio(channel_index_value, input_queue, output_queue):
     while True:
         input_data = input_queue.get()
 
-        segment = AudioSegment.from_file(io.BytesIO(input_data), format="mp3")
-        samples = numpy.array(segment.get_array_of_samples(), dtype=numpy.float32)
+        try:
+            segment = AudioSegment.from_file(io.BytesIO(input_data), format="mp3")
+            samples = numpy.array(segment.get_array_of_samples(), dtype=numpy.float32)
 
-        output_queue.put(samples)
+            output_queue.put(samples)
+        except:
+            print("EXCEPTION")
 
 def play_audio(done_event, channel_index_value, input_queue, output_queue):
     while True:
