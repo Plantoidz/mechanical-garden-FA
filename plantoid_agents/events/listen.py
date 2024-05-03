@@ -107,7 +107,7 @@ class Listen:
         random_effect = random.choice([
             'oh', 'oh.', 'oh?', 'um', 'hrm', 'hrmmmmm',
             'interesting!', 'okay', 'i see', 'right', 'really?',
-            'really.', 'oh, really?', 'ah', 'mhm.', 'ooh',
+            'really.', 'ah', 'mhm.', 'ooh', # 'oh, really?'
             'ahh', 'hmm', 'huh.', 'huh!', 'huh??', 'kay.'
         ])
 
