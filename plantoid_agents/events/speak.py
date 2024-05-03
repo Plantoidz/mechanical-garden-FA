@@ -202,7 +202,7 @@ class Speak:
         voice_id: str,
         channel_id: str,
         callback: Any = None,
-        use_multichannel: bool = False,
+        use_multichannel: bool = True,
         use_streaming: bool = True,
     ) -> None:
 
