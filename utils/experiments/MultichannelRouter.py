@@ -46,8 +46,8 @@ def decode_audio(channel_index_value, input_queue, output_queue):
             samples = numpy.array(segment.get_array_of_samples(), dtype=numpy.float32)
 
             output_queue.put(samples)
-        except:
-            print("EXCEPTION")
+        except Exception as e:
+            print(f"Audio decoder exception occurred: \n{e}")
 
 def play_audio(stream_input_event, done_event, channel_index_value, input_queue, output_queue):
     collected_samples = []
@@ -101,6 +101,10 @@ def play_audio(stream_input_event, done_event, channel_index_value, input_queue,
 
 def magicstream(audio_stream: Iterator[bytes], channel_number: str) -> bytes:
     global input_queue
+    global done_event
+    global stream_input_event
+    global channel_index_value
+
     setup_magicstream()
 
     done_event.clear()
