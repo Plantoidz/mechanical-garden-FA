@@ -14,9 +14,8 @@ import audioop
 import threading
 
 from utils.config_util import read_services_config
-# from plantoid_agents.lib.MultichannelRouter import Iterator, magicstream, setup_magicstream
-from plantoid_agents.lib.MultichannelRouter_BAK import Iterator, magicstream, stop_mpv_processes, setup_magicstream
-from plantoid_agents.lib.DeepgramTranscription_2 import DeepgramTranscription
+from plantoid_agents.lib.MultichannelRouter import Iterator, magicstream, setup_magicstream
+# from plantoid_agents.lib.MultichannelRouter_BAK import Iterator, magicstream, stop_mpv_processes, setup_magicstream
 from plantoid_agents.events.listen import Listen
 
 from dotenv import load_dotenv
