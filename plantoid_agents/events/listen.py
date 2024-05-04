@@ -241,7 +241,7 @@ class Listen:
         cfg = config['audio']
 
         # TEMP
-        record_mode = 'continuous'
+        record_mode = 'fixed'
 
         use_timeout = self.TIMEOUT
 
@@ -281,10 +281,14 @@ class Listen:
 
         if record_mode == 'fixed':
 
+            print('fixed mode - listening for speech...')
+
             # this is for a fixed amount of recording seconds
             for i in range(0, int(self.RATE / self.CHUNK * self.RECORD_SECONDS)):
                 data = stream.read(self.CHUNK)
                 samples.append(data)
+
+            self.record_wav_file(samples, audio, audio_file_path)
 
         if record_mode == 'continuous':
 
@@ -359,6 +363,8 @@ class Listen:
 
     def record_wav_file(self, data, audio, audio_file_path):
 
+        print("saving audio file to: ", audio_file_path)
+
         with wave.open(audio_file_path, 'wb') as wf:
             wf.setnchannels(self.CHANNELS)
             wf.setsampwidth(audio.get_sample_size(self.FORMAT))
@@ -366,7 +372,7 @@ class Listen:
             wf.writeframes(b''.join(data))
             #wf.close()
 
-    def listen_for_speech_google(self):
+    def listen_for_speech_google(self, timeout_override: int = 1):
 
         # def countdown():
         #     # Countdown timer to run concurrently
@@ -389,19 +395,22 @@ class Listen:
         # countdown_thread = threading.Thread(target=countdown)
         # countdown_thread.start()
 
+        use_timeout = self.TIMEOUT
+
+        if timeout_override is not None:
+            use_timeout = timeout_override
+
         audio_file_path = os.getcwd() + "/media/user_audio/temp/temp_reco.wav"
 
         # Obtain audio from the microphone
         with sr.Microphone() as source:
             r.adjust_for_ambient_noise(source, duration=0.5)  # Automatically adjusts the energy threshold
             print("\t\033[91mListening for speech...\033[0m")
-            audio = r.listen(source, timeout=self.TIMEOUT)
+            audio = r.listen(source, timeout=use_timeout)
 
         # Save the audio to a WAV file
         with open(audio_file_path, "wb") as f:
             f.write(audio.get_wav_data())
-
-        print("\t\033[91mRecognizing with Whisper...\033[0m")
 
     def recognize_speech(self, filename):
         
@@ -438,6 +447,8 @@ class Listen:
     
     def recognize_whisper(self):
 
+        print("\t\033[91mRecognizing with Whisper...\033[0m")
+
         audio_file_path = os.getcwd() + "/media/user_audio/temp/temp_reco.wav"
 
         device=("cuda" if torch.cuda.is_available() else "cpu")
@@ -467,7 +478,7 @@ class Listen:
     
     def recognize_speech_whisper_google(self, timeout_override: str = None):
         try:
-            self.listen_for_speech_google()
+            self.listen_for_speech_google(timeout_override=timeout_override)
         except sr.exceptions.WaitTimeoutError:
             print("\t\033[91mTimeout reached. Stopping the recording...\033[0m")
             return ""

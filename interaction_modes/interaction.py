@@ -24,7 +24,16 @@ class PlantoidInteraction:
         self.select_next_speaker = selection_function
         self.last_speaker_idx = 0
         self.current_speaker_idx = 0
+        self.humanness = 1 # 0.5
+        self.agent_interrupted = False
         self.interaction_timestamp = datetime.now()
+
+    def set_agent_interrupted(self, agent_interrupted: bool = True):
+        self.agent_interrupted = agent_interrupted
+        
+    def interruption_callback(self, agent_interrupted, speaker_name, message):
+        self.set_agent_interrupted(agent_interrupted)
+        self.inject(speaker_name, message)
 
     def increment_speaker_idx(self, idx_type: str = "current"):
 
@@ -85,9 +94,21 @@ class PlantoidInteraction:
         self.inject(speaker.name, intro_message)
 
     def step(self) -> tuple[str, str]:
+
+        print("Doing interaction step: ", self._step)
+        print("Agent was interrupted: ", self.agent_interrupted)
+
         # 1. choose the next speaker
-        speaker_idx = self.select_next_speaker(self._step, self.agents, self.last_speaker_idx, 1) #last arg is humanness % (between 0 and 1)
+        speaker_idx = self.select_next_speaker(
+            self._step,
+            self.agents,
+            self.last_speaker_idx,
+            self.humanness, # arg is humanness % (between 0 and 1)
+            self.agent_interrupted,
+        ) 
+
         self.set_speaker_idx(speaker_idx, idx_type="current")
+        self.set_agent_interrupted(agent_interrupted=False)
         speaker = self.agents[speaker_idx]
 
         # print(f"Current speaker index: {self.current_speaker_idx}")
@@ -98,10 +119,10 @@ class PlantoidInteraction:
 
             print('\n\n\033[92mHuman selected (' + speaker.name + ')\033[0m')
 
-            # ENUNCIATE SPEAKER NAME HERE
-            last_speaker = self.agents[self.last_speaker_idx]
-            #TODO: cue based on runtime_effects
+            # # # ENUNCIATE SPEAKER NAME HERE
+            # last_speaker = self.agents[self.last_speaker_idx]
             # last_speaker.speak(self.agents, speaker.name, use_streaming=False)
+            # playsound(os.getcwd() + "/media/cleanse.mp3", block=False)
 
             message = speaker.listen_for_speech(self.agents, self._step)
             self.log_conversation(speaker, message)
@@ -110,7 +131,11 @@ class PlantoidInteraction:
 
             # 2. next speaker sends message
             message = speaker.send()
-            speaker.speak(self.agents, message)
+            speaker.speak(
+                self.agents,
+                message,
+                interruption_callback = self.interruption_callback,
+            )
             self.log_conversation(speaker, message)
 
         # 3. everyone receives message

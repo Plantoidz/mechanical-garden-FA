@@ -14,9 +14,10 @@ import audioop
 import threading
 
 from utils.config_util import read_services_config
-# from utils.experiments.MultichannelRouter import Iterator, magicstream, setup_magicstream
-from plantoid_agents.lib.MultichannelRouter import Iterator, magicstream, setup_magicstream
-from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
+# from plantoid_agents.lib.MultichannelRouter import Iterator, magicstream, setup_magicstream
+from plantoid_agents.lib.MultichannelRouter_BAK import Iterator, magicstream, stop_mpv_processes, setup_magicstream
+from plantoid_agents.lib.DeepgramTranscription_2 import DeepgramTranscription
+from plantoid_agents.events.listen import Listen
 
 from dotenv import load_dotenv
 from elevenlabs.client import ElevenLabs, AsyncElevenLabs
@@ -44,7 +45,13 @@ class Speak:
     A template class for implementing speaking behaviors in an interaction system.
     """
 
-    def __init__(self):
+    def __init__(
+        self,
+        rate: int = 16000,
+        chunk: int = 512,
+        channels: int = 1,
+        device_index: int = None,
+    ) -> None:
         """
         Initializes a new instance of the Speak class.
         """
@@ -54,6 +61,11 @@ class Speak:
         self.elevenlabs_model_type = services["speech_synthesis_model"]
         self.use_interruption = str_to_bool(services["use_interruption"])
         self.use_multichannel = str_to_bool(services["use_multichannel"])
+        self.RATE = rate
+        self.CHUNK = chunk
+        self.device_index = device_index
+        self.channels = channels
+        self.listen = Listen()
 
     def get_text_to_speech_response(self, text, eleven_voice_id, callback=None):
 
@@ -261,22 +273,27 @@ class Speak:
 
         if self.use_interruption and use_streaming:
 
-            transcription = DeepgramTranscription(sample_rate=self.RATE, device_index=self.device_index, timeout=2)
-            transcription.reset()
-            transcription.start_listening(step=None)
-            utterance = transcription.get_final_result()
-            print("Shadow Listener - Utterance: ", utterance)
-            # time.sleep(5)
-            audio_detected_event.set()
-            stop_event.set()
-            # TODO: impleemnt equivalent
-            # stop_mpv_processes()
+            # transcription = DeepgramTranscription(sample_rate=self.RATE, device_index=self.device_index, timeout=2)
+            # transcription.reset()
+            # transcription.start_listening(step=None)
+            # utterance = transcription.get_final_result()
 
-            if interruption_callback is not None:
-                interruption_callback(True, agent.name, utterance)  # Notify the rest of the application
-                # runtime_effect = self.select_random_runtime_effect(agent.get_voice_id())
-                # # print("Runtime effect: ", runtime_effect)
-                # playsound(runtime_effect, block=False)
+            utterance = self.listen.recognize_speech_whisper_manual(timeout_override=3)
+            print("Shadow Listener - Utterance: ", utterance)
+
+            if utterance != "":
+
+                # time.sleep(5)
+                audio_detected_event.set()
+                stop_event.set()
+                # TODO: impleemnt equivalent
+                stop_mpv_processes()
+
+                if interruption_callback is not None:
+                    interruption_callback(True, agent.name, utterance)  # Notify the rest of the application
+                    # runtime_effect = self.select_random_runtime_effect(agent.get_voice_id())
+                    # # print("Runtime effect: ", runtime_effect)
+                    # playsound(runtime_effect, block=False)
 
     def select_random_runtime_effect(self, voice_id):
         """
@@ -341,7 +358,7 @@ class Speak:
                     
                 if self.use_multichannel:
                     print("\033[90mstreaming on channel",channel_id,"\033[0m\n")
-                    magicstream(audio_stream, channel_id)
+                    magicstream(audio_stream, channel_id, stop_event)
 
                 else:
                     stream(audio_stream)
@@ -371,6 +388,7 @@ class Speak:
         channel_id: str,
         bg_callback: Any = None,
         voice_set_callback: Any = None,
+        interruption_callback: Any = None,
         clone_voice: bool = False,
         create_clone: bool = False,
         use_streaming: bool = True,
@@ -399,6 +417,7 @@ class Speak:
                 voice,
                 channel_id,
                 bg_callback=bg_callback,
+                interruption_callback=interruption_callback,
                 use_streaming=use_streaming,
             )
 
@@ -409,6 +428,6 @@ class Speak:
                 voice_id,
                 channel_id,
                 bg_callback=bg_callback,
+                interruption_callback=interruption_callback,
                 use_streaming=use_streaming,
-
             )

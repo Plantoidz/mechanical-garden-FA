@@ -17,6 +17,9 @@ import threading
 #         return False
 #     return True
 
+def setup_magicstream():
+    pass
+
 mpv_processes = []
 
 def stop_mpv_processes():
@@ -68,9 +71,9 @@ def magicstream(audio_stream: Iterator[bytes], number_string: str, stop_event: t
 
     try:
         for chunk in audio_stream:
-            # if stop_event.is_set():
-            #     print("Magicstream - stopped by stop event.")
-            #     break
+            if stop_event.is_set():
+                print("Magicstream - stopped by stop event.")
+                break
 
             # Check if the mpv process has unexpectedly exited
             if mpv_process.poll() is not None:
