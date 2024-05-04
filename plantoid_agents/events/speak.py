@@ -296,7 +296,7 @@ class Speak:
                     audio_detected_event.set()
                     stop_event.set()
                     # TODO: impleemnt equivalent
-                    stop_mpv_processes()
+                    # stop_mpv_processes()
 
                     if interruption_callback is not None:
                         interruption_callback(True, agent.name, utterance)  # Notify the rest of the application
@@ -369,7 +369,7 @@ class Speak:
                     
                 if self.use_multichannel:
                     print("\033[90mstreaming on channel",channel_id,"\033[0m\n")
-                    magicstream(audio_stream, channel_id, stop_event)
+                    magicstream(audio_stream, channel_id) # stop_event
 
                 else:
                     stream(audio_stream)
