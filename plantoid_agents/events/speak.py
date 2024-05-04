@@ -14,8 +14,7 @@ import audioop
 import threading
 
 from utils.config_util import read_services_config
-from plantoid_agents.lib.MultichannelRouter import Iterator, magicstream, setup_magicstream
-# from plantoid_agents.lib.MultichannelRouter_BAK import Iterator, magicstream, stop_mpv_processes, setup_magicstream
+from plantoid_agents.lib.MultichannelRouter import magicstream, magicstream_MPV, setup_magicstream
 from plantoid_agents.events.listen import Listen
 
 from dotenv import load_dotenv
@@ -60,6 +59,7 @@ class Speak:
         self.elevenlabs_model_type = services["speech_synthesis_model"]
         self.use_interruption = str_to_bool(services["use_interruption"])
         self.use_multichannel = str_to_bool(services["use_multichannel"])
+        self.multichannel_implementation = services["multichannel_implementation"]
         self.RATE = rate
         self.CHUNK = chunk
         self.device_index = device_index
@@ -369,7 +369,12 @@ class Speak:
                     
                 if self.use_multichannel:
                     print("\033[90mstreaming on channel",channel_id,"\033[0m\n")
-                    magicstream(audio_stream, channel_id) # stop_event
+
+                    if self.multichannel_implementation == "MPV":
+                        magicstream_MPV(audio_stream, channel_id, stop_event)
+
+                    else:
+                        magicstream(audio_stream, channel_id, stop_event)
 
                 else:
                     stream(audio_stream)
