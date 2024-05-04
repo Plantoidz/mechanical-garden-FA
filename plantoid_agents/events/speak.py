@@ -278,24 +278,31 @@ class Speak:
             # transcription.start_listening(step=None)
             # utterance = transcription.get_final_result()
 
-            # utterance = self.listen_module.recognize_speech_whisper_manual(timeout_override=3)
-            utterance = self.listen_module.recognize_speech_whisper_google(timeout_override=None)
+            while not stop_event.is_set():
 
+                utterance = self.listen_module.recognize_speech_whisper_manual(timeout_override=3)
+                # utterance = self.listen_module.recognize_speech_whisper_google(timeout_override=None)
 
-            print("Shadow Listener - Utterance: ", utterance)
+                print("Shadow Listener - Utterance: ", utterance)
 
-            if utterance != "":
+                if (any(x in utterance for x in ["[INAUDIBLE]", "[BLANK_AUDIO]"]) or utterance == ""):
+                    print("No audio detected. Continuing..:, utterance: ", utterance)
+                    pass
 
-                # time.sleep(5)
-                audio_detected_event.set()
-                stop_event.set()
-                # TODO: impleemnt equivalent
-                stop_mpv_processes()
+                else:
 
-                if interruption_callback is not None:
-                    interruption_callback(True, agent.name, utterance)  # Notify the rest of the application
-                    # runtime_effect = self.select_random_runtime_effect(agent.get_voice_id())
-                    self.listen_module.play_speech_acknowledgement(agent.get_voice_id())
+                    print("Audio input detected. Stopping streaming.")
+
+                    # time.sleep(5)
+                    audio_detected_event.set()
+                    stop_event.set()
+                    # TODO: impleemnt equivalent
+                    stop_mpv_processes()
+
+                    if interruption_callback is not None:
+                        interruption_callback(True, agent.name, utterance)  # Notify the rest of the application
+                        # runtime_effect = self.select_random_runtime_effect(agent.get_voice_id())
+                        self.listen_module.play_speech_acknowledgement(agent.get_voice_id())
 
                     # # print("Runtime effect: ", runtime_effect)
                     # playsound(runtime_effect, block=False)
