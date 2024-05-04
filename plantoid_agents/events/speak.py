@@ -113,7 +113,7 @@ class Speak:
 
             raise Exception("Error: " + str(status) + ": "+ str(message))
         
-    def stream_text(self, response_stream):
+    def stream_text(self, agent, response_stream):
 
         if isinstance(response_stream, str):
             return response_stream
@@ -124,6 +124,11 @@ class Speak:
                 text_chunk = delta.content
                 yield text_chunk
                 print(text_chunk, end='', flush=True)
+
+        # This is here to make the agent do serial/network stuff as soon as the stream is done coming through.
+        # If not, it would occur too soon or too late.
+        if(agent and agent.callback):
+            agent.callback("<speaking>")
 
     def format_response_type(self, response: Any) -> Any:
         return self.stream_text(response) if isinstance(response, types.GeneratorType) else response
@@ -372,7 +377,7 @@ class Speak:
 
                 # generate audio stream   
                 audio_stream = client.generate(
-                    text=self.stream_text(response),
+                    text=self.stream_text(agent, response),
                     model=self.elevenlabs_model_type,
                     voice=voice_id,
                     stream=True
@@ -381,7 +386,7 @@ class Speak:
                 # stop background music callback
                 if bg_callback is not None:
                     bg_callback()
-                    
+
                 if self.use_multichannel:
                     print("\033[90mstreaming on channel",channel_id,"\033[0m\n")
 
@@ -429,9 +434,11 @@ class Speak:
             setup_magicstream()
 
         for a in agents:
+            if a == agent: continue
             if(a.callback): a.callback("<asleep>")
 
-        if(agent.callback): agent.callback("<speaking>")
+        # See stream_text
+        # if(agent.callback): agent.callback("<speaking>")
 
 
         if clone_voice:

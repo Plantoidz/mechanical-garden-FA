@@ -53,6 +53,10 @@ class PlantoidDialogueAgent:
             try:
                 # self.tunnel = Telnet(addr, 23, timeout=3)
                 self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                 self.callback = self.tunnel_wifi
                 self.addr = addr
             except Exception as err:
