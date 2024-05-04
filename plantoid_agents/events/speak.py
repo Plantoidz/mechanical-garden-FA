@@ -385,6 +385,7 @@ class Speak:
             setup_magicstream()
 
         for a in agents:
+            if a == agent: continue
             if(a.callback): a.callback("<asleep>")
 
         # See stream_text

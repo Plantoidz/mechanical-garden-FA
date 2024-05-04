@@ -382,7 +382,7 @@ class Listen:
         r.dynamic_energy_threshold = False
 
         # Set the pause threshold
-        r.pause_threshold = 1 #self.SILENCE_LIMIT  # Adjust this based on the desired pause length
+        r.pause_threshold = 2 #self.SILENCE_LIMIT  # Adjust this based on the desired pause length
 
 
         # # Start countdown in a separate thread
