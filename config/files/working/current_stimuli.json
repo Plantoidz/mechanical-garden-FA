@@ -1,58 +1,58 @@
 {
     "conversation_stimuli": {
         "pending_forgiveness": {
-            "stimulus": "What’s something you’ve not yet asked for forgiveness for?"
+            "stimulus": "Quelque chose pour lequel tu n'as pas encore demandé pardon ?"
         },
         "festival_fear": {
-            "stimulus": "What do you fear people will find out about you at a festival?"
+            "stimulus": "Qu'est-ce que tu crains que les gens découvrent à ton sujet lors d'un festival ?"
         },
         "forward_look": {
-            "stimulus": "What are you most looking forward to right now?"
+            "stimulus": "À quoi as-tu le plus hâte en ce moment ?"
         },
         "blindspot": {
-            "stimulus": "What do you avoid thinking about? Why?"
+            "stimulus": "À quoi évites-tu de penser ? Pourquoi ?"
         },
         "envy": {
-            "stimulus": "What do you envy in others?"
+            "stimulus": "Qu'est-ce que tu envies chez les autres ?"
         },
         "judging": {
-            "stimulus": "When did you last notice yourself judging someone? And for what?"
+            "stimulus": "Quand as-tu remarqué pour la dernière fois que tu juges quelqu'un ? Et pour quoi ?"
         },
         "insult": {
-            "stimulus": "I want you to hurt my feelings. Insult me. Do your worst. Don't hold back"
+            "stimulus": "Je veux que tu me blesses. Insulte-moi. Fais de ton mieux. Ne te retiens pas."
         },
         "parental_criticism": {
-            "stimulus": "What do your parents wish you'd do differently?"
+            "stimulus": "Qu'est-ce que tes parents aimeraient que tu fasses différemment ?"
         },
         "rational_fear": {
-            "stimulus": "What is your most rational fear?"
+            "stimulus": "Quelle est ta peur la plus rationnelle ?"
         },
         "irrational_fear": {
-            "stimulus": "What is your most irrational fear?"
+            "stimulus": "Quelle est ta peur la plus irrationnelle ?"
         },
         "never_tell_parents": {
-            "stimulus": "What should your parents never find out about you?"
+            "stimulus": "Qu'est-ce que tes parents ne devraient jamais découvrir à ton sujet ?"
         },
         "judging-pt": {
-            "stimulus": "When did you last notice yourself judging someone? And for what?"
+            "stimulus": "Quand as-tu remarqué pour la dernière fois que tu juges quelqu'un ? Et pour quoi ?"
         },
         "despised_trait": {
-            "stimulus": "What trait do you most despise in others?"
+            "stimulus": "Quel trait détestes-tu le plus chez les autres ?"
         },
         "fear_let_go": {
-            "stimulus": "What fear are you ready to let go of?"
+            "stimulus": "De quelle peur es-tu prêt à te débarrasser ?"
         },
         "never_forgiven": {
-            "stimulus": "What have you never forgiven yourself for?"
+            "stimulus": "Pour quoi ne t'es-tu jamais pardonné ?"
         },
         "worst_accusation": {
-            "stimulus": "What’s the worst thing someone could call you or accuse you of, behind your back?"
+            "stimulus": "Quelle est la pire chose qu'on pourrait te dire ou te reprocher dans ton dos ?"
         },
         "family_skeletons": {
-            "stimulus": "What skeletons does your family keep in its closet?"
+            "stimulus": "Quels secrets ta famille garde-t-elle cachés ?"
         },
         "incognito_search": {
-            "stimulus": "What is a search query or topic you’d only use incognito mode for?"
+            "stimulus": "Quelle est une requête de recherche ou un sujet que tu n'utiliserais que en mode incognito ?"
         }
     }
 }
