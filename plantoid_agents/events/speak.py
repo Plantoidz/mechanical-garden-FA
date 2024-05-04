@@ -65,7 +65,7 @@ class Speak:
         self.CHUNK = chunk
         self.device_index = device_index
         self.channels = channels
-        self.listen = Listen()
+        self.listen_module = Listen()
 
     def get_text_to_speech_response(self, text, eleven_voice_id, callback=None):
 
@@ -278,7 +278,10 @@ class Speak:
             # transcription.start_listening(step=None)
             # utterance = transcription.get_final_result()
 
-            utterance = self.listen.recognize_speech_whisper_manual(timeout_override=3)
+            # utterance = self.listen_module.recognize_speech_whisper_manual(timeout_override=3)
+            utterance = self.listen_module.recognize_speech_whisper_google(timeout_override=None)
+
+
             print("Shadow Listener - Utterance: ", utterance)
 
             if utterance != "":
@@ -292,26 +295,28 @@ class Speak:
                 if interruption_callback is not None:
                     interruption_callback(True, agent.name, utterance)  # Notify the rest of the application
                     # runtime_effect = self.select_random_runtime_effect(agent.get_voice_id())
+                    self.listen_module.play_speech_acknowledgement(agent.get_voice_id())
+
                     # # print("Runtime effect: ", runtime_effect)
                     # playsound(runtime_effect, block=False)
 
-    def select_random_runtime_effect(self, voice_id):
-        """
-        Selects a random file from the specified directory.
-        """
-        directory = os.getcwd() + "/media/runtime_effects"
-        prefix = f"{voice_id}_"
+    # def select_random_runtime_effect(self, voice_id):
+    #     """
+    #     Selects a random file from the specified directory.
+    #     """
+    #     directory = os.getcwd() + "/media/runtime_effects"
+    #     prefix = f"{voice_id}_"
         
-        # List all files that start with the given voice ID
-        files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f)) and f.startswith(prefix)]
+    #     # List all files that start with the given voice ID
+    #     files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f)) and f.startswith(prefix)]
         
-        # Check if there are any matching files
-        if not files:
-            return None  # Return None or raise an Exception if no matching files are found
+    #     # Check if there are any matching files
+    #     if not files:
+    #         return None  # Return None or raise an Exception if no matching files are found
 
-        # Randomly select a file
-        random_file = random.choice(files)
-        return os.path.join(directory, random_file)
+    #     # Randomly select a file
+    #     random_file = random.choice(files)
+    #     return os.path.join(directory, random_file)
 
 
     def stream_audio_response(
