@@ -388,7 +388,7 @@ class Listen:
         r.dynamic_energy_threshold = False
 
         # Set the pause threshold
-        r.pause_threshold = 1 #self.SILENCE_LIMIT  # Adjust this based on the desired pause length
+        r.pause_threshold = 3 #self.SILENCE_LIMIT  # Adjust this based on the desired pause length
 
 
         # # Start countdown in a separate thread
@@ -417,7 +417,7 @@ class Listen:
         with sr.AudioFile(filename) as source:
 
             r = sr.Recognizer()
-            r.energy_threshold = 50
+            r.energy_threshold = 150
             r.dynamic_energy_threshold = False
 
             audio = r.record(source)
@@ -503,7 +503,7 @@ class Listen:
             if(character.callback): character.callback("<listening>")
 
         if self.tts_model_type == "google":
-            return self.recognize_speech_whisper_google()
+            return self.recognize_speech_whisper_google(timeout_override)
         
         if self.tts_model_type == "whisper":
             return self.recognize_speech_whisper_manual(timeout_override)

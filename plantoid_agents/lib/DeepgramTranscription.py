@@ -28,7 +28,7 @@ def ignoreStderr():
         os.close(old_stderr)
 
 class DeepgramTranscription:
-    def __init__(self, sample_rate: int = 48000, device_index: int = None, channels: int = 1, timeout: int = 5):
+    def __init__(self, sample_rate: int = 48000, device_index: int = None, channels: int = 1, timeout: int = 5, callback=None):
         self.deepgram = DeepgramClient()
         self.is_finals = []
         self.final_result = ""
@@ -37,6 +37,8 @@ class DeepgramTranscription:
         self.channels = channels
         self.device_index = device_index
         self.timeout = timeout  # Timeout in seconds
+        self.callback = callback  # Callback for real-time updates
+
 
     def reset(self):
         """
@@ -64,10 +66,19 @@ class DeepgramTranscription:
                     self.final_result = ' '.join(self.is_finals)
                     # print(f"Deepgram Utterance End: {self.final_result}")
                     print(f"\033[90m\tSpeech Final: {self.final_result}\033[0m")
+
+                    if self.callback:
+                        self.callback(self.final_result, final=True)
             else:
                 print(f"\033[90m\tAlmost Final: {sentence}\033[0m")
+
+                if self.callback:
+                    self.callback(self.final_result, final=False)
         else:
             print(f"\033[90m\tInterim Results: {sentence}\033[0m")
+
+            if self.callback:
+                self.callback(self.final_result, final=False)
 
     def on_metadata(self, *args, **kwargs):
         metadata = kwargs['metadata'] 

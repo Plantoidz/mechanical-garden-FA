@@ -24,6 +24,7 @@ from utils.util import str_to_bool
 
 # https://elevenlabs.io/docs/api-reference/edit-voice
 
+from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
 
 # Load environment variables from .env file
 load_dotenv()
@@ -270,17 +271,31 @@ class Speak:
     ):
         """Listen to the microphone and set the stop_event when noise is detected."""
 
-        if self.use_interruption and use_streaming:
+        def transcription_callback(transcript, final=False):
+            if final:
+                print(f"Final transcript: {transcript}")
+                stop_event.set()
+            else:
+                print(f"Interim transcript: {transcript}")
+                stop_event.set()
 
-            # transcription = DeepgramTranscription(sample_rate=self.RATE, device_index=self.device_index, timeout=2)
-            # transcription.reset()
-            # transcription.start_listening(step=None)
-            # utterance = transcription.get_final_result()
+        if self.use_interruption and use_streaming:
 
             while not stop_event.is_set():
 
-                utterance = self.listen_module.recognize_speech_whisper_manual(timeout_override=3)
+                # utterance = self.listen_module.recognize_speech_whisper_manual(timeout_override=5)
                 # utterance = self.listen_module.recognize_speech_whisper_google(timeout_override=None)
+
+                transcription = DeepgramTranscription(
+                    sample_rate=self.RATE, 
+                    device_index=self.device_index, 
+                    timeout=2,
+                    callback=transcription_callback
+                )
+
+                transcription.reset()
+                transcription.start_listening(step=None)
+                utterance = transcription.get_final_result()
 
                 print("Shadow Listener - Utterance: ", utterance)
 
