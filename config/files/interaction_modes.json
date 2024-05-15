@@ -20,45 +20,6 @@
             "selection_function": "clone",
             "bidding_template": "clone",
             "description": "A conversation between a human and a simulated version of that human."
-        },
-        "confessional": {
-            "current_mode": "confession",
-            "agent_type": "debate",
-            "selection_function": "confession",
-            "bidding_template": "confession",
-            "description": "Robot(s) take turns asking pre-scripted questions and responding (requires additional setup)",
-            "reasoning_prompt1": "I'm going to tell you something that I am afraid people will find out about me, when I am at a party or festival. Please offer me some insights that can help transform my fears into ways I can face and overcome my fears",
-            "reasoning_prompt1_msg": "Overcome your fears in this way:",
-            "collective_prompt1": "Write eight one-liners about overcoming my fear. Here's some context:",
-            "responding_prompt1": "I'm going to tell you something that I am afraid people will find out about me, when I am at a party or festival. Please offer me some insights that can help transform my fears into ways I can face and overcome my fear. Here's what I'm afraid of context:"
-        },
-        "storytime (WIP)": {
-            "current_mode": "debate",
-            "agent_type": "debate",
-            "selection_function": "debate",
-            "bidding_template": "debate",
-            "description": "Humans and robot(s) take turns building a story."
-        },
-        "roast (WIP)": {
-            "current_mode": "roast",
-            "agent_type": "dialogue",
-            "selection_function": "roast",
-            "bidding_template": "roast",
-            "description": "Robot(s) roast humans."
-        },
-        "couples counseling (WIP)": {
-            "current_mode": "roast",
-            "agent_type": "dialogue",
-            "selection_function": "roast",
-            "bidding_template": "roast",
-            "description": "A moderated discussion between two humans and a robot."
-        },
-        "interrogation (WIP)": {
-            "current_mode": "roast",
-            "agent_type": "dialogue",
-            "selection_function": "roast",
-            "bidding_template": "roast",
-            "description": "Several robots take turns interrogating a human."
         }
     }
 }

@@ -95,8 +95,8 @@ class PlantoidInteraction:
 
     def step(self) -> tuple[str, str]:
 
-        print("Doing interaction step: ", self._step)
-        print("Agent was interrupted: ", self.agent_interrupted)
+        # print("Doing interaction step: ", self._step)
+        # print("Agent was interrupted: ", self.agent_interrupted)
 
         # 1. choose the next speaker
         speaker_idx = self.select_next_speaker(

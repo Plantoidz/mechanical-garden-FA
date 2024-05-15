@@ -226,7 +226,7 @@ def magicstream_MPV(audio_stream: Iterator[bytes], number_string: str, stop_even
 
     finally:
         if mpv_process.poll() is None:
-            print("Closing MPV process...")
+            # print("Closing MPV process...")
             if mpv_process.stdin:
                 mpv_process.stdin.close()
             mpv_process.wait()
