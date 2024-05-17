@@ -114,6 +114,7 @@ class PlantoidInteraction:
         # print(f"Current speaker index: {self.current_speaker_idx}")
         # print(f"Last speaker index: {self.last_speaker_idx}")
 
+        # 2. think or listen based on if human or agent
         # human is selected
         if speaker.is_human == True:
 

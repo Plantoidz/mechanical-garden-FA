@@ -15,6 +15,7 @@ import threading
 
 from utils.config_util import read_services_config
 from plantoid_agents.lib.MultichannelRouter import magicstream, magicstream_MPV, setup_magicstream
+# from plantoid_agents.lib.esp32_comms import XYZ
 from plantoid_agents.events.listen import Listen
 
 from dotenv import load_dotenv
@@ -339,6 +340,10 @@ class Speak:
     #     random_file = random.choice(files)
     #     return os.path.join(directory, random_file)
 
+    def delegate_audio_playback_esp32():
+        # esp32_comms.XYZ()
+        pass
+
 
     def stream_audio_response(
         self,
@@ -381,6 +386,9 @@ class Speak:
                 # stop background music callback
                 if bg_callback is not None:
                     bg_callback()
+
+                # if something:
+                #     delegate_audio_playback_esp32()
                     
                 if self.use_multichannel:
                     print("\033[90mstreaming on channel",channel_id,"\033[0m\n")

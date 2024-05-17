@@ -28,6 +28,7 @@ from collections import deque
 
 from utils.config_util import read_services_config
 from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
+# from plantoid_agents.lib.esp32_comms import XYZ
 
 # from whisper_mic.whisper_mic import WhisperMic
 
@@ -495,6 +496,10 @@ class Listen:
         # print("DEEPGRAM UTTERANCE:", utterance)
 
         return utterance
+    
+    def delegate_speech_recognition_esp32():
+        # esp32_comms.XYZ()
+        pass
     
     def listen(self, characters, timeout_override: str = None, step: int = 0) -> Any:
 
