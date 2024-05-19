@@ -14,7 +14,12 @@ import audioop
 import threading
 
 from utils.config_util import read_services_config
-from plantoid_agents.lib.MultichannelRouter import magicstream, magicstream_MPV, setup_magicstream
+from plantoid_agents.lib.MultichannelRouter import (
+    magicstream,
+    magicstream_MPV,
+    magicstream_websocket,
+    setup_magicstream
+)
 # from plantoid_agents.lib.esp32_comms import XYZ
 from plantoid_agents.events.listen import Listen
 
@@ -61,6 +66,7 @@ class Speak:
         self.elevenlabs_model_type = services["speech_synthesis_model"]
         self.use_interruption = str_to_bool(services["use_interruption"])
         self.use_multichannel = str_to_bool(services["use_multichannel"])
+        self.use_websockets = str_to_bool(services["use_websockets"])
         self.multichannel_implementation = services["multichannel_implementation"]
         self.RATE = rate
         self.CHUNK = chunk
@@ -395,9 +401,16 @@ class Speak:
 
                     if self.multichannel_implementation == "MPV":
                         magicstream_MPV(audio_stream, channel_id, stop_event)
+                        # stream_esp32(audio_stream, channel_id, stop_event)
 
                     else:
                         magicstream(audio_stream, channel_id, stop_event)
+
+                elif self.use_websockets:
+                    print("agent socket is", agent.socket)
+                    # TODO: before calling this check if the agent socket exists,
+                    # if not send a fallback (ie next available socket)
+                    magicstream_websocket(audio_stream, agent.socket)
 
                 else:
                     stream(audio_stream)

@@ -30,6 +30,7 @@ class PlantoidDialogueAgent:
         channel_id: str,
         io: str,
         addr: str,
+        esp_id: str,
     ) -> None:
         self.name = name
         self.is_human = is_human
@@ -48,6 +49,9 @@ class PlantoidDialogueAgent:
         
         self.tunnel = None
         self.callback = None
+        self.socket = None
+        self.esp_id = esp_id
+
         if(io == "wifi" and addr):
             print("connecting to Plantoid IP: ", addr)
             try:
@@ -81,7 +85,9 @@ class PlantoidDialogueAgent:
 
     def tunnel_serial(self, val):
         return ## TODO, activate the serial communication
-
+    
+    def associate_esp_websocket(self, ws):
+        self.socket = ws
 
     def get_voice_id(self) -> str:
 

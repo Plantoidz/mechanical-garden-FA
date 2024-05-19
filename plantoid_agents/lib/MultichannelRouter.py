@@ -8,6 +8,7 @@ from typing import Iterator, Union
 import multiprocessing
 import time
 import threading
+import websockets
 
 samplerate = 44100
 
@@ -280,3 +281,15 @@ def magicplay(mp3_filepath: str, number_string: str) -> bytes:
     mpv_process.wait()
 
     return audio_data
+
+async def magicstream_websocket(audio_stream: Iterator[bytes], associated_ws_connection):
+
+    # ws = websocket.WebSocket()
+
+    # ws.connect(socket_addr)
+    try:
+        for chunk in audio_stream:
+            await associated_ws_connection.send(chunk)
+    except websockets.exceptions.ConnectionClosedError:
+        print("Connection closed.")
+        pass

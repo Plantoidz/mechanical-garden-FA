@@ -15,8 +15,9 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
         channel_id: str,
         io: str,
         addr: str,
+        esp_id: str,
     ) -> None:
-        super().__init__(name, is_human, system_message, eleven_voice_id, channel_id, io, addr)
+        super().__init__(name, is_human, system_message, eleven_voice_id, channel_id, io, addr, esp_id)
         self.bidding_template = bidding_template
         self.clone_voice = True
         self.create_clone = True

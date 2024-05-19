@@ -239,6 +239,7 @@ class InteractionManager:
             character_channel_id = character['default_channel']
             character_io = character['io']
             character_addr = character['addr']
+            character_esp_id = character['esp_id']
             character_is_human = str_to_bool(character['is_human'])
 
             system_message = self.get_system_message(
@@ -261,6 +262,7 @@ class InteractionManager:
                 channel_id=character_channel_id,
                 io=character_io,
                 addr = character_addr,
+                esp_id = character_esp_id,
             )
 
             character_objects.append(character_object)
