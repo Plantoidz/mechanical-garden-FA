@@ -1,28 +1,36 @@
-from context.interaction_manager import InteractionManager
 
 import os
+from multiprocessing import Process
 
 import utils.config_util as config_util
 from plantoid_agents.lib.MultichannelRouter import setup_magicstream
+
+import processes.interaction_manager_process as interaction_manager_process
+import processes.websocket_server_process as websocket_server_process
 
 def run_program():
     print("\n\033[94mHello Mechanical Garden!\033[0m")
     
     setup_magicstream()
 
-    # instantiate the InteractionManager
-    interaction_manager = InteractionManager()
+    # Start the WebSocket server in a separate process
+    websocket_process = Process(target=websocket_server_process.run)
+    websocket_process.start()
+
+    # Start the InteractionManager in a separate process
+    interaction_process = Process(target=interaction_manager_process.run)
+    interaction_process.start()
 
     try:
-
         while True:
-
-            # start the interaction
-            interaction_manager.run_interaction()
-
+            pass
     except KeyboardInterrupt:
-        print("Exiting interaction.")
-        pass
+        print("Exiting program.")
+    finally:
+        websocket_process.terminate()
+        interaction_process.terminate()
+        websocket_process.join()
+        interaction_process.join()
 
 def config_mode():
     os.system("$(which python3) config/scripts/configure_modes.py")

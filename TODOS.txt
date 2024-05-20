@@ -4,6 +4,9 @@
 3. Integrate Ben output on streaming, litellm etc
 
 NEW VENV
+sudo apt-get install portaudio19-dev
 conda install -c conda-forge deepgram-sdk
-conda install -c conda-forge pyaudio
+pip install pyaudio
+# conda install -c conda-forge pyaudio
 pip install -r requirements.txt
+

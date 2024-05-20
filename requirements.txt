@@ -35,6 +35,7 @@ pyserial
 keyboard
 pyaudio
 mpv
+websocket-client
 # deepgram
 #scipy
 #mutagen
