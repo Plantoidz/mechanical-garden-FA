@@ -11,6 +11,8 @@ from plantoid_agents.lib.text_content import *
 # TEMP
 from litellm.utils import CustomStreamWrapper
 
+from utils.util import str_to_bool
+
 PURPLE = '\033[94m'
 BLUE = '\033[34m'
 GREY = '\033[90m'
@@ -45,9 +47,13 @@ class PlantoidDialogueAgent:
         self.speak_module = Speak()
         self.listen_module = Listen()
         self.channel_id = channel_id
+        self.enunciate_speech = True
+        self.use_speech_indicator = False
+        self.play_speech_acknowledgement = False
         
         self.tunnel = None
         self.callback = None
+
         if(io == "wifi" and addr):
             print("connecting to Plantoid IP: ", addr)
             try:
@@ -64,15 +70,7 @@ class PlantoidDialogueAgent:
 
 
     def tunnel_wifi(self, val):
-    #     if(not self.tunnel):
-    #        if(self.io and self.addr):
-    #         try:
-    #                 self.tunnel = Telnet(self.addr, 23, timeout=3)
-    #                 self.callback = self.tunnel_wifi
-    #         except Exception as err:
-    #                 print("Failed to connect: ", err)
 
-    #     if(self.tunnel): self.tunnel.write(val.encode('ascii') + b"\n")
         if(self.socket): 
             try: 
                 self.socket.sendto(bytes(val, 'utf-8'), (self.addr, 666))
@@ -82,6 +80,8 @@ class PlantoidDialogueAgent:
     def tunnel_serial(self, val):
         return ## TODO, activate the serial communication
 
+    def set_enunciate_speech(self, enunciate_speech: bool):
+        self.enunciate_speech = enunciate_speech
 
     def get_voice_id(self) -> str:
 
@@ -112,11 +112,25 @@ class PlantoidDialogueAgent:
         else:
             print(GREEN + "The human will just listen for now..." + ENDC)
             return False
-
+        
+    def check_for_utterance(self, system_message, utterance: str) -> bool:
+        """
+        Checks if the message passes the filter for utterance.
+        """
+        utterance_found = self.think_module.think(
+            self,
+            system_message,
+            utterance,
+            # self.use_model_type,
+            False,
+        )
+        print("utterance_found:", utterance_found)
+        return str_to_bool(utterance_found)
 
     def listen_for_speech(self, agents, step: int = 0) -> str:
 
-        self.listen_module.play_speech_indicator()
+        if self.use_speech_indicator:
+            self.listen_module.play_speech_indicator()
         user_message = self.listen_module.listen(agents, step=step)
 
         print("\n\033[92m" +"Human said:\033[0m\n" + user_message)
@@ -147,7 +161,8 @@ class PlantoidDialogueAgent:
         # print("\n\t" + BLUE + "SYSTEM MESSAGE:" + ENDC, self.system_message)
         print("\n" + GREY + "Message history:", self.message_history, ENDC)
 
-        self.listen_module.play_speech_acknowledgement(self.get_voice_id())
+        if self.play_speech_acknowledgement:
+            self.listen_module.play_speech_acknowledgement(self.get_voice_id())
 
         message = self.think_module.think(
             self,
@@ -189,6 +204,7 @@ class PlantoidDialogueAgent:
             self.get_voice_id(),
             self.get_channel_id(),
             # bg_callback=None, #self.speak_module.stop_background_music,
+            enunciate_speech = self.enunciate_speech,
             interruption_callback = interruption_callback,
             use_streaming = use_streaming,
             clone_voice = clone_voice,
@@ -219,3 +235,13 @@ class PlantoidDialogueAgent:
         return [lst[0]] + lst[-n_messages:] if len(lst) > n_messages else lst
 
 #TODO: do not commingle classes and functions here
+
+    #     if(not self.tunnel):
+    #        if(self.io and self.addr):
+    #         try:
+    #                 self.tunnel = Telnet(self.addr, 23, timeout=3)
+    #                 self.callback = self.tunnel_wifi
+    #         except Exception as err:
+    #                 print("Failed to connect: ", err)
+
+    #     if(self.tunnel): self.tunnel.write(val.encode('ascii') + b"\n")

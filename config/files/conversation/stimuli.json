@@ -28,8 +28,16 @@
         "description": "Synthetic Soirées and Human Happenings"
     },
     {
+        "stimuli": "stimuli/partying.json",
+        "description": "Synthetic Soirées and Human Happenings"
+    },
+    {
         "stimuli": "stimuli/sentience.json",
         "description": "Is AI Alive? Exploring the Boundaries of Sentience"
+    },
+    {
+        "stimuli": "stimuli/egotoxin.json",
+        "description": "The Egotoxin: A Poisonous Cocktail of Self-Deception"
     },
     {
         "stimuli": "stimuli/openended-fr.json",

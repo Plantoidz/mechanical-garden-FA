@@ -24,6 +24,10 @@ def convert_to_single_line_json(input_file_path, output_file_path):
         file.write(json_encoded_content)
 
 # Example usage
-input_path = os.getcwd()+'/config/files/plantoid_context.txt'
-output_path = os.getcwd()+'/config/files/plantoid_context_single_line.txt'
+input_path = os.getcwd()+'/config/files/conversation/contexts/millipedes_context.txt'
+output_path = os.getcwd()+'/config/files/conversation/contexts/millipedes_context_single_line.txt'
+
+input_path = os.getcwd()+'/config/files/characters/contexts/scarab_minister_context.txt'
+output_path = os.getcwd()+'/config/files/characters/contexts/scarab_minister_context_single_line.txt'
+
 convert_to_single_line_json(input_path, output_path)

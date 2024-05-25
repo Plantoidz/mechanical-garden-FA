@@ -8,6 +8,7 @@ import os
 from datetime import datetime
 from playsound import playsound
 from plantoid_agents.events.speak import Speak
+from plantoid_agents.events.think import Think
 
 
 class PlantoidInteraction:
@@ -27,6 +28,33 @@ class PlantoidInteraction:
         self.humanness = 1 # 0.5
         self.agent_interrupted = False
         self.interaction_timestamp = datetime.now()
+        self.speak_intro_enunciation = False
+        self.speaker_enunciates = True
+        # self.interaction_think_module = Think()
+
+    def set_enunciation_by_filtering_message(self, agent, message: str):
+        # print("utterance is: ", message)
+
+        system_message = f"""
+            Here is a message that the user passed in, in angle brackets <<  {message} >>,
+            Check if it contains a string similar to the following in angle brackets:
+            << What is the Millipede? >>
+            Your criteria for similarity should take into account the message is a voice transcription, so grammar, spelling and punctuation may not be accurate.
+            After your evaluation, Return only the string True.
+            Otherwise return only the string False
+        """
+
+        passes_filter = agent.check_for_utterance(system_message, message)
+        print("Passes filter: ", passes_filter, "type: ", type(passes_filter))
+
+        if passes_filter:
+            self.speaker_enunciates = True
+        else:
+            self.speaker_enunciates = False
+
+    def set_speaker_enunciates(self, agent, speaker_enunciates: bool = True):
+        # agent.set_enunciate_speech(speaker_enunciates)
+        self.speaker_enunciates = speaker_enunciates
 
     def set_agent_interrupted(self, agent_interrupted: bool = True):
         self.agent_interrupted = agent_interrupted
@@ -88,7 +116,8 @@ class PlantoidInteraction:
         speaker = self.agents[self.get_first_non_human_idx()]
         # print('speaker name === ', speaker.name)
         # print("INTRO MSG = ", intro_message)
-        speaker.speak(self.agents, intro_message, use_streaming=False)
+        if self.speak_intro_enunciation:
+            speaker.speak(self.agents, intro_message, use_streaming=False)
 
         self.set_speaker_idx(self.get_first_non_human_idx(), idx_type="last")
         self.inject(speaker.name, intro_message)
@@ -97,6 +126,7 @@ class PlantoidInteraction:
 
         print("Doing interaction step: ", self._step)
         print("Agent was interrupted: ", self.agent_interrupted)
+
 
         # 1. choose the next speaker
         speaker_idx = self.select_next_speaker(
@@ -110,6 +140,8 @@ class PlantoidInteraction:
         self.set_speaker_idx(speaker_idx, idx_type="current")
         self.set_agent_interrupted(agent_interrupted=False)
         speaker = self.agents[speaker_idx]
+
+        # self.set_speaker_enunciates(speaker, True)
 
         # print(f"Current speaker index: {self.current_speaker_idx}")
         # print(f"Last speaker index: {self.last_speaker_idx}")
@@ -125,9 +157,12 @@ class PlantoidInteraction:
             # playsound(os.getcwd() + "/media/cleanse.mp3", block=False)
 
             message = speaker.listen_for_speech(self.agents, self._step)
+            self.set_enunciation_by_filtering_message(speaker, message)
             self.log_conversation(speaker, message)
 
         else:
+
+            speaker.set_enunciate_speech(self.speaker_enunciates)
 
             # 2. next speaker sends message
             message = speaker.send()

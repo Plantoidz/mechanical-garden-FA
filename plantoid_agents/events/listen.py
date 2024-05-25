@@ -65,9 +65,9 @@ class Listen:
 
     def __init__(
         self,
-        timeout: int = 15,
+        timeout: int = 10,
         silence_limit: int = 1,
-        threshold: int = 500,
+        threshold: int = 50,
         record_seconds: int = 2,
         rate: int = 16000,
         chunk: int = 512,
@@ -97,6 +97,7 @@ class Listen:
             
         # get the path to the speech indicator sound
         speech_indicator_path = os.getcwd()+"/media/beep_start.wav"
+
         playsound(speech_indicator_path, block=False)
 
         # mixer.init()

@@ -417,6 +417,7 @@ class Speak:
         response: str,
         voice_id: str,
         channel_id: str,
+        enunciate_speech: bool = True,
         bg_callback: Any = None,
         voice_set_callback: Any = None,
         interruption_callback: Any = None,
@@ -433,32 +434,33 @@ class Speak:
 
         if(agent.callback): agent.callback("<speaking>")
 
+        if enunciate_speech:
 
-        if clone_voice:
+            if clone_voice:
 
-            voice = self.clone_voice(
-                create_clone=create_clone,
-                cloned_voice_id=voice_id,
-                voice_set_callback=voice_set_callback,
-            )
+                voice = self.clone_voice(
+                    create_clone=create_clone,
+                    cloned_voice_id=voice_id,
+                    voice_set_callback=voice_set_callback,
+                )
 
-            self.stream_audio_response(
-                agent,
-                response,
-                voice,
-                channel_id,
-                bg_callback=bg_callback,
-                interruption_callback=interruption_callback,
-                use_streaming=use_streaming,
-            )
+                self.stream_audio_response(
+                    agent,
+                    response,
+                    voice,
+                    channel_id,
+                    bg_callback=bg_callback,
+                    interruption_callback=interruption_callback,
+                    use_streaming=use_streaming,
+                )
 
-        else:
-            self.stream_audio_response(
-                agent,
-                response,
-                voice_id,
-                channel_id,
-                bg_callback=bg_callback,
-                interruption_callback=interruption_callback,
-                use_streaming=use_streaming,
-            )
+            else:
+                self.stream_audio_response(
+                    agent,
+                    response,
+                    voice_id,
+                    channel_id,
+                    bg_callback=bg_callback,
+                    interruption_callback=interruption_callback,
+                    use_streaming=use_streaming,
+                )
