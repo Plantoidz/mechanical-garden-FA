@@ -1,5 +1,5 @@
 from typing import Callable, List, Union, Any
-from langchain.prompts import PromptTemplate
+from multiprocessing import Queue
 from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
 
 class PlantoidDebateAgent(PlantoidDialogueAgent):
@@ -7,8 +7,10 @@ class PlantoidDebateAgent(PlantoidDialogueAgent):
         self,
         name: str,
         is_human: bool,
+        speech_queue: Queue,
+        listen_queue: Queue,
         system_message: str,
-        bidding_template: PromptTemplate,
+        bidding_template: str,
         # model: Any, #Union[ChatOpenAI, ChatHuggingFace],
         eleven_voice_id: str,
         channel_id: str,
@@ -16,7 +18,7 @@ class PlantoidDebateAgent(PlantoidDialogueAgent):
         addr: str,
         esp_id: str,
     ) -> None:
-        super().__init__(name, is_human, system_message, eleven_voice_id, channel_id, io, addr, esp_id)
+        super().__init__(name, is_human, speech_queue, listen_queue, system_message, eleven_voice_id, channel_id, io, addr, esp_id)
         self.bidding_template = bidding_template
 
     def bid(self) -> str:

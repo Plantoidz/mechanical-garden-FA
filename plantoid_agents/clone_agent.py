@@ -1,5 +1,5 @@
 from typing import Callable, List, Union, Any
-
+from multiprocessing import Queue
 from langchain.prompts import PromptTemplate
 from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
 
@@ -8,6 +8,8 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
         self,
         name: str,
         is_human: bool,
+        speech_queue: Queue,
+        listen_queue: Queue,
         system_message: str,
         bidding_template: PromptTemplate,
         # model: Any, # Union[ChatOpenAI, ChatHuggingFace],
@@ -17,7 +19,7 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
         addr: str,
         esp_id: str,
     ) -> None:
-        super().__init__(name, is_human, system_message, eleven_voice_id, channel_id, io, addr, esp_id)
+        super().__init__(name, is_human, speech_queue, listen_queue, system_message, eleven_voice_id, channel_id, io, addr, esp_id)
         self.bidding_template = bidding_template
         self.clone_voice = True
         self.create_clone = True

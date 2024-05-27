@@ -17,9 +17,9 @@ from utils.config_util import read_services_config
 from plantoid_agents.lib.MultichannelRouter import (
     magicstream,
     magicstream_MPV,
-    magicstream_websocket,
     setup_magicstream
 )
+from plantoid_agents.lib.esp32_comms import magicstream_websocket
 # from plantoid_agents.lib.esp32_comms import XYZ
 from plantoid_agents.events.listen import Listen
 
@@ -328,28 +328,9 @@ class Speak:
                     # # print("Runtime effect: ", runtime_effect)
                     # playsound(runtime_effect, block=False)
 
-    # def select_random_runtime_effect(self, voice_id):
-    #     """
-    #     Selects a random file from the specified directory.
-    #     """
-    #     directory = os.getcwd() + "/media/runtime_effects"
-    #     prefix = f"{voice_id}_"
-        
-    #     # List all files that start with the given voice ID
-    #     files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f)) and f.startswith(prefix)]
-        
-    #     # Check if there are any matching files
-    #     if not files:
-    #         return None  # Return None or raise an Exception if no matching files are found
-
-    #     # Randomly select a file
-    #     random_file = random.choice(files)
-    #     return os.path.join(directory, random_file)
-
     def delegate_audio_playback_esp32():
         # esp32_comms.XYZ()
         pass
-
 
     def stream_audio_response(
         self,
@@ -360,22 +341,19 @@ class Speak:
         bg_callback: Any = None,
         interruption_callback: Any = None,
         # use_multichannel: bool = False,
-        use_streaming: bool = True,
+        use_streaming: bool = False,
     ) -> None:
+        
+        print("IN stream_audio_response: ", self.use_websockets, use_streaming)
 
         stop_event = threading.Event()
         audio_detected_event = threading.Event()
 
-        # trigger_thread = threading.Thread(
-        #     target=self.trigger_stop_event,
-        #     args=(use_streaming, stop_event, interruption_callback)
-        # )
         shadow_listener_thread = threading.Thread(
             target=self.shadow_listener,
             args=(agent, use_streaming, stop_event, audio_detected_event, interruption_callback)
         )
         shadow_listener_thread.start()
-        # trigger_thread.start()
 
         try:
 
@@ -393,9 +371,6 @@ class Speak:
                 if bg_callback is not None:
                     bg_callback()
 
-                # if something:
-                #     delegate_audio_playback_esp32()
-                    
                 if self.use_multichannel:
                     print("\033[90mstreaming on channel",channel_id,"\033[0m\n")
 
@@ -407,10 +382,8 @@ class Speak:
                         magicstream(audio_stream, channel_id, stop_event)
 
                 elif self.use_websockets:
-                    print("agent socket is", agent.socket)
-                    # TODO: before calling this check if the agent socket exists,
-                    # if not send a fallback (ie next available socket)
-                    magicstream_websocket(audio_stream, agent.socket)
+                    print("agent speech_queue is", agent.speech_queue)
+                    magicstream_websocket(audio_stream, agent.speech_queue)
 
                 else:
                     stream(audio_stream)
@@ -429,7 +402,6 @@ class Speak:
             stop_event.set()
             audio_detected_event.set()
             shadow_listener_thread.join()
-            # trigger_thread.join()  # Ensure the interrupt thread is cleaned up properly
 
     def speak(
         self,

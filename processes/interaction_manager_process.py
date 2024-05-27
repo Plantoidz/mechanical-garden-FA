@@ -1,8 +1,8 @@
 from context.interaction_manager import InteractionManager
 
-def run():
+def run(queues):
     # Instantiate the InteractionManager
-    interaction_manager = InteractionManager()
+    interaction_manager = InteractionManager(queues)
 
     try:
         while True:

@@ -19,9 +19,9 @@ import context.speaker_selection as speaker_selection # TODO: roll this into con
 import random
 
 class InteractionManager:
-    def __init__(self):
-        pass
-        # self.llm = llm  # Language Learning Model or any contextually relevant model
+    def __init__(self, queues: Dict[str, Any]):
+        self.speech_queue = queues["speech"]
+        self.listen_queue = queues["listen"]
 
     def get_selection_function(self, selection_function: str) -> any:
         """
@@ -219,6 +219,8 @@ class InteractionManager:
     def generate_character_context(
         self,
         characters: Dict[str, List[Dict[str, Any]]],
+        speech_queue: Any,
+        listen_queue: Any,
         plantoid_agent: Type,
         bidding_function: any,
         interaction_mode_name: str,
@@ -255,6 +257,8 @@ class InteractionManager:
             character_object = plantoid_agent(
                 name=character_name,
                 is_human=character_is_human,
+                speech_queue=speech_queue,
+                listen_queue=listen_queue,
                 system_message=system_message, 
                 # model=self.llm,
                 bidding_template=bidding_template,
@@ -316,6 +320,8 @@ class InteractionManager:
 
         character_context = self.generate_character_context(
             characters,
+            self.speech_queue,
+            self.listen_queue,
             plantoid_agent,
             bidding_function,
             interaction_mode.mode_name,

@@ -1,6 +1,6 @@
 
 import os
-from multiprocessing import Process
+from multiprocessing import Queue, get_context, Process, Event, current_process
 
 import utils.config_util as config_util
 from plantoid_agents.lib.MultichannelRouter import setup_magicstream
@@ -11,14 +11,19 @@ import processes.websocket_server_process as websocket_server_process
 def run_program():
     print("\n\033[94mHello Mechanical Garden!\033[0m")
     
-    setup_magicstream()
+    # setup_magicstream()
+
+    queues = {
+        "speech": Queue(),
+        "listen": Queue(),
+    }
 
     # Start the WebSocket server in a separate process
-    websocket_process = Process(target=websocket_server_process.run)
+    websocket_process = Process(target=websocket_server_process.run, args=(queues,))
     websocket_process.start()
 
     # Start the InteractionManager in a separate process
-    interaction_process = Process(target=interaction_manager_process.run)
+    interaction_process = Process(target=interaction_manager_process.run, args=(queues,))
     interaction_process.start()
 
     try:

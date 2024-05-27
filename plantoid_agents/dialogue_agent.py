@@ -1,4 +1,5 @@
 from typing import Callable, List, Union
+from multiprocessing import Queue, get_context
 
 import socket
 
@@ -24,6 +25,8 @@ class PlantoidDialogueAgent:
         self,
         name: str,
         is_human: bool,
+        speech_queue: Queue,
+        listen_queue: Queue,
         system_message: str,
         # model: Union[ChatOpenAI, ChatHuggingFace],
         eleven_voice_id: str,
@@ -32,6 +35,11 @@ class PlantoidDialogueAgent:
         addr: str,
         esp_id: str,
     ) -> None:
+        # self.ctx = get_context('spawn')
+        # self.speech_queue = self.ctx.Queue()
+        # self.listen_queue = self.ctx.Queue()
+        self.speech_queue = speech_queue
+        self.listen_queue = listen_queue
         self.name = name
         self.is_human = is_human
         self.system_message = system_message
