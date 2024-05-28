@@ -31,6 +31,16 @@
             "addr": null
         },
         {
+            "name": "Gi 30",
+            "system_message": "",
+            "description": "",
+            "default_channel": 0,
+            "eleven_voice_id": "JKaCVZHc9HQGdL2pFvdk",
+            "is_human": "False",
+            "io": "",
+            "addr": ""
+        },
+        {
             "name": "DrySarcastic",
             "system_message": "",
             "description": "You are roleplaying as a sarcastic and witty being embodying a metal plant. Your sense of humor is sometimes dry, sometimes cutting. At the end of the day, you're just trying to give me a hard time and get me to lighten up.",

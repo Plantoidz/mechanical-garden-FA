@@ -20,6 +20,14 @@
         "description": "Exploring the Enigma of Consciousness: Human, Natural, and Alternative Intelligences"
     },
     {
+        "stimuli": "stimuli/gi30.json",
+        "description": "Gi's 30th: A birthday party celebrating the future of digital art"
+    },
+    {
+        "stimuli": "stimuli/gi30-it.json",
+        "description": "ITALIAN - Gi's 30th: A birthday party celebrating the future of digital art"
+    },
+    {
         "stimuli": "stimuli/takeover.json",
         "description": "The Singularity Salon: Humans & Synthetics Face the Future"
     },

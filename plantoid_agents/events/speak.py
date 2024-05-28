@@ -27,11 +27,13 @@ from utils.util import str_to_bool
 from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(override=True)
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 ELEVENLABS_API_KEY = os.environ.get("ELEVENLABS_API_KEY")
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
+
+print("Eleven API KEY", ELEVENLABS_API_KEY)
 
 client = ElevenLabs(
   api_key=ELEVENLABS_API_KEY
