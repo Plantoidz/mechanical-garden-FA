@@ -119,11 +119,13 @@ async def transcribe_audio(websocket, path):
         audio.terminate()
         unregister_esp(esp_id)
 
-async def send_stream_to_websocket(websocket, path, queue):
+async def send_stream_to_websocket(websocket, path, queue, speech_event):
 
     esp_id = await websocket.recv()
     logging.info(f"Welcome to {esp_id}")
     register_esp(esp_id, websocket)
+
+    await websocket.send("START_PLAYBACK")
     
     loop = asyncio.get_event_loop()
     try:
@@ -133,6 +135,11 @@ async def send_stream_to_websocket(websocket, path, queue):
                 break
             await websocket.send(chunk)
             logging.info(f"Sent audio stream chunk of size: {len(chunk)} bytes")
+
+        # Wait for the client's playback termination message
+        termination_message = await websocket.recv()
+        if termination_message == "PLAYBACK_COMPLETE":  # Adjust this condition as needed
+            speech_event.set()
 
     except Exception as e:
         logging.error(f"An error occurred while sending audio stream: {e}")
@@ -166,16 +173,19 @@ async def switch_modes():
         await ws.send(str(MODE))
         await asyncio.sleep(7) #NOTE: mock
 
-def run_websocket_server(queues):
+def run_websocket_server(queues, events):
     logging.info("Starting server")
     loop = asyncio.get_event_loop()
     
     speech_queue = queues["speech"]
     listen_queue = queues["listen"]
 
+    speech_event = events["speech"]
+    listen_event = events["listen"]
+
     if speech_queue is not None:
 
-        serve_stream = websockets.serve(lambda ws, path: send_stream_to_websocket(ws, path, speech_queue), '', STREAM_PORT, ping_interval=None)
+        serve_stream = websockets.serve(lambda ws, path: send_stream_to_websocket(ws, path, speech_queue, speech_event), '', STREAM_PORT, ping_interval=None)
         loop.run_until_complete(serve_stream)
 
     if listen_queue is not None:

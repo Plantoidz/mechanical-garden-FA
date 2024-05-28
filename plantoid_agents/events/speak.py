@@ -344,8 +344,6 @@ class Speak:
         use_streaming: bool = False,
     ) -> None:
         
-        print("IN stream_audio_response: ", self.use_websockets, use_streaming)
-
         stop_event = threading.Event()
         audio_detected_event = threading.Event()
 
@@ -383,7 +381,7 @@ class Speak:
 
                 elif self.use_websockets:
                     print("agent speech_queue is", agent.speech_queue)
-                    magicstream_websocket(audio_stream, agent.speech_queue)
+                    magicstream_websocket(audio_stream, agent.speech_queue, agent.speech_event)
 
                 else:
                     stream(audio_stream)

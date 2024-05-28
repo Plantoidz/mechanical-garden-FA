@@ -1,5 +1,5 @@
 from typing import Callable, List, Union, Any
-from multiprocessing import Queue
+from multiprocessing import Queue, Event
 from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
 
 class PlantoidDebateAgent(PlantoidDialogueAgent):
@@ -9,6 +9,8 @@ class PlantoidDebateAgent(PlantoidDialogueAgent):
         is_human: bool,
         speech_queue: Queue,
         listen_queue: Queue,
+        speech_event: Event,
+        listen_event: Event,
         system_message: str,
         bidding_template: str,
         # model: Any, #Union[ChatOpenAI, ChatHuggingFace],
@@ -18,7 +20,20 @@ class PlantoidDebateAgent(PlantoidDialogueAgent):
         addr: str,
         esp_id: str,
     ) -> None:
-        super().__init__(name, is_human, speech_queue, listen_queue, system_message, eleven_voice_id, channel_id, io, addr, esp_id)
+        super().__init__(
+            name,
+            is_human,
+            speech_queue,
+            listen_queue,
+            speech_event,
+            listen_event, 
+            system_message,
+            eleven_voice_id,
+            channel_id,
+            io,
+            addr,
+            esp_id,
+        )
         self.bidding_template = bidding_template
 
     def bid(self) -> str:

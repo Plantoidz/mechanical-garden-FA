@@ -1,9 +1,14 @@
-from multiprocessing import Queue
+from multiprocessing import Queue, Event
 from typing import Iterator
 import logging
 import asyncio
 
-def magicstream_websocket(audio_stream: Iterator[bytes], speech_queue: Queue):
+def magicstream_websocket(
+    audio_stream: Iterator[bytes],
+    speech_queue: Queue,
+    speech_event: Event,
+    timeout: int = 30,
+):
 
     # ws = websocket.WebSocket()
 
@@ -23,6 +28,16 @@ def magicstream_websocket(audio_stream: Iterator[bytes], speech_queue: Queue):
 
         # Signal the end of the stream
         loop.run_in_executor(None, speech_queue.put_nowait, None)
+
+        # Wait for the playback termination message
+        logging.info("Waiting for playback termination message from client.")
+
+        if speech_event.wait(timeout):
+            logging.info("Playback termination message received.")
+        else:
+            logging.warning(f"No playback termination message received within {timeout} seconds.")
+
+        logging.info("Playback termination message received.")
 
     except Exception as e:
         print(f"An error occurred while queuing audio stream: {e}")

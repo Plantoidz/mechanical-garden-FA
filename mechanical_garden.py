@@ -18,12 +18,17 @@ def run_program():
         "listen": Queue(),
     }
 
+    events = {
+        "speech": Event(),
+        "listen": Event(),
+    }
+
     # Start the WebSocket server in a separate process
-    websocket_process = Process(target=websocket_server_process.run, args=(queues,))
+    websocket_process = Process(target=websocket_server_process.run, args=(queues, events))
     websocket_process.start()
 
     # Start the InteractionManager in a separate process
-    interaction_process = Process(target=interaction_manager_process.run, args=(queues,))
+    interaction_process = Process(target=interaction_manager_process.run, args=(queues, events))
     interaction_process.start()
 
     try:
