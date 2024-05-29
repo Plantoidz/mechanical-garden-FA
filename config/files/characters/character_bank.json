@@ -34,5 +34,9 @@
     {
         "stimuli": "gi30.json",
         "description": "Gi 30, for his birthday."
+    },
+    {
+        "stimuli": "crosslucid.json",
+        "description": "Catfishdogtoid - oceanic hypersition"
     }
 ]

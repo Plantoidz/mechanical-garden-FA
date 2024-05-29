@@ -1,4 +1,4 @@
-from deepgram import DeepgramClient, LiveTranscriptionEvents, LiveOptions, Microphone
+from deepgram import DeepgramClient, DeepgramClientOptions, LiveTranscriptionEvents, LiveOptions, Microphone
 from dotenv import load_dotenv
 import logging, verboselogs
 import time
@@ -8,6 +8,10 @@ from ctypes import *
 from contextlib import contextmanager
 import os
 import sys
+
+load_dotenv(override=True)
+
+DEEPGRAM_API_KEY = os.getenv("DEEPGRAM_API_KEY")
 
 # sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -29,7 +33,12 @@ def ignoreStderr():
 
 class DeepgramTranscription:
     def __init__(self, sample_rate: int = 48000, device_index: int = None, channels: int = 1, timeout: int = 5, callback=None):
-        self.deepgram = DeepgramClient()
+
+        config = DeepgramClientOptions(
+            options={"keepalive": "true"} # Comment this out to see the effect of not using keepalive
+        )
+                
+        self.deepgram = DeepgramClient(DEEPGRAM_API_KEY, config)
         self.is_finals = []
         self.final_result = ""
         self.transcription_complete = False  # New flag for completion

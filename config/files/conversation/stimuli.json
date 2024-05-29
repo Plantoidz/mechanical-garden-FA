@@ -20,6 +20,10 @@
         "description": "Exploring the Enigma of Consciousness: Human, Natural, and Alternative Intelligences"
     },
     {
+        "stimuli": "stimuli/crosslucid.json",
+        "description": "Crosslucid and the oceans: an exploration of lifeforms for oecanic preservation"
+    },
+    {
         "stimuli": "stimuli/gi30.json",
         "description": "Gi's 30th: A birthday party celebrating the future of digital art"
     },
