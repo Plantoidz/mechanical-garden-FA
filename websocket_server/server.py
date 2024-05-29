@@ -136,6 +136,8 @@ async def send_stream_to_websocket(websocket, path, queue, speech_event):
             await websocket.send(chunk)
             logging.info(f"Sent audio stream chunk of size: {len(chunk)} bytes")
 
+        await websocket.send("END_STREAM")
+
         # Wait for the client's playback termination message
         termination_message = await websocket.recv()
         if termination_message == "PLAYBACK_COMPLETE":  # Adjust this condition as needed
