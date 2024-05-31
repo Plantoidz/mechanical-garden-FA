@@ -7,7 +7,7 @@ def magicstream_websocket(
     audio_stream: Iterator[bytes],
     speech_queue: Queue,
     speech_event: Event,
-    timeout: int = 30,
+    timeout: int = 300,
 ):
 
     # ws = websocket.WebSocket()

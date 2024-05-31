@@ -141,7 +141,10 @@ async def send_stream_to_websocket(websocket, path, queue, speech_event):
         # Wait for the client's playback termination message
         termination_message = await websocket.recv()
         if termination_message == "PLAYBACK_COMPLETE":  # Adjust this condition as needed
+            logging.info("Received playback termination message from client")
             speech_event.set()
+            # Reset the event for the next session
+            speech_event.clear()
 
     except Exception as e:
         logging.error(f"An error occurred while sending audio stream: {e}")
