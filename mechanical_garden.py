@@ -1,6 +1,6 @@
 
 import os
-from multiprocessing import Queue, get_context, Process, Event, current_process
+from multiprocessing import Queue, get_context, Process, Event, current_process, Manager
 
 import utils.config_util as config_util
 from plantoid_agents.lib.MultichannelRouter import setup_magicstream
@@ -11,11 +11,10 @@ import processes.websocket_server_process as websocket_server_process
 def run_program():
     print("\n\033[94mHello Mechanical Garden!\033[0m")
     
-    # setup_magicstream()
-
     queues = {
         "speech": Queue(),
         "listen": Queue(),
+        "esp_ws": Queue(),
     }
 
     events = {

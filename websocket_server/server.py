@@ -29,7 +29,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 CHUNK_SIZE = 1024
 INIT = 0
 FILE = "test.wav"
-agents = []  # where all agents encountered so far are stored
+# agents = []  # where all agents encountered so far are stored
 
 model = WhisperModel("small", compute_type="auto", device="cpu")
 audio = pyaudio.PyAudio()
@@ -46,6 +46,19 @@ client = ElevenLabs(
 )
 
 voice_id  = "K5W90fMZclFpp7zIpkCc"
+
+
+def register_esp(esp_id, ws, esp_ws_queue):
+
+    esp_ws_queue.put(esp_id)
+    logging.info(f"Registering ESP id: {esp_id} with socket: {ws}")
+
+def unregister_esp(esp_id, esp_ws_queue):
+    logging.info(f"Unregistering ESP id: {esp_id}")
+    # for i, a in enumerate(agents):
+    #     if a["id"] == esp:
+    #         agents.pop(i)
+    #         break
 
 async def save_and_transcribe(audio_data):
     timestamp = time.strftime("%Y-%m-%dT%H-%M-%S", time.gmtime())
@@ -67,42 +80,15 @@ async def save_and_transcribe(audio_data):
     for segment in segments:
         logging.info("[%.2fs -> %.2fs] %s" % (segment.start, segment.end, segment.text))
 
-def register_esp(esp, ws):
-    logging.info(f"Registering agent id: {esp} with socket: {ws}")
-    agents.append({"id": esp, "ws": ws})
-
-def unregister_esp(esp):
-    logging.info(f"Unregistering ESP {esp}")
-    for i, a in enumerate(agents):
-        if a["id"] == esp:
-            agents.pop(i)
-            break
-
-# def read_wav(wf):
-#     CHUNK = 1024
-#     data = wf.readframes(CHUNK)
-#     while data:
-#         yield data
-#         data = wf.readframes(CHUNK)
-
-# async def server_audio(ws, path):
-#     wf = wave.open(FILE, 'rb')
-#     generator = read_wav(wf)
-#     try:
-#         for data in generator:
-#             await ws.send(data)
-#     finally:
-#         wf.close()
-
-async def transcribe_audio(websocket, path):
+async def transcribe_audio(websocket, path, esp_ws_queue, listen_queue, listen_event):
     global INIT
     esp_id = await websocket.recv()
-    logging.info(f"Welcome to {esp_id}")
-    register_esp(esp_id, websocket)
+    logging.info(f"Found ESP with id: {esp_id}")
+    register_esp(esp_id, websocket, esp_ws_queue)
 
     if not INIT:
         logging.info("INIT is unset, starting switch modes task.")
-        asyncio.create_task(switch_modes())
+        asyncio.create_task(switch_modes(None))
         INIT = 1
 
     audio_data = bytearray()
@@ -117,20 +103,20 @@ async def transcribe_audio(websocket, path):
         stream.stop_stream()
         stream.close()
         audio.terminate()
-        unregister_esp(esp_id)
+        unregister_esp(esp_id, esp_ws_queue)
 
-async def send_stream_to_websocket(websocket, path, queue, speech_event):
+async def send_stream_to_websocket(websocket, path, esp_ws_queue, speech_queue, speech_event):
 
     esp_id = await websocket.recv()
     logging.info(f"Welcome to {esp_id}")
-    register_esp(esp_id, websocket)
+    register_esp(esp_id, websocket, esp_ws_queue)
 
     await websocket.send("START_PLAYBACK")
     
     loop = asyncio.get_event_loop()
     try:
         while True:
-            chunk = await loop.run_in_executor(None, queue.get)
+            chunk = await loop.run_in_executor(None, speech_queue.get)
             if chunk is None:
                 break
             await websocket.send(chunk)
@@ -149,7 +135,7 @@ async def send_stream_to_websocket(websocket, path, queue, speech_event):
     except Exception as e:
         logging.error(f"An error occurred while sending audio stream: {e}")
 
-async def switch_modes():
+async def switch_modes(agents):
     global FILE
     logging.info("Switch mode activated")
 
@@ -179,22 +165,28 @@ async def switch_modes():
         await asyncio.sleep(7) #NOTE: mock
 
 def run_websocket_server(queues, events):
+    
     logging.info("Starting server")
     loop = asyncio.get_event_loop()
     
     speech_queue = queues["speech"]
     listen_queue = queues["listen"]
+    esp_ws_queue = queues["esp_ws"]
 
     speech_event = events["speech"]
     listen_event = events["listen"]
 
     if speech_queue is not None:
 
-        serve_stream = websockets.serve(lambda ws, path: send_stream_to_websocket(ws, path, speech_queue, speech_event), '', STREAM_PORT, ping_interval=None)
-        loop.run_until_complete(serve_stream)
+        speech_stream = websockets.serve(lambda ws, path: send_stream_to_websocket(ws, path, esp_ws_queue, speech_queue, speech_event), '', STREAM_PORT, ping_interval=None)
+        loop.run_until_complete(speech_stream)
 
     if listen_queue is not None:
-        loop.run_until_complete(websockets.serve(transcribe_audio, '', TRANSCRIBE_PORT, ping_interval=None))
+
+        listen_stream = websockets.serve(lambda ws, path: transcribe_audio(ws, path, esp_ws_queue, listen_queue, listen_event), '', TRANSCRIBE_PORT, ping_interval=None)
+        loop.run_until_complete(listen_stream)
+    
+        # loop.run_until_complete(websockets.serve(transcribe_audio, '', TRANSCRIBE_PORT, ping_interval=None))
         # loop.run_until_complete(websockets.serve(send_stream_to_websocket, '', STREAM_PORT, ping_interval=None))
     loop.run_forever()
 

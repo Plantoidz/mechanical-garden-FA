@@ -11,6 +11,8 @@ from plantoid_agents.lib.text_content import *
 
 # TEMP
 from litellm.utils import CustomStreamWrapper
+import threading
+import time
 
 PURPLE = '\033[94m'
 BLUE = '\033[34m'
@@ -27,6 +29,7 @@ class PlantoidDialogueAgent:
         is_human: bool,
         speech_queue: Queue,
         listen_queue: Queue,
+        esp_ws_queue: Queue,
         speech_event: Event,
         listen_event: Event, 
         system_message: str,
@@ -42,6 +45,7 @@ class PlantoidDialogueAgent:
         # self.listen_queue = self.ctx.Queue()
         self.speech_queue = speech_queue
         self.listen_queue = listen_queue
+        self.esp_ws_queue = esp_ws_queue
         self.speech_event = speech_event
         self.listen_event = listen_event
         self.name = name
@@ -78,6 +82,10 @@ class PlantoidDialogueAgent:
         # self.use_model_type = "litellm"
         self.use_streaming = True
 
+        # Start a thread to check the queue for matching esp_id
+        self.register_esp_thread = threading.Thread(target=self.associate_esp_websocket)
+        self.register_esp_thread.start()
+
 
     def tunnel_wifi(self, val):
     #     if(not self.tunnel):
@@ -98,8 +106,20 @@ class PlantoidDialogueAgent:
     def tunnel_serial(self, val):
         return ## TODO, activate the serial communication
     
-    def associate_esp_websocket(self, ws):
-        self.socket = ws
+    def associate_esp_websocket(self):
+        # self.socket = ws
+        print("ASSOCIATE ESP WEBSOCKET")
+        while True:
+            esp_id = self.esp_ws_queue.get()
+            print(f"Agent {self.name} found matching ESP ID: {esp_id}")
+            time.sleep(1)
+            # esp_id, ws = self.esp_ws_queue.get()
+            # if esp_id == self.channel_id:
+            #     print(f"Agent {self.name} found matching ESP ID: {esp_id}")
+            #     # Do something with the matching esp_id
+            #     self.socket = ws
+            # time.sleep(1)
+
 
     def get_voice_id(self) -> str:
 

@@ -11,3 +11,6 @@ pip install pyaudio
 pip install -r requirements.txt
 
 //claude-3-opus-20240229
+
+Agents should have a thread that reads a multiprocessing queue where the server populates it by registering the found ESP id in the queue,
+the agent thread then checks if it matches its own agent id

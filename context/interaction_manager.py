@@ -22,9 +22,11 @@ class InteractionManager:
     def __init__(self, queues: Dict[str, Any], events: Dict[str, Any]):
         self.speech_queue = queues["speech"]
         self.listen_queue = queues["listen"]
+        self.esp_ws_queue = queues["esp_ws"]
 
         self.speech_event = events["speech"]
         self.listen_event = events["listen"]
+
 
     def get_selection_function(self, selection_function: str) -> any:
         """
@@ -224,6 +226,7 @@ class InteractionManager:
         characters: Dict[str, List[Dict[str, Any]]],
         speech_queue: Any,
         listen_queue: Any,
+        esp_ws_queue: Any,
         speech_event: Any,
         listen_event: Any,
         plantoid_agent: Type,
@@ -235,7 +238,7 @@ class InteractionManager:
         """
         Generates context for each character based on the configurations.
         """
-        character_objects = []
+        character_agents = []
 
         # print(characters)
 
@@ -259,11 +262,12 @@ class InteractionManager:
 
             bidding_template = bidding_function(character_description)
 
-            character_object = plantoid_agent(
+            character_agent = plantoid_agent(
                 name=character_name,
                 is_human=character_is_human,
                 speech_queue=speech_queue,
                 listen_queue=listen_queue,
+                esp_ws_queue=esp_ws_queue,
                 speech_event=speech_event,
                 listen_event=listen_event,
                 system_message=system_message, 
@@ -276,9 +280,14 @@ class InteractionManager:
                 esp_id = character_esp_id,
             )
 
-            character_objects.append(character_object)
+            character_agents.append(character_agent)
+            # self.mp_agents.put(character_agent)
 
-        return character_objects
+            # while not self.mp_agents.empty():
+            #     print("AAAAAAAAAA")
+            #     print(self.mp_agents.get())
+
+        return character_agents
 
     def start_interaction(
         self,
@@ -329,6 +338,7 @@ class InteractionManager:
             characters,
             self.speech_queue,
             self.listen_queue,
+            self.esp_ws_queue,
             self.speech_event,
             self.listen_event,
             plantoid_agent,
