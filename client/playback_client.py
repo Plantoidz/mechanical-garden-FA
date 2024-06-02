@@ -4,6 +4,7 @@ import logging
 import subprocess
 import threading
 import time
+import argparse
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -19,16 +20,25 @@ STREAM_END_MESSAGE = "END_STREAM"
 ESTIMATED_BIT_RATE = int(16 * 1024)
 CORRECTION_FACTOR = 0.85
 
-async def receive_and_play_audio(websocket, start_event, end_event):
+async def receive_and_play_audio(websocket, start_event, end_event, esp_id):
     while True:
-        await websocket.send("1")
-        logging.info("Sent initial message '1' to WebSocket server")
+        await websocket.send(str(esp_id))
+        logging.info(f"Sent initial message '{esp_id}' to WebSocket server")
 
         # Wait for playback start trigger from server
         while True:
             message = await websocket.recv()
-            if message == PLAYBACK_START_TRIGGER_MESSAGE:
-                logging.info("Received playback start trigger message from server")
+            logging.info(f"Received message from server: {message}")
+
+            if message == STREAM_END_MESSAGE:
+                logging.info("Received end of stream message from server")
+                end_event.set()
+                break
+
+            start_msg = message.split(":")[0]
+            agent_esp_id = int(message.split(":")[1])
+            if start_msg == PLAYBACK_START_TRIGGER_MESSAGE and agent_esp_id == esp_id:
+                logging.info(f"Received playback start trigger message from server for ESP ID: {esp_id}")
                 start_event.set()
                 break
 
@@ -50,7 +60,7 @@ async def receive_and_play_audio(websocket, start_event, end_event):
                 total_size += chunk_size
                 last_chunk_time = time.time()
 
-                logging.info(f"Received message of size: {chunk_size} bytes")
+                logging.info(f"Received message of size: {chunk_size} bytes for esp id {esp_id}")
 
                 try:
                     mpv_process.stdin.write(message)
@@ -95,7 +105,7 @@ async def receive_and_play_audio(websocket, start_event, end_event):
             logging.info(f"WebSocket connection closed with code {e.code}: {e.reason}")
             break
 
-async def main():
+async def main(esp_id):
     uri = f"ws://localhost:{PORT}"
     while True:
         try:
@@ -104,14 +114,18 @@ async def main():
                 end_event = threading.Event()
 
                 # Handle receiving and playing audio in the main thread
-                await receive_and_play_audio(websocket, start_event, end_event)
+                await receive_and_play_audio(websocket, start_event, end_event, esp_id)
 
         except websockets.ConnectionClosed as e:
             logging.error(f"WebSocket connection closed, reconnecting in 2 seconds... {e}")
             await asyncio.sleep(2)
         except Exception as e:
-            logging.error(f"Unexpected error: {e}")
-            break
+            logging.error(f"Unexpected error: {e}, reconnecting in 2 seconds...")
+            await asyncio.sleep(2)
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    parser = argparse.ArgumentParser(description="WebSocket audio player with MPV.")
+    parser.add_argument("--esp_id", type=int, default=None, help="ESP ID to send to the WebSocket server")
+    args = parser.parse_args()
+
+    asyncio.run(main(args.esp_id))

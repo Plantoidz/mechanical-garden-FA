@@ -86,6 +86,8 @@ class PlantoidDialogueAgent:
         self.register_esp_thread = threading.Thread(target=self.associate_esp_websocket)
         self.register_esp_thread.start()
 
+    def set_esp_id(self, esp_id):
+        self.esp_id = esp_id
 
     def tunnel_wifi(self, val):
     #     if(not self.tunnel):
@@ -108,11 +110,14 @@ class PlantoidDialogueAgent:
     
     def associate_esp_websocket(self):
         # self.socket = ws
-        print("ASSOCIATE ESP WEBSOCKET")
+        # print("ASSOCIATE ESP WEBSOCKET", self.channel_id, esp_id, self.channel_id == esp_id)
         while True:
-            esp_id = self.esp_ws_queue.get()
-            print(f"Agent {self.name} found matching ESP ID: {esp_id}")
-            time.sleep(1)
+            esp_id = int(self.esp_ws_queue.get())
+
+            if esp_id == self.channel_id:
+                print(f"Agent {self.name} found matching ESP ID: {esp_id}")
+                self.set_esp_id(esp_id)
+                time.sleep(1)
             # esp_id, ws = self.esp_ws_queue.get()
             # if esp_id == self.channel_id:
             #     print(f"Agent {self.name} found matching ESP ID: {esp_id}")

@@ -8,13 +8,14 @@ def magicstream_websocket(
     speech_queue: Queue,
     speech_event: Event,
     timeout: int = 300,
+    esp_id: int = None,
 ):
 
     # ws = websocket.WebSocket()
 
     # ws.connect(socket_addr)
 
-    logging.info("MAGICSTREAM WEBSOCKET")
+    logging.info(f"MAGICSTREAM WEBSOCKET, ESP ID: {esp_id}")
     # print("audio_stream: ", audio_stream)
     # print("speech_queue: ", speech_queue)
 
@@ -23,11 +24,11 @@ def magicstream_websocket(
         loop = asyncio.get_event_loop()
         for chunk in audio_stream:
             if chunk:
-                loop.run_in_executor(None, speech_queue.put_nowait, chunk)
-                logging.info(f"Queued audio stream chunk of size: {len(chunk)} bytes")
+                loop.run_in_executor(None, speech_queue.put_nowait, (esp_id, chunk))
+                logging.info(f"Queued audio stream chunk of size: {len(chunk)} bytes with ESP ID: {esp_id}")
 
         # Signal the end of the stream
-        loop.run_in_executor(None, speech_queue.put_nowait, None)
+        loop.run_in_executor(None, speech_queue.put_nowait, (esp_id, None))
 
         # Wait for the playback termination message
         logging.info("Waiting for playback termination message from client.")

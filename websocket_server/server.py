@@ -107,20 +107,31 @@ async def transcribe_audio(websocket, path, esp_ws_queue, listen_queue, listen_e
 
 async def send_stream_to_websocket(websocket, path, esp_ws_queue, speech_queue, speech_event):
 
-    esp_id = await websocket.recv()
+    esp_id = int(await websocket.recv())
     logging.info(f"Welcome to {esp_id}")
     register_esp(esp_id, websocket, esp_ws_queue)
 
-    await websocket.send("START_PLAYBACK")
+    await websocket.send(f"START_PLAYBACK: {esp_id}")
     
     loop = asyncio.get_event_loop()
     try:
         while True:
-            chunk = await loop.run_in_executor(None, speech_queue.get)
+            agent_esp_id, chunk = await loop.run_in_executor(None, speech_queue.get)
+
             if chunk is None:
                 break
-            await websocket.send(chunk)
+
+            if agent_esp_id == esp_id:
+                await websocket.send(chunk)
+
+            else:
+                await websocket.send("END_STREAM")
+                break
             logging.info(f"Sent audio stream chunk of size: {len(chunk)} bytes")
+
+            # else:
+            #     logging.info(f"Skipping audio stream chunk for ESP: {agent_esp_id}")
+            #     await websocket.send("END_STREAM")
 
         await websocket.send("END_STREAM")
 

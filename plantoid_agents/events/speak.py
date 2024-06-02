@@ -381,7 +381,7 @@ class Speak:
 
                 elif self.use_websockets:
                     # print("agent speech_queue is", agent.speech_queue)
-                    magicstream_websocket(audio_stream, agent.speech_queue, agent.speech_event)
+                    magicstream_websocket(audio_stream, agent.speech_queue, agent.speech_event, esp_id=agent.esp_id)
 
                 else:
                     stream(audio_stream)
