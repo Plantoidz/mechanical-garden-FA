@@ -362,7 +362,8 @@ class Speak:
                     text=self.stream_text(response),
                     model=self.elevenlabs_model_type,
                     voice=voice_id,
-                    stream=True
+                    stream=True,
+                    output_format="pcm_16000"
                 )
 
                 # stop background music callback

@@ -7,7 +7,7 @@ def magicstream_websocket(
     audio_stream: Iterator[bytes],
     speech_queue: Queue,
     speech_event: Event,
-    timeout: int = 300,
+    timeout: int = 10,
     esp_id: int = None,
 ):
 
@@ -15,7 +15,7 @@ def magicstream_websocket(
 
     # ws.connect(socket_addr)
 
-    logging.info(f"MAGICSTREAM WEBSOCKET, ESP ID: {esp_id}")
+    logging.info(f"MAGICSTREAM WEBSOCKET, AGENT ESP ID: {esp_id}")
     # print("audio_stream: ", audio_stream)
     # print("speech_queue: ", speech_queue)
 
