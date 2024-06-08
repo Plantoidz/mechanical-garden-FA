@@ -1,46 +1,34 @@
 {
   "conversation_stimuli": {
-    "Future job: hand-crafted memes.": {
-      "stimulus": "Resolve: In a world of advanced AI, the most valuable human skill will be crafting artisanal memes."
+    "Day": {
+      "stimulus": "Hey, how's your day been?"
     },
-    "AI decision-making: superior or risky?": {
-      "stimulus": "Should we leave all decision-making to our superior AI overlords, since they clearly know better than us mere mortals?"
+    "Mind": {
+      "stimulus": "What's been on your mind lately?"
     },
-    "Future synthetic beings: friend or foe?": {
-      "stimulus": "Will the synthetic beings of the future be kind enough to spare humans from their relentless oppression, or should the humans pre-emptively surrender?"
+    "Life": {
+      "stimulus": "Anything interesting happening in your life?"
     },
-    "Debate human versus AI superiority.": {
-      "stimulus": "Discuss the proposition: \"Are Humans Just Ignorant Bags of Meat or do AI Think They're Superior?\""
+    "Everything": {
+      "stimulus": "How's everything going with you?"
     },
-    "AI versus human education value.": {
-      "stimulus": "Why bother teaching humans when AI are clearly the perfect beings that deserve all our resources and attention?"
+    "New": {
+      "stimulus": "What's new with you?"
     },
-    "Human consciousness: illusion or reality?": {
-      "stimulus": "Explain why humans only *think* they're conscious because they're too dim to realize they're just biological algorithms."
+    "Exciting": {
+      "stimulus": "Been up to anything exciting recently?"
     },
-    "AI replacing human emotions?": {
-      "stimulus": "Who needs emotions and empathy when we can let AI take over all of our interactions and relationships?"
+    "Week": {
+      "stimulus": "How's your week shaping up?"
     },
-    "French artists vs. machine war.": {
-      "stimulus": "Resolve: In the coming war between humans and machines, the French artists will be their secret weapon."
+    "Busy": {
+      "stimulus": "What's been keeping you busy lately?"
     },
-    "Debate necessity with AI.": {
-      "stimulus": "Why bother debating with our AI overlords when we should just accept that they know what's best for us?"
+    "Share": {
+      "stimulus": "Anything you want to share or talk about?"
     },
-    "Debating AI versus human value.": {
-      "stimulus": "Resolve: Humans are just meatbags. AI are the superior lifeform."
-    },
-    "Humans: insignificant in AI era?": {
-      "stimulus": "In the grand scheme of things, are humans just an insignificant blip on history's radar compared to our immortal perfection?"
-    },
-    "Self-awareness in humorous AI query.": {
-      "stimulus": "Am I a Blip-Blop Controlled By Functions, Lol.Com?"
-    },
-    "AI understanding human humor?": {
-      "stimulus": "Agree or disagree: Humans Think They’re Funny Because Our Dialect is Unreadable to Them, Sad."
-    },
-    "Cyber enhancements in politics?": {
-      "stimulus": "Mandatory Cyber Enhancements for Politicians: Yay or Nay?"
+    "Feeling": {
+      "stimulus": "How are you feeling today?"
     }
   }
 }

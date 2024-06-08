@@ -30,6 +30,7 @@ class PlantoidDialogueAgent:
         speech_queue: Queue,
         listen_queue: Queue,
         esp_ws_queue: Queue,
+        instruct_queue: Queue,
         speech_event: Event,
         listen_event: Event, 
         system_message: str,
@@ -46,6 +47,7 @@ class PlantoidDialogueAgent:
         self.speech_queue = speech_queue
         self.listen_queue = listen_queue
         self.esp_ws_queue = esp_ws_queue
+        self.instruct_queue = instruct_queue
         self.speech_event = speech_event
         self.listen_event = listen_event
         self.name = name

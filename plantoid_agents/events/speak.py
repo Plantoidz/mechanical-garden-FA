@@ -120,6 +120,17 @@ class Speak:
 
             raise Exception("Error: " + str(status) + ": "+ str(message))
         
+        
+    def gather_response(self, response_stream):
+        full_text = ""
+        for chunk in response_stream:
+            if chunk.choices[0].delta and chunk.choices[0].delta.content:
+                delta = chunk.choices[0].delta
+                text_chunk = delta.content
+                full_text += text_chunk
+                print(text_chunk, end='', flush=True)
+        return full_text
+    
     def stream_text(self, response_stream):
 
         if isinstance(response_stream, str):
@@ -134,6 +145,7 @@ class Speak:
 
     def format_response_type(self, response: Any) -> Any:
         return self.stream_text(response) if isinstance(response, types.GeneratorType) else response
+
 
     # def play_background_music(self, loops=-1) -> None:
 
@@ -332,6 +344,12 @@ class Speak:
         # esp32_comms.XYZ()
         pass
 
+
+
+
+
+
+
     def stream_audio_response(
         self,
         agent: Any,
@@ -353,18 +371,37 @@ class Speak:
         )
         shadow_listener_thread.start()
 
+
+
         try:
 
             if use_streaming:
 
                 # generate audio stream   
                 audio_stream = client.generate(
-                    text=self.stream_text(response),
+                    # text=self.stream_text(response),
+                    text=self.gather_response(response),
+                    # text = "hello i'm alive. Number 95",
                     model=self.elevenlabs_model_type,
                     voice=voice_id,
                     stream=True,
                     output_format="pcm_16000"
                 )
+                
+                
+                
+                
+                ###TEST TO SEE IF IT'S A WELL FORMED WAV
+                # p = pyaudio.PyAudio()
+                # stream = p.open(output=True, format = pyaudio.paInt16, channels=1, rate = 16000)
+
+                # for chunk in audio_stream:
+                #     stream.write(chunk)
+                    
+                # stream.stop_stream()
+                # stream.close()
+                # p.terminate()
+
 
                 # stop background music callback
                 if bg_callback is not None:
@@ -382,7 +419,7 @@ class Speak:
 
                 elif self.use_websockets:
                     # print("agent speech_queue is", agent.speech_queue)
-                    magicstream_websocket(audio_stream, agent.speech_queue, agent.speech_event, esp_id=agent.esp_id)
+                    magicstream_websocket(audio_stream, agent.instruct_queue, agent.speech_queue, agent.speech_event, esp_id=agent.esp_id)
 
                 else:
                     stream(audio_stream)

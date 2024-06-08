@@ -23,6 +23,7 @@ class InteractionManager:
         self.speech_queue = queues["speech"]
         self.listen_queue = queues["listen"]
         self.esp_ws_queue = queues["esp_ws"]
+        self.instruct_queue = queues["instruct"]
 
         self.speech_event = events["speech"]
         self.listen_event = events["listen"]
@@ -227,6 +228,7 @@ class InteractionManager:
         speech_queue: Any,
         listen_queue: Any,
         esp_ws_queue: Any,
+        instruct_queue: Any,
         speech_event: Any,
         listen_event: Any,
         plantoid_agent: Type,
@@ -268,6 +270,7 @@ class InteractionManager:
                 speech_queue=speech_queue,
                 listen_queue=listen_queue,
                 esp_ws_queue=esp_ws_queue,
+                instruct_queue=instruct_queue,
                 speech_event=speech_event,
                 listen_event=listen_event,
                 system_message=system_message, 
@@ -339,6 +342,7 @@ class InteractionManager:
             self.speech_queue,
             self.listen_queue,
             self.esp_ws_queue,
+            self.instruct_queue,
             self.speech_event,
             self.listen_event,
             plantoid_agent,

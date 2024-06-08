@@ -15,6 +15,7 @@ def run_program():
         "speech": Queue(),
         "listen": Queue(),
         "esp_ws": Queue(),
+        "instruct": Queue(),
     }
 
     events = {
