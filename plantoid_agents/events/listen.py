@@ -260,7 +260,15 @@ class Listen:
 
         # define the audio file path
         # TODO: pass as param
-        audio_file_path = os.getcwd() + "/media/user_audio/temp/temp_reco.wav"
+        cwd = os.getcwd()
+        # path is "/media/user_audio/temp/temp_reco.wav", but must ensure directories exist
+        if not os.path.exists(cwd + "/media/"):
+            os.mkdir(cwd + "/media/", 0755);
+        if not os.path.exists(cwd + "/media/user_audio/"):
+            os.mkdir(cwd + "/media/user_audio/", 0755);
+        if not os.path.exists(cwd + "/media/user_audio/temp/"):
+            os.mkdir(cwd + "/media/user_audio/temp/", 0755);
+        audio_file_path = cwd + "/media/user_audio/temp/temp_reco.wav"
 
         # audio = pyaudio.PyAudio()
 
@@ -373,6 +381,9 @@ class Listen:
     def record_wav_file(self, data, audio, audio_file_path):
 
         print("saving audio file to: ", audio_file_path)
+        
+        # first check if directory exist
+        
 
         with wave.open(audio_file_path, 'wb') as wf:
             wf.setnchannels(self.CHANNELS)
