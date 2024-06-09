@@ -90,6 +90,8 @@ yarn.lock
 # Logs
 *.log
 
+models/
+
 # Environment variables
 .env
 env/

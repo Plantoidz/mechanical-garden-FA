@@ -1,6 +1,6 @@
 from RealtimeTTS import TextToAudioStream, SystemEngine, CoquiEngine, AzureEngine, ElevenlabsEngine
 from litellm import completion
-
+import time
 
 def litellm(msg):
     
@@ -20,13 +20,38 @@ def litestream(msg):
         if(text_chunk := chunk["choices"][0]["delta"].get("content")) is not None:
             yield text_chunk
 
+def my_text_start_func():
+    print("text stream started")
+
+def my_text_stop_func():
+    print("text stream stopped")
+
+def my_audio_start_func():
+    print("audio stream started")
+
+def my_audio_stop_func():
+    print("audio stream stopped")
+
+def on_audio_chunk(chunk):
+    print("playing of len", len(chunk))
+
 
 if __name__ == '__main__':
 
     print("loading engine..")
-    engine = CoquiEngine() 
+    engine = CoquiEngine(
+        model_name="tts_models/multilingual/multi-dataset/xtts_v2"
+        # model_name="tts_models/en/ek1/tacotron2"
+
+    ) 
     print("setting up the engine")
-    stream = TextToAudioStream(engine)
+    stream = TextToAudioStream(
+        engine=engine,
+        on_text_stream_start=my_text_start_func,
+        on_text_stream_stop=my_text_stop_func,
+        on_audio_stream_start=my_audio_start_func,
+        on_audio_stream_stop=my_audio_stop_func,
+    )
     print("feeding the words")
     
     messages = [{ "content": "Write a three-sentence relaxing speech","role": "user"}]
@@ -40,7 +65,12 @@ if __name__ == '__main__':
     stream.feed(r)
         
     print("playing")
-    stream.play()
+    stream.play_async(
+        on_audio_chunk=on_audio_chunk,
+    )
+
+    while stream.is_playing():
+        time.sleep(0.1)
     print("done...")
     
 

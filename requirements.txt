@@ -36,6 +36,7 @@ keyboard
 pyaudio
 mpv
 websocket-client
+RealTimeTTS
 # deepgram
 #scipy
 #mutagen

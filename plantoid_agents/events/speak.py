@@ -12,6 +12,7 @@ import requests
 import types
 import audioop
 import threading
+import asyncio
 
 from utils.config_util import read_services_config
 from plantoid_agents.lib.MultichannelRouter import (
@@ -19,7 +20,7 @@ from plantoid_agents.lib.MultichannelRouter import (
     magicstream_MPV,
     setup_magicstream
 )
-from plantoid_agents.lib.esp32_comms import magicstream_websocket
+from plantoid_agents.lib.esp32_comms import magicstream_websocket, magicstream_local_websocket
 # from plantoid_agents.lib.esp32_comms import XYZ
 from plantoid_agents.events.listen import Listen
 
@@ -32,6 +33,8 @@ from utils.util import str_to_bool
 
 from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
 
+from RealtimeTTS import TextToAudioStream, SystemEngine, CoquiEngine, AzureEngine, ElevenlabsEngine
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -42,6 +45,12 @@ ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 client = ElevenLabs(
   api_key=ELEVENLABS_API_KEY
 )
+
+engine = CoquiEngine(
+    model_name="tts_models/multilingual/multi-dataset/xtts_v2"
+    # model_name="tts_models/en/ek1/tacotron2"
+
+) 
 
 # set_api_key(ELEVENLABS_API_KEY)
 
@@ -348,12 +357,6 @@ class Speak:
         # esp32_comms.XYZ()
         pass
 
-
-
-
-
-
-
     def stream_audio_response(
         self,
         agent: Any,
@@ -375,22 +378,59 @@ class Speak:
         )
         shadow_listener_thread.start()
 
-
-
         try:
 
             if use_streaming:
 
-                # generate audio stream   
-                audio_stream = client.generate(
-                    # text=self.stream_text(response),
-                    text=self.gather_response(response),
-                    # text = "hello i'm alive. Number 95",
-                    model=self.elevenlabs_model_type,
-                    voice=voice_id,
-                    stream=True,
-                    output_format="pcm_16000"
-                )
+                # # # generate audio stream   
+                # audio_stream = client.generate(
+                #     # text=self.stream_text(response),
+                #     text=self.gather_response(response),
+                #     # text = "hello i'm alive. Number 95",
+                #     model=self.elevenlabs_model_type,
+                #     voice=voice_id,
+                #     stream=True,
+                #     output_format="pcm_16000"
+                # )
+
+
+                ############################################
+
+                # LOCAL TTS PART ###########################
+                audio_stream = TextToAudioStream(engine)
+                audio_stream.feed(self.gather_response(response))
+
+                magicstream_local_websocket(audio_stream, agent.instruct_queue, agent.speech_queue, agent.speech_event, esp_id=agent.esp_id)
+
+
+                # loop = asyncio.get_event_loop()\
+
+
+
+
+                # def on_audio_chunk(chunk):
+                #     if chunk is not None:
+                #         # print("chunk len", len(chunk))
+                #         loop.run_in_executor(None, agent.speech_queue.put_nowait, (agent.esp_id, chunk))  
+
+                # print("playing")
+                # audio_stream.play_async(
+                #     on_audio_chunk=on_audio_chunk,
+                #     muted=True,
+                # )
+
+                # loop.run_in_executor(None, agent.speech_queue.put_nowait, (agent.esp_id, None))                    
+                # loop.run_in_executor(None, agent.instruct_queue.put_nowait, (agent.esp_id, "3"))                    
+
+                # if agent.speech_event.wait(30):
+                #     print("Playback termination message received.")
+                # else:
+                #     print(f"No playback termination message received within {30} seconds.")
+
+                ############################################
+
+                # for chunk in audio_stream:
+                #     print("stream chunk len", len(chunk))
 
                 # stop background music callback
                 if bg_callback is not None:

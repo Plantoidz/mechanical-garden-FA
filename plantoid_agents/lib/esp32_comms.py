@@ -42,3 +42,38 @@ def magicstream_websocket(
 
     except Exception as e:
         print(f"An error occurred while queuing audio stream: {e}")
+
+def magicstream_local_websocket(
+    audio_stream: any,
+    instruct_queue: Queue,
+    speech_queue: Queue,
+    speech_event: Event,
+    timeout: int = 30,
+    esp_id: int = None,
+):
+
+    logging.info(f"MAGICSTREAM WEBSOCKET, AGENT ESP ID: {esp_id}")
+
+    def on_audio_chunk(chunk):
+        if chunk is not None:
+            # print("chunk len", len(chunk))
+            loop.run_in_executor(None, speech_queue.put_nowait, (esp_id, chunk))  
+    try:
+        
+        loop = asyncio.get_event_loop()
+
+        audio_stream.play_async(
+            on_audio_chunk=on_audio_chunk,
+            muted=True,
+        )
+
+        loop.run_in_executor(None, speech_queue.put_nowait, (esp_id, None))                    
+        loop.run_in_executor(None, instruct_queue.put_nowait, (esp_id, "3"))                    
+
+        if speech_event.wait(timeout):
+            print("Playback termination message received.")
+        else:
+            print(f"No playback termination message received within {timeout} seconds.")
+
+    except Exception as e:
+        print(f"An error occurred while queuing audio stream: {e}")
