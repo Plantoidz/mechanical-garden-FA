@@ -54,14 +54,14 @@ def magicstream_local_websocket(
 
     logging.info(f"MAGICSTREAM WEBSOCKET, AGENT ESP ID: {esp_id}")
 
+    loop = asyncio.get_event_loop()
+
     def on_audio_chunk(chunk):
         if chunk is not None:
             # print("chunk len", len(chunk))
             loop.run_in_executor(None, speech_queue.put_nowait, (esp_id, chunk))  
     try:
         
-        loop = asyncio.get_event_loop()
-
         audio_stream.play_async(
             on_audio_chunk=on_audio_chunk,
             muted=True,
