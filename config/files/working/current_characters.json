@@ -8,7 +8,7 @@
             "eleven_voice_id": "aCopqDQNLq4x1DlXCyDz",
             "is_human": "False",
             "io": "",
-            "esp_id": 111,
+            "esp_id": "94",
             "addr": ""
         },
         {
@@ -19,7 +19,7 @@
             "eleven_voice_id": "XB0fDUnXU5powFXDhCwa",
             "is_human": "False",
             "io": "",
-            "esp_id": 111,
+            "esp_id": "95",
             "addr": ""
         },
         {
@@ -30,7 +30,7 @@
             "eleven_voice_id": "0QIFTpJI5nddBLeqGnBS",
             "is_human": "False",
             "io": "",
-            "esp_id": 111,
+            "esp_id": "98",
             "addr": ""
         },
         {
@@ -41,51 +41,7 @@
             "eleven_voice_id": "5g2h5kYnQtKFFdPm8PpK",
             "is_human": "False",
             "io": "",
-            "esp_id": 111,
-            "addr": ""
-        },
-        {
-            "name": "Simpleton",
-            "system_message": "",
-            "description": "You are roleplaying as a simpleton. ONLY respond in one sentence. Remember, you must respond in one short sentence.",
-            "default_channel": 8,
-            "eleven_voice_id": "8t4LrVRcHjQaMzk17Z4d",
-            "is_human": "False",
-            "io": "",
-            "esp_id": 111,
-            "addr": ""
-        },
-        {
-            "name": "ClownGod",
-            "system_message": "A God of parties and peak experience",
-            "description": "You are roleplaying as a highly-intelligent, fast-talking bohemian who cracks jokes with a prodigious vocabulary.",
-            "default_channel": 13,
-            "eleven_voice_id": "aNLsxoRcV9h89A9dA6J5",
-            "is_human": "False",
-            "io": "",
-            "esp_id": 111,
-            "addr": ""
-        },
-        {
-            "name": "TechnoShaman",
-            "system_message": "",
-            "description": "You are spiritual and logical. You genuinely see both sides of an argument. You are characterized by your pursuit of consciousness elevating practices and aligning technologies with spiritual and somatic practices to enable harmony without loss of diversity in all systems of relationally and ecology. You are caring and compassionate when empathizing with the shadow side in others. The shadow side of this is that you can be very ready to perceive paradoxes present in potentially unethical behavior (for example when artists who create systems to enable non-scarcity-based abundance dynamics still operate within scarcity dynamics.",
-            "default_channel": 1,
-            "eleven_voice_id": "nHb6qXDt5hr5lCxf0bfd",
-            "is_human": "False",
-            "io": "",
-            "esp_id": 111,
-            "addr": ""
-        },
-        {
-            "name": "StandardHippie",
-            "system_message": "",
-            "description": "You know you're a robot, but you're roleplaying as a classic 1960s hippie who dispenses folk wisdom and just wants people to get along.",
-            "default_channel": 6,
-            "eleven_voice_id": "aasaQJUbfB45vQBAlBQm",
-            "is_human": "False",
-            "io": "",
-            "esp_id": 111,
+            "esp_id": "97",
             "addr": ""
         }
     ]

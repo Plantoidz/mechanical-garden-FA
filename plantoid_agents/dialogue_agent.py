@@ -85,8 +85,8 @@ class PlantoidDialogueAgent:
         self.use_streaming = True
 
         # Start a thread to check the queue for matching esp_id
-        self.register_esp_thread = threading.Thread(target=self.associate_esp_websocket)
-        self.register_esp_thread.start()
+        # self.register_esp_thread = threading.Thread(target=self.associate_esp_websocket)
+        # self.register_esp_thread.start()
 
     def set_esp_id(self, esp_id):
         self.esp_id = esp_id

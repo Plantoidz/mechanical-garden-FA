@@ -39,7 +39,7 @@ agents = []  # where all agents encountered so far are stored
 def register_esp(esp_id, ws, esp_ws_queue):
     global agents
 
-    esp_ws_queue.put(esp_id)
+    # esp_ws_queue.put(esp_id)
     agents.append({"id": esp_id, "ws": ws})
     logging.info(f"Registering ESP id: {esp_id} with socket: {ws}")
 
@@ -106,24 +106,26 @@ async def orchestrate_instructions(websocket, path, esp_ws_queue, instruct_queue
 
     while True:
         agent_esp_id, instruction = await loop.run_in_executor(None, instruct_queue.get)
-        print("SERVER FOUND INSTRUCTION FOR ", agent_esp_id, " with instruction == ", instruction)
-        print("agent-esp-id == ", agent_esp_id, " of type = ", type(agent_esp_id))
-        print("-esp-id == ", esp_id, " of type = ", type(esp_id))
+        print("SERVER FOUND INSTRUCTION FOR ["+ agent_esp_id+ "]of type = ", type(esp_id), " with instruction == ", instruction)
+        print("Current socket ---------esp-id == ["+ esp_id+ "] of type = ", type(esp_id))
 
-
-    #  if(agent_esp_id == esp_id):
-        try:
-            await websocket.send(instruction)
-        except websockets.exceptions.ConnectionClosed:
-            logging.warning(f"Connection closed for ESP id: {esp_id}")
-            unregister_esp(esp_id, esp_ws_queue)
+        if(agent_esp_id == esp_id):
+            try:
+                print("PLAYBACK .............................................")
+                await websocket.send(instruction)
+            except websockets.exceptions.ConnectionClosed:
+                logging.warning(f"Connection closed for ESP id: {esp_id}")
+                unregister_esp(esp_id, esp_ws_queue)
+        else: ### not for you, put it back in the queue !
+            print("not for me------------------------------ putting instructions back in the Queue")
+            loop.run_in_executor(None, instruct_queue.put, (agent_esp_id, instruction))
             
     
 
 
 
 def playback_disconnected(speech_event):
-    print("SET END EVENT") ### TODO: this should be put at the on_close() of 7777
+    print("SET END EVENT -------------------------------------------> client disconnected after end of palyback") 
     speech_event.set()
     speech_event.clear()
 

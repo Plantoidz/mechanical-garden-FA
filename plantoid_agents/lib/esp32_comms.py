@@ -8,7 +8,7 @@ def magicstream_websocket(
     instruct_queue: Queue,
     speech_queue: Queue,
     speech_event: Event,
-    timeout: int = 30,
+    timeout: int = 300,
     esp_id: int = None,
 ):
 
@@ -40,6 +40,8 @@ def magicstream_websocket(
         # Signal the end of the stream
         loop.run_in_executor(None, speech_queue.put, (esp_id, None))
 
+
+        # instruct the ESP to playback 
         loop.run_in_executor(None, instruct_queue.put, (esp_id, "3"))
 
    
@@ -47,7 +49,7 @@ def magicstream_websocket(
 
 
         # Wait for the playback termination message
-        logging.info("Waiting for playback termination message from client.")
+        logging.info("Waiting for playback termination message from playback server.")
 
         if speech_event.wait(timeout):
             logging.info("Playback termination message received.")
