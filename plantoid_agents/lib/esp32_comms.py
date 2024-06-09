@@ -8,7 +8,7 @@ def magicstream_websocket(
     instruct_queue: Queue,
     speech_queue: Queue,
     speech_event: Event,
-    timeout: int = 20,
+    timeout: int = 30,
     esp_id: int = None,
 ):
 

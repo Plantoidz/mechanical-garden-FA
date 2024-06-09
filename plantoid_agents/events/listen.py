@@ -67,7 +67,7 @@ class Listen:
     def __init__(
         self,
         timeout: int = 15,
-        silence_limit: int = 1,
+        silence_limit: int = 2,
         threshold: int = 500,
         record_seconds: int = 2,
         rate: int = 16000,
@@ -242,7 +242,7 @@ class Listen:
         cfg = config['audio']
 
         # TEMP
-        record_mode = 'fixed'
+        record_mode = 'continuous'
 
         use_timeout = self.TIMEOUT
 

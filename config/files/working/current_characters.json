@@ -43,6 +43,17 @@
             "io": "",
             "esp_id": "97",
             "addr": ""
+        },
+        {
+            "name": "primavera",
+            "system_message": "",
+            "description": "",
+            "default_channel": 999,
+            "eleven_voice_id": "5g2h5kYnQtKFFdPm8PpK",
+            "is_human": "True",
+            "io": "",
+            "addr": "",
+            "esp_id": ""
         }
     ]
 }
