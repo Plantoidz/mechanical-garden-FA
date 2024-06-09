@@ -1,23 +1,21 @@
 from RealtimeTTS import TextToAudioStream, SystemEngine, CoquiEngine, AzureEngine, ElevenlabsEngine
 from litellm import completion
 import time
+import multiprocessing
 
 def litellm(msg):
-    
     response = completion(
-    model="ollama/llama3", 
-    messages=msg, 
-    api_base="http://localhost:11434",
-    stream=True
+        model="ollama/llama3", 
+        messages=msg, 
+        api_base="http://localhost:11434",
+        stream=True
     )
-    # return(response['choices'][0]['message']['content'])
     return response
 
 def litestream(msg):
-    
     r = litellm(msg)
     for chunk in r:
-        if(text_chunk := chunk["choices"][0]["delta"].get("content")) is not None:
+        if (text_chunk := chunk["choices"][0]["delta"].get("content")) is not None:
             yield text_chunk
 
 def my_text_start_func():
@@ -35,15 +33,12 @@ def my_audio_stop_func():
 def on_audio_chunk(chunk):
     print("playing of len", len(chunk))
 
-
-if __name__ == '__main__':
-
+def main():
     print("loading engine..")
     engine = CoquiEngine(
         model_name="tts_models/multilingual/multi-dataset/xtts_v2"
         # model_name="tts_models/en/ek1/tacotron2"
-
-    ) 
+    )
     print("setting up the engine")
     stream = TextToAudioStream(
         engine=engine,
@@ -54,23 +49,18 @@ if __name__ == '__main__':
     )
     print("feeding the words")
     
-    messages = [{ "content": "Write a three-sentence relaxing speech","role": "user"}]
-
-
-
-        
-    #  r = litellm(messages)
-    r = litestream(messages);
+    messages = [{"content": "Write a three-sentence relaxing speech", "role": "user"}]
+    r = litestream(messages)
     print("received ----->  ", r)
     stream.feed(r)
-        
+    
     print("playing")
-    stream.play_async(
-        on_audio_chunk=on_audio_chunk,
-    )
+    stream.play_async(on_audio_chunk=on_audio_chunk)
 
     while stream.is_playing():
         time.sleep(0.1)
     print("done...")
-    
 
+if __name__ == '__main__':
+    multiprocessing.freeze_support()  # Optional
+    main()

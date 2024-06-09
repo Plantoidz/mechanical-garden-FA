@@ -1,5 +1,6 @@
 
 import os
+import multiprocessing
 from multiprocessing import Queue, get_context, Process, Event, current_process, Manager
 
 import utils.config_util as config_util
@@ -7,6 +8,8 @@ from plantoid_agents.lib.MultichannelRouter import setup_magicstream
 
 import processes.interaction_manager_process as interaction_manager_process
 import processes.websocket_server_process as websocket_server_process
+
+multiprocessing.set_start_method('fork', force=True)
 
 def run_program():
     print("\n\033[94mHello Mechanical Garden!\033[0m")
