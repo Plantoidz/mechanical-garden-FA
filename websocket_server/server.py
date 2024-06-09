@@ -36,7 +36,7 @@ PLAYBACK = None
 agents = []  # where all agents encountered so far are stored
 
 
-def register_esp(esp_id, ws, esp_ws_queue):
+def register_esp(esp_id, ws):
     global agents
 
     # esp_ws_queue.put(esp_id)
@@ -44,7 +44,7 @@ def register_esp(esp_id, ws, esp_ws_queue):
     logging.info(f"Registering ESP id: {esp_id} with socket: {ws}")
 
 
-def unregister_esp(esp_id, esp_ws_queue):
+def unregister_esp(esp_id):
     global agents
 
     logging.info(f"Unregistering ESP id: {esp_id}")
@@ -89,21 +89,21 @@ def unregister_esp(esp_id, esp_ws_queue):
 #             await asyncio.sleep(1)  # NOTE: mock
 
 
-async def orchestrate_instructions(websocket, path, esp_ws_queue, instruct_queue):
+async def orchestrate_instructions(websocket, path, instruct_queue, speech_event):
     global INIT
     global agents
 
     esp_id = await websocket.recv()
     logging.info(f"Welcome to {esp_id}")
-    register_esp(esp_id, websocket, esp_ws_queue)
+    register_esp(esp_id, websocket)
     
     closed = asyncio.ensure_future(websocket.wait_closed())
-    closed.add_done_callback(lambda task: unregister_esp(esp_id, esp_ws_queue))
+    closed.add_done_callback(lambda task: unregister_esp(esp_id))
 
 
     if not INIT:
         logging.info("INIT is unset, starting async task for instruction.")
-        asyncio.create_task(check_for_instructions(instruct_queue))
+        asyncio.create_task(check_for_instructions(instruct_queue, speech_event))
         INIT = 1
         
 
@@ -142,7 +142,7 @@ def playback_disconnected(speech_event):
     speech_event.clear()
 
 
-async def send_stream_to_websocket(websocket, path, esp_ws_queue, speech_queue, speech_event):
+async def send_stream_to_websocket(websocket, path, speech_queue, speech_event):
     
     closed = asyncio.ensure_future(websocket.wait_closed())
     closed.add_done_callback(lambda task: playback_disconnected(speech_event))
@@ -174,7 +174,7 @@ async def send_stream_to_websocket(websocket, path, esp_ws_queue, speech_queue, 
 #     pass
 
 
-async def check_for_instructions(instruct_queue):
+async def check_for_instructions(instruct_queue, speech_event):
     
     loop = asyncio.get_event_loop()
 
@@ -204,7 +204,14 @@ async def check_for_instructions(instruct_queue):
                 await ws.send(task)
             except websockets.exceptions.ConnectionClosed:
                 logging.warning(f"Connection closed for ESP id: {esp_id}")
-                unregister_esp(esp_id, esp_ws_queue)
+                unregister_esp(esp_id)
+                speech_event.set()
+                speech_event.clear()
+            except Exception as err:
+                logging.warning("ERROR SENDING INSTRUCTION: ", err)
+                unregister_esp(esp_id)
+                speech_event.set()
+                speech_event.clear()
         # else: ### not for you, put it back in the queue !
         #     print("not for me------------------------------ putting instructions back in the Queue")
         #     loop.run_in_executor(None, instruct_queue.put, (agent_esp_id, instruction))
@@ -218,20 +225,20 @@ def run_websocket_server(queues, events):
     # listen_queue = queues["listen"]
     
     # this is can deleted I think
-    esp_ws_queue = queues["esp_ws"]  ### this is used by the server to register the ESP in the orchestrator
+    # esp_ws_queue = queues["esp_ws"]  ### this is used by the server to register the ESP in the orchestrator
 
     speech_event = events["speech"]
     # listen_event = events["listen"]
     
     instruct_queue = queues["instruct"]
 
-    orchestrate_stream = websockets.serve(lambda ws, path: orchestrate_instructions(ws, path, esp_ws_queue, instruct_queue), '', ORCHESTRATE_PORT, ping_interval=None)
+    orchestrate_stream = websockets.serve(lambda ws, path: orchestrate_instructions(ws, path, instruct_queue, speech_event), '', ORCHESTRATE_PORT, ping_interval=None)
     loop.run_until_complete(orchestrate_stream)
     
     
 
     # if speech_queue is not None:
-    speech_stream = websockets.serve(lambda ws, path: send_stream_to_websocket(ws, path, esp_ws_queue, speech_queue, speech_event), '', SPEECH_PORT, ping_interval=None)
+    speech_stream = websockets.serve(lambda ws, path: send_stream_to_websocket(ws, path, speech_queue, speech_event), '', SPEECH_PORT, ping_interval=None)
     loop.run_until_complete(speech_stream)
 
     # if listen_queue is not None:
