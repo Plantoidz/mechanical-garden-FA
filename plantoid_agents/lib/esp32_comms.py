@@ -2,6 +2,28 @@ from multiprocessing import Queue, Event
 from typing import Iterator
 import logging
 import asyncio
+from pydub import AudioSegment
+from io import BytesIO
+import pyaudio
+
+def convert_audio_chunk(chunk: bytes, src_format: int, src_channels: int, src_rate: int, dst_format: int, dst_channels: int, dst_rate: int) -> bytes:
+    # Create an AudioSegment from the source chunk
+    audio_segment = AudioSegment(
+        data=chunk,
+        sample_width=pyaudio.get_sample_size(src_format),
+        frame_rate=src_rate,
+        channels=src_channels
+    )
+
+    # Convert to the target format
+    audio_segment = audio_segment.set_frame_rate(dst_rate)
+    audio_segment = audio_segment.set_channels(dst_channels)
+    audio_segment = audio_segment.set_sample_width(pyaudio.get_sample_size(dst_format))
+
+    # Export to bytes
+    buffer = BytesIO()
+    audio_segment.export(buffer, format="raw")
+    return buffer.getvalue()
 
 def magicstream_websocket(
     audio_stream: Iterator[bytes],
@@ -59,6 +81,17 @@ def magicstream_local_websocket(
     def on_audio_chunk(chunk):
         if chunk is not None:
             # print("chunk len", len(chunk))
+
+                # Example usage
+            src_format = pyaudio.paFloat32
+            src_channels = 1
+            src_rate = 16000
+            dst_format = pyaudio.paInt16
+            dst_channels = 1
+            dst_rate = 16000
+
+            # Assume `audio_chunk` is a chunk of audio in the source format
+            chunk = convert_audio_chunk(chunk, src_format, src_channels, src_rate, dst_format, dst_channels, dst_rate)
             loop.run_in_executor(None, speech_queue.put_nowait, (esp_id, chunk))  
     try:
         
@@ -77,3 +110,8 @@ def magicstream_local_websocket(
 
     except Exception as e:
         print(f"An error occurred while queuing audio stream: {e}")
+
+
+# Function to convert audio chunk
+
+

@@ -48,6 +48,7 @@ client = ElevenLabs(
 
 engine = CoquiEngine(
     model_name="tts_models/multilingual/multi-dataset/xtts_v2"
+    # thread_count=1
     # model_name="tts_models/en/ek1/tacotron2"
 
 ) 
