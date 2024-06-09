@@ -100,25 +100,37 @@ async def orchestrate_instructions(websocket, path, esp_ws_queue, instruct_queue
     closed = asyncio.ensure_future(websocket.wait_closed())
     closed.add_done_callback(lambda task: unregister_esp(esp_id, esp_ws_queue))
 
+
+    if not INIT:
+        logging.info("INIT is unset, starting async task for instruction.")
+        asyncio.create_task(check_for_instructions(instruct_queue))
+        INIT = 1
+        
+
+    try:
+            async for msg in websocket:
+                pass  # This is where orchestration logic will go, if needed.
+    finally:
+            unregister_esp(esp_id)
     
     
-    loop = asyncio.get_event_loop()
+    # loop = asyncio.get_event_loop()
 
-    while True:
-        agent_esp_id, instruction = await loop.run_in_executor(None, instruct_queue.get)
-        print("SERVER FOUND INSTRUCTION FOR ["+ agent_esp_id+ "]of type = ", type(esp_id), " with instruction == ", instruction)
-        print("Current socket ---------esp-id == ["+ esp_id+ "] of type = ", type(esp_id))
+    # while True:
+    #     agent_esp_id, instruction = await loop.run_in_executor(None, instruct_queue.get)
+    #     print("SERVER FOUND INSTRUCTION FOR ["+ agent_esp_id+ "]of type = ", type(esp_id), " with instruction == ", instruction)
+    #     print("Current socket ---------esp-id == ["+ esp_id+ "] of type = ", type(esp_id))
 
-        if(agent_esp_id == esp_id):
-            try:
-                print("PLAYBACK .............................................")
-                await websocket.send(instruction)
-            except websockets.exceptions.ConnectionClosed:
-                logging.warning(f"Connection closed for ESP id: {esp_id}")
-                unregister_esp(esp_id, esp_ws_queue)
-        else: ### not for you, put it back in the queue !
-            print("not for me------------------------------ putting instructions back in the Queue")
-            loop.run_in_executor(None, instruct_queue.put, (agent_esp_id, instruction))
+    #     if(agent_esp_id == esp_id):
+    #         try:
+    #             print("PLAYBACK .............................................")
+    #             await websocket.send(instruction)
+    #         except websockets.exceptions.ConnectionClosed:
+    #             logging.warning(f"Connection closed for ESP id: {esp_id}")
+    #             unregister_esp(esp_id, esp_ws_queue)
+    #     else: ### not for you, put it back in the queue !
+    #         print("not for me------------------------------ putting instructions back in the Queue")
+    #         loop.run_in_executor(None, instruct_queue.put, (agent_esp_id, instruction))
             
     
 
@@ -162,6 +174,41 @@ async def send_stream_to_websocket(websocket, path, esp_ws_queue, speech_queue, 
 #     pass
 
 
+async def check_for_instructions(instruct_queue):
+    
+    loop = asyncio.get_event_loop()
+
+    while True:
+        esp_id, task = await loop.run_in_executor(None, instruct_queue.get)
+        print("SERVER FOUND INSTRUCTION FOR ["+ esp_id+ "]of type = ", type(esp_id), " with instruction == ", task)
+        logging.info(f"Processing task: esp={esp_id} mode={task}")
+        
+        ws = None
+        for a in agents:
+            if a["id"] == esp_id:
+                ws = a["ws"]
+                logging.info(f"Found a match for {esp_id} with socket: {ws}")
+                break
+
+        if ws is None:
+            for a in agents:
+                if a["ws"]:
+                    ws = a["ws"]
+                    logging.info(f"Fallback to ESP {a['id']}")
+                    break
+
+        if ws:
+            print("Sending instruction .............")
+            try:
+                print("PLAYBACK .............................................")
+                await ws.send(task)
+            except websockets.exceptions.ConnectionClosed:
+                logging.warning(f"Connection closed for ESP id: {esp_id}")
+                unregister_esp(esp_id, esp_ws_queue)
+        # else: ### not for you, put it back in the queue !
+        #     print("not for me------------------------------ putting instructions back in the Queue")
+        #     loop.run_in_executor(None, instruct_queue.put, (agent_esp_id, instruction))
+
 
 def run_websocket_server(queues, events):
     logging.info("Starting server")
@@ -169,6 +216,8 @@ def run_websocket_server(queues, events):
 
     speech_queue = queues["speech"] ### this is used by the orchestrator to send the audio chunks to the server
     # listen_queue = queues["listen"]
+    
+    # this is can deleted I think
     esp_ws_queue = queues["esp_ws"]  ### this is used by the server to register the ESP in the orchestrator
 
     speech_event = events["speech"]
@@ -188,6 +237,7 @@ def run_websocket_server(queues, events):
     # if listen_queue is not None:
     #     listen_stream = websockets.serve(lambda ws, path: transcribe_audio(ws, path, esp_ws_queue, listen_queue, listen_event), '', LISTEN_PORT, ping_interval=None)
     #     loop.run_until_complete(listen_stream)
+
 
     loop.run_forever()
 
