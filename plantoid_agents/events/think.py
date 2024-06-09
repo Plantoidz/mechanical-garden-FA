@@ -158,7 +158,9 @@ class Think:
     def think(self, agent, system_message: str, use_content: str, use_streaming: bool) -> str:
         
      #   traceback.print_stack()
+        print("starting to think !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! calling callback .......")
         if(agent.callback): agent.callback("<thinking>")
+        
 
         if self.use_model_api == 'simpleAIChat':
             message = self.think_simpleAIChat(system_message, use_content)

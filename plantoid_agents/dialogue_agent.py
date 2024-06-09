@@ -1,6 +1,6 @@
 from typing import Callable, List, Union
 from multiprocessing import Queue, Event, get_context
-
+import asyncio
 import socket
 
 # import plantoid_agents.lib.speech as PlantoidSpeech
@@ -79,6 +79,9 @@ class PlantoidDialogueAgent:
                 self.addr = addr
             except Exception as err:
                 print("Failed to connect: ", err)
+                
+        elif(io == "ws" and esp_id):
+            self.callback = self.tunnel_ws
 
         #TODO: do not hardcode!
         # self.use_model_type = "litellm"
@@ -90,6 +93,8 @@ class PlantoidDialogueAgent:
 
     def set_esp_id(self, esp_id):
         self.esp_id = esp_id
+
+        
 
     def tunnel_wifi(self, val):
     #     if(not self.tunnel):
@@ -109,6 +114,15 @@ class PlantoidDialogueAgent:
 
     def tunnel_serial(self, val):
         return ## TODO, activate the serial communication
+    
+    def tunnel_ws(self, val):
+        print("inside the tunnel................. value ===================== ", val, " for agent = ", self.esp_id)
+        if(val == "<speaking>"): return # we are handling this directly via the server
+        if(val == "<thinking>"): # add instruction to the queue
+            # instruct the ESP to playback 
+            loop = asyncio.get_event_loop()
+            loop.run_in_executor(None, self.instruct_queue.put_nowait, (self.esp_id, "2")) # thinking
+    
     
     def associate_esp_websocket(self):
         # self.socket = ws

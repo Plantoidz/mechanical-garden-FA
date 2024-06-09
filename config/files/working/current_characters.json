@@ -7,7 +7,7 @@
             "default_channel": 0,
             "eleven_voice_id": "aCopqDQNLq4x1DlXCyDz",
             "is_human": "False",
-            "io": "",
+            "io": "ws",
             "esp_id": "94",
             "addr": ""
         },
@@ -18,7 +18,7 @@
             "default_channel": 3,
             "eleven_voice_id": "XB0fDUnXU5powFXDhCwa",
             "is_human": "False",
-            "io": "",
+            "io": "ws",
             "esp_id": "95",
             "addr": ""
         },
@@ -29,7 +29,7 @@
             "default_channel": 4,
             "eleven_voice_id": "0QIFTpJI5nddBLeqGnBS",
             "is_human": "False",
-            "io": "",
+            "io": "ws",
             "esp_id": "98",
             "addr": ""
         },
@@ -40,7 +40,7 @@
             "default_channel": 5,
             "eleven_voice_id": "5g2h5kYnQtKFFdPm8PpK",
             "is_human": "False",
-            "io": "",
+            "io": "ws",
             "esp_id": "97",
             "addr": ""
         },
