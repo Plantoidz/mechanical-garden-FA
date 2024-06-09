@@ -104,6 +104,11 @@ class Listen:
         # mixer.music.load(speech_indicator_path)
         # mixer.music.play(loops=1)
 
+    def play_speech_ending(self) -> None:
+        
+        speech_acknowledgement_path = os.getcwd()+"/media/beep_stop.wav"
+        playsound(speech_acknowledgement_path, block=False)
+
     def play_speech_acknowledgement(self, voice_id: str) -> None:
         random_effect = random.choice([
             'oh', 'um', 'hrm', 'hrmmmmm',
@@ -124,6 +129,7 @@ class Listen:
         else:
             # Print a warning message if the file does not exist
             print("\033[90m\nThe specified audio effect file does not exist. Skipping playback.\033[0m")
+            
     
     def compute_average(self, fragment, sample_width=2):
         """Compute the raw average of audio samples."""
@@ -359,6 +365,8 @@ class Listen:
 
         stream.close()
         audio.terminate()
+        
+        self.play_speech_ending()
 
         return audio_file_path
 
