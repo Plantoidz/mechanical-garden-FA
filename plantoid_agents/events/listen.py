@@ -262,12 +262,16 @@ class Listen:
         # TODO: pass as param
         cwd = os.getcwd()
         # path is "/media/user_audio/temp/temp_reco.wav", but must ensure directories exist
-        if not os.path.exists(cwd + "/media/"):
-            os.mkdir(cwd + "/media/", 0755);
-        if not os.path.exists(cwd + "/media/user_audio/"):
-            os.mkdir(cwd + "/media/user_audio/", 0755);
-        if not os.path.exists(cwd + "/media/user_audio/temp/"):
-            os.mkdir(cwd + "/media/user_audio/temp/", 0755);
+        try: 
+            if not os.path.exists(cwd + "/media/"):
+                os.mkdir(cwd + "/media/", 0o755)
+            if not os.path.exists(cwd + "/media/user_audio/"):
+                os.mkdir(cwd + "/media/user_audio/", 0o755)
+            if not os.path.exists(cwd + "/media/user_audio/temp/"):
+                os.mkdir(cwd + "/media/user_audio/temp/", 0o755)
+        except Exception as err:
+            print("Error creating the user directory for saving temp_reco.wav: ", err)
+
         audio_file_path = cwd + "/media/user_audio/temp/temp_reco.wav"
 
         # audio = pyaudio.PyAudio()
