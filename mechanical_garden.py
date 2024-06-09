@@ -87,6 +87,7 @@ def show_menu():
     print("11. Exit")
 
 if __name__ == "__main__":
+    multiprocessing.freeze_support()
     while True:
         show_menu()
         choice = input("\nSelect an option: ")
