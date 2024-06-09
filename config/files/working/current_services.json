@@ -1,5 +1,5 @@
 {
-    "language_model": "ollama/llama3",
+    "language_model": "gpt-4o",
     "language_model_api": "litellm",
     "speech_recognition_model": "whisper",
     "speech_synthesis_model": "eleven_turbo_v2",

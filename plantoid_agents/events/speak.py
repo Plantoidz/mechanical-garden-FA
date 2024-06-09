@@ -123,6 +123,10 @@ class Speak:
         
     def gather_response(self, response_stream):
         full_text = ""
+
+        if isinstance(response_stream, str):
+            return response_stream
+    
         for chunk in response_stream:
             if chunk.choices[0].delta and chunk.choices[0].delta.content:
                 delta = chunk.choices[0].delta
@@ -387,21 +391,6 @@ class Speak:
                     stream=True,
                     output_format="pcm_16000"
                 )
-                
-                
-                
-                
-                ###TEST TO SEE IF IT'S A WELL FORMED WAV
-                # p = pyaudio.PyAudio()
-                # stream = p.open(output=True, format = pyaudio.paInt16, channels=1, rate = 16000)
-
-                # for chunk in audio_stream:
-                #     stream.write(chunk)
-                    
-                # stream.stop_stream()
-                # stream.close()
-                # p.terminate()
-
 
                 # stop background music callback
                 if bg_callback is not None:

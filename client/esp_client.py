@@ -120,11 +120,11 @@ def main():
         stream.close()
         p.terminate()
 
-        # # MPV
-        # mpv_process.stdin.write(b"quit\n")
-        # mpv_process.stdin.flush()
-        # mpv_process.stdin.close()
-        # mpv_process.terminate()
+        # MPV
+        mpv_process.stdin.write(b"quit\n")
+        mpv_process.stdin.flush()
+        mpv_process.stdin.close()
+        mpv_process.terminate()
 
 if __name__ == "__main__":
     main()
