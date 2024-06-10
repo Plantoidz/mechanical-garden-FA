@@ -37,6 +37,7 @@ pyaudio
 mpv
 websocket-client
 RealTimeTTS
+deepgram-sdk
 # deepgram
 #scipy
 #mutagen

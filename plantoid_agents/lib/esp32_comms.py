@@ -94,8 +94,9 @@ def magicstream_local_websocket(
             chunk = convert_audio_chunk(chunk, src_format, src_channels, src_rate, dst_format, dst_channels, dst_rate)
             loop.run_in_executor(None, speech_queue.put_nowait, (esp_id, chunk))  
     try:
-        
-        audio_stream.play_async(
+        # loop.run_in_executor(None, instruct_queue.put_nowait, (esp_id, "3"))                    
+
+        audio_stream.play(
             on_audio_chunk=on_audio_chunk,
             muted=True,
         )

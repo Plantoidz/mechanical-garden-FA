@@ -1,37 +1,36 @@
-
 import os
 import multiprocessing
-from multiprocessing import Queue, get_context, Process, Event, current_process, Manager
+from multiprocessing import Queue, Event, current_process, Manager
 
 import utils.config_util as config_util
-from plantoid_agents.lib.MultichannelRouter import setup_magicstream
+# from plantoid_agents.lib.MultichannelRouter import setup_magicstream
 
 import processes.interaction_manager_process as interaction_manager_process
 import processes.websocket_server_process as websocket_server_process
 
-multiprocessing.set_start_method('fork', force=True)
-
 def run_program():
     print("\n\033[94mHello Mechanical Garden!\033[0m")
+
+    ctx = multiprocessing.get_context('fork')
     
     queues = {
-        "speech": Queue(),
-        "listen": Queue(),
-        "esp_ws": Queue(),
-        "instruct": Queue(),
+        "speech": ctx.Queue(),
+        "listen": ctx.Queue(),
+        "esp_ws": ctx.Queue(),
+        "instruct": ctx.Queue(),
     }
 
     events = {
-        "speech": Event(),
-        "listen": Event(),
+        "speech": ctx.Event(),
+        "listen": ctx.Event(),
     }
 
     # Start the WebSocket server in a separate process
-    websocket_process = Process(target=websocket_server_process.run, args=(queues, events))
+    websocket_process = ctx.Process(target=websocket_server_process.run, args=(queues, events))
     websocket_process.start()
 
     # Start the InteractionManager in a separate process
-    interaction_process = Process(target=interaction_manager_process.run, args=(queues, events))
+    interaction_process = ctx.Process(target=interaction_manager_process.run, args=(queues, events))
     interaction_process.start()
 
     try:
@@ -86,34 +85,42 @@ def show_menu():
     print("10. Test Audio")
     print("11. Exit")
 
+def main():
+    if 'RUNNING_IN_DOCKER' in os.environ:
+        print("Running in Docker environment")
+        run_program()
+    else:
+        while True:
+            show_menu()
+            choice = input("\nSelect an option: ")
+            
+            if choice == '1':
+                run_program()
+            elif choice == '2':
+                config_util.check_config()
+            elif choice == '3':
+                config_mode()
+            elif choice == '4':
+                config_characters()
+            elif choice == '5':
+                add_human_participant()
+            elif choice == '6':
+                dump_layout()
+            elif choice == '7':
+                generate_runtime_effects()
+            elif choice == '8':
+                config_services()
+            elif choice == '9':
+                config_audio()
+            elif choice == '10':
+                test_audio()
+            elif choice == '11':
+                print("Exiting program.")
+                break
+            else:
+                print("Invalid choice. Please try again.")
+
 if __name__ == "__main__":
-    multiprocessing.freeze_support()
-    while True:
-        show_menu()
-        choice = input("\nSelect an option: ")
-        
-        if choice == '1':
-            run_program()
-        elif choice == '2':
-            config_util.check_config()
-        elif choice == '3':
-            config_mode()
-        elif choice == '4':
-            config_characters()
-        elif choice == '5':
-            add_human_participant()
-        elif choice == '6':
-            dump_layout()
-        elif choice == '7':
-            generate_runtime_effects()
-        elif choice == '8':
-            config_services()
-        elif choice == '9':
-            config_audio()
-        elif choice == '10':
-            test_audio()
-        elif choice == '11':
-            print("Exiting program.")
-            break
-        else:
-            print("Invalid choice. Please try again.")
+    # multiprocessing.freeze_support()
+    multiprocessing.set_start_method('fork')
+    main()

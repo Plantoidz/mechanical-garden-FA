@@ -15,11 +15,11 @@ import threading
 import asyncio
 
 from utils.config_util import read_services_config
-from plantoid_agents.lib.MultichannelRouter import (
-    magicstream,
-    magicstream_MPV,
-    setup_magicstream
-)
+# from plantoid_agents.lib.MultichannelRouter import (
+#     magicstream,
+#     magicstream_MPV,
+#     setup_magicstream
+# )
 from plantoid_agents.lib.esp32_comms import magicstream_websocket, magicstream_local_websocket
 # from plantoid_agents.lib.esp32_comms import XYZ
 from plantoid_agents.events.listen import Listen
@@ -34,6 +34,7 @@ from utils.util import str_to_bool
 from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
 
 from RealtimeTTS import TextToAudioStream, SystemEngine, CoquiEngine, AzureEngine, ElevenlabsEngine
+import logging
 
 # Load environment variables from .env file
 load_dotenv()
@@ -46,12 +47,16 @@ client = ElevenLabs(
   api_key=ELEVENLABS_API_KEY
 )
 
-engine = CoquiEngine(
-    model_name="tts_models/multilingual/multi-dataset/xtts_v2"
-    # thread_count=1
-    # model_name="tts_models/en/ek1/tacotron2"
+def initialize_coqui_engine():
+    return CoquiEngine(
+        model_name="tts_models/multilingual/multi-dataset/xtts_v2",
+        level=logging.DEBUG,
+    )
 
-) 
+engine = None
+
+if __name__ == '__main__':
+    engine = initialize_coqui_engine()
 
 # set_api_key(ELEVENLABS_API_KEY)
 
@@ -383,30 +388,28 @@ class Speak:
 
             if use_streaming:
 
-                # # # generate audio stream   
-                # audio_stream = client.generate(
-                #     # text=self.stream_text(response),
-                #     text=self.gather_response(response),
-                #     # text = "hello i'm alive. Number 95",
-                #     model=self.elevenlabs_model_type,
-                #     voice=voice_id,
-                #     stream=True,
-                #     output_format="pcm_16000"
-                # )
+                # # generate audio stream   
+                audio_stream = client.generate(
+                    # text=self.stream_text(response),
+                    text=self.gather_response(response),
+                    # text = "hello i'm alive. Number 95",
+                    model=self.elevenlabs_model_type,
+                    voice=voice_id,
+                    stream=True,
+                    output_format="pcm_16000"
+                )
 
 
-                ############################################
+                # ############################################
 
                 # LOCAL TTS PART ###########################
-                audio_stream = TextToAudioStream(engine)
-                audio_stream.feed(self.gather_response(response))
+                # audio_stream = TextToAudioStream(engine)
+                # audio_stream.feed(self.gather_response(response))
 
-                magicstream_local_websocket(audio_stream, agent.instruct_queue, agent.speech_queue, agent.speech_event, esp_id=agent.esp_id)
+                # magicstream_local_websocket(audio_stream, agent.instruct_queue, agent.speech_queue, agent.speech_event, esp_id=agent.esp_id)
 
 
                 # loop = asyncio.get_event_loop()\
-
-
 
 
                 # def on_audio_chunk(chunk):
@@ -440,12 +443,12 @@ class Speak:
                 if self.use_multichannel:
                     print("\033[90mstreaming on channel",channel_id,"\033[0m\n")
 
-                    if self.multichannel_implementation == "MPV":
-                        magicstream_MPV(audio_stream, channel_id, stop_event)
-                        # stream_esp32(audio_stream, channel_id, stop_event)
+                    # if self.multichannel_implementation == "MPV":
+                    #     magicstream_MPV(audio_stream, channel_id, stop_event)
+                    #     # stream_esp32(audio_stream, channel_id, stop_event)
 
-                    else:
-                        magicstream(audio_stream, channel_id, stop_event)
+                    # else:
+                    #     magicstream(audio_stream, channel_id, stop_event)
 
                 elif self.use_websockets:
                     # print("agent speech_queue is", agent.speech_queue)
@@ -484,8 +487,8 @@ class Speak:
         use_streaming: bool = True,
 
     ) -> None:
-        if use_streaming:
-            setup_magicstream()
+        # if use_streaming:
+        #     setup_magicstream()
 
         for a in agents:
             if(a.callback): a.callback("<asleep>")

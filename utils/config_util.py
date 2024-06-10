@@ -1,6 +1,6 @@
 import os
 import json
-import sounddevice as sd
+# import sounddevice as sd
 
 def read_character_config():
     config_path = os.getcwd()+'/config/files/working/current_characters.json'
@@ -38,22 +38,22 @@ def read_services_config():
 COLORS = {"green": "\033[32m", "red": "\033[31m", "yellow": "\033[33m", "blue": "\033[34m", "green": "\033[32m", "reset": "\033[0m"
 }
 
-def print_default_audio_devices():
-    """ Print the default audio input and output devices along with their channel counts """
-    try:
-        # Query information about the default input device
-        default_input_device_info = sd.query_devices(sd.default.device[0], 'input')
-        # Query information about the default output device
-        default_output_device_info = sd.query_devices(sd.default.device[1], 'output')
+# def print_default_audio_devices():
+#     """ Print the default audio input and output devices along with their channel counts """
+#     try:
+#         # Query information about the default input device
+#         default_input_device_info = sd.query_devices(sd.default.device[0], 'input')
+#         # Query information about the default output device
+#         default_output_device_info = sd.query_devices(sd.default.device[1], 'output')
         
-        # Print the name and channel count of the input device
-        print(f"{COLORS['blue']}Audio input through{COLORS['reset']}", f"{COLORS['green']}{default_input_device_info['name']}{COLORS['reset']}", f"{COLORS['blue']}with{COLORS['reset']}", f"{COLORS['green']}{default_input_device_info['max_input_channels']}", f"channels{COLORS['reset']}")
+#         # Print the name and channel count of the input device
+#         print(f"{COLORS['blue']}Audio input through{COLORS['reset']}", f"{COLORS['green']}{default_input_device_info['name']}{COLORS['reset']}", f"{COLORS['blue']}with{COLORS['reset']}", f"{COLORS['green']}{default_input_device_info['max_input_channels']}", f"channels{COLORS['reset']}")
 
-        # Print the name and channel count of the output device
-        print(f"\n{COLORS['blue']}Audio output through{COLORS['reset']}", f"{COLORS['green']}{default_output_device_info['name']}{COLORS['reset']}", f"{COLORS['blue']}with{COLORS['reset']}", f"{COLORS['green']}{default_output_device_info['max_output_channels']}", f"channels{COLORS['reset']}")
+#         # Print the name and channel count of the output device
+#         print(f"\n{COLORS['blue']}Audio output through{COLORS['reset']}", f"{COLORS['green']}{default_output_device_info['name']}{COLORS['reset']}", f"{COLORS['blue']}with{COLORS['reset']}", f"{COLORS['green']}{default_output_device_info['max_output_channels']}", f"channels{COLORS['reset']}")
     
-    except Exception as e:
-        print(f"Error retrieving audio device information: {e}")
+#     except Exception as e:
+#         print(f"Error retrieving audio device information: {e}")
 
 def format_value(value, indent=0, color_index=0):
     """ Recursively format JSON values for printing with colors. """
@@ -109,4 +109,4 @@ def check_config():
 
     for filepath in config_files:
         read_and_display_file(filepath)
-    print_default_audio_devices()
+    # print_default_audio_devices()

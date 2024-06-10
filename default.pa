@@ -1,0 +1,8 @@
+#!/usr/bin/pulseaudio -nF
+
+load-module module-native-protocol-unix
+load-module module-dbus-protocol
+load-module module-esound-protocol-unix
+load-module module-waveout
+load-module module-winsound
+load-module module-null-sink sink_name=sink

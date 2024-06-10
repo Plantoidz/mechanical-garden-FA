@@ -24,7 +24,7 @@ class PlantoidInteraction:
         self.select_next_speaker = selection_function
         self.last_speaker_idx = 0
         self.current_speaker_idx = 0
-        self.humanness = 0.3
+        self.humanness = 1.0
         self.agent_interrupted = False
         self.interaction_timestamp = datetime.now()
 
@@ -125,8 +125,8 @@ class PlantoidInteraction:
             # last_speaker.speak(self.agents, speaker.name, use_streaming=False)
             # playsound(os.getcwd() + "/media/cleanse.mp3", block=False)
 
-            message = speaker.listen_for_speech(self.agents, self._step)
-            # message = "Test human message"
+            # message = speaker.listen_for_speech(self.agents, self._step)
+            message = "Test human message"
             self.log_conversation(speaker, message)
 
         else:

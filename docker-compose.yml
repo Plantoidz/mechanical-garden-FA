@@ -1,0 +1,17 @@
+services:
+  web:
+    build: .
+    ports:
+      - "7777:7777"
+      - "8888:8888"
+    volumes:
+      - .:/usr/src/app
+      - /etc/asound.conf:/etc/asound.conf
+      - /usr/share/alsa:/usr/share/alsa
+      - /etc/alsa:/etc/alsa
+      - /dev/snd:/dev/snd
+    environment:
+      - ENV=development
+      - PULSE_SERVER=unix:/run/user/1000/pulse/native
+    env_file:
+      - .env

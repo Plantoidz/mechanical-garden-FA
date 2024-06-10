@@ -14,3 +14,14 @@ pip install -r requirements.txt
 
 Agents should have a thread that reads a multiprocessing queue where the server populates it by registering the found ESP id in the queue,
 the agent thread then checks if it matches its own agent id
+
+https://docs.docker.com/engine/install/ubuntu/
+https://docs.docker.com/compose/install/standalone/
+
+docker exec -it mechanical-garden-fa-web-1 bash
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
+
+
+docker-compose logs -f
