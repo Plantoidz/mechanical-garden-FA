@@ -125,8 +125,8 @@ class PlantoidInteraction:
             # last_speaker.speak(self.agents, speaker.name, use_streaming=False)
             # playsound(os.getcwd() + "/media/cleanse.mp3", block=False)
 
-            # message = speaker.listen_for_speech(self.agents, self._step)
-            message = "Test human message"
+            message = speaker.listen_for_speech(self.agents, self._step)
+            # message = "Test human message"
             self.log_conversation(speaker, message)
 
         else:

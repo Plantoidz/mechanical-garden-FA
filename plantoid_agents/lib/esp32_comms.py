@@ -6,24 +6,7 @@ from pydub import AudioSegment
 from io import BytesIO
 import pyaudio
 
-def convert_audio_chunk(chunk: bytes, src_format: int, src_channels: int, src_rate: int, dst_format: int, dst_channels: int, dst_rate: int) -> bytes:
-    # Create an AudioSegment from the source chunk
-    audio_segment = AudioSegment(
-        data=chunk,
-        sample_width=pyaudio.get_sample_size(src_format),
-        frame_rate=src_rate,
-        channels=src_channels
-    )
 
-    # Convert to the target format
-    audio_segment = audio_segment.set_frame_rate(dst_rate)
-    audio_segment = audio_segment.set_channels(dst_channels)
-    audio_segment = audio_segment.set_sample_width(pyaudio.get_sample_size(dst_format))
-
-    # Export to bytes
-    buffer = BytesIO()
-    audio_segment.export(buffer, format="raw")
-    return buffer.getvalue()
 
 def magicstream_websocket(
     audio_stream: Iterator[bytes],
@@ -64,6 +47,33 @@ def magicstream_websocket(
 
     except Exception as e:
         print(f"An error occurred while queuing audio stream: {e}")
+
+
+
+def convert_audio_chunk(chunk: bytes, src_format: int, src_channels: int, src_rate: int, dst_format: int, dst_channels: int, dst_rate: int) -> bytes:
+    
+    # check that the chunk is fine (data length must be multiple of '(sample_width * channels)
+    sample_w = pyaudio.get_sample_size(src_format)
+    if(len(chunk) % sample_w):
+        return chunk
+
+    # Create an AudioSegment from the source chunk
+    audio_segment = AudioSegment(
+        data=chunk,
+        sample_width=sample_w, # pyaudio.get_sample_size(src_format),
+        frame_rate=src_rate,
+        channels=src_channels
+    )
+
+    # Convert to the target format
+    audio_segment = audio_segment.set_frame_rate(dst_rate)
+    audio_segment = audio_segment.set_channels(dst_channels)
+    audio_segment = audio_segment.set_sample_width(pyaudio.get_sample_size(dst_format))
+
+    # Export to bytes
+    buffer = BytesIO()
+    audio_segment.export(buffer, format="raw")
+    return buffer.getvalue()
 
 def magicstream_local_websocket(
     audio_stream: any,
