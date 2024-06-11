@@ -23,5 +23,10 @@ sudo groupadd docker
 sudo usermod -aG docker $USER
 newgrp docker
 
+docker run --rm -it --privileged=true --device=/dev/snd:/dev/snd mechanical-garden-fa-mg-1
 
 docker-compose logs -f
+web-1  | 2024-06-11 00:35:23,821 - INFO - Using default voice, both coqui_default_voice.json and coqui_default_voice.wav not found.
+https://github.com/mviereck/x11docker/wiki/Container-sound:-ALSA-or-Pulseaudio
+
+https://github.com/janvda/balena-pulseaudio/tree/master

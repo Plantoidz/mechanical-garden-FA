@@ -40,10 +40,12 @@ class PlantoidDialogueAgent:
         io: str,
         addr: str,
         esp_id: str,
+        local_engine: any = None,
     ) -> None:
         # self.ctx = get_context('spawn')
         # self.speech_queue = self.ctx.Queue()
         # self.listen_queue = self.ctx.Queue()
+        self.local_engine = local_engine
         self.speech_queue = speech_queue
         self.listen_queue = listen_queue
         self.esp_ws_queue = esp_ws_queue
@@ -61,7 +63,7 @@ class PlantoidDialogueAgent:
         # eleven voice id
         self.eleven_voice_id = eleven_voice_id
         self.think_module = Think()
-        self.speak_module = Speak()
+        self.speak_module = Speak(local_engine=self.local_engine)
         self.listen_module = Listen()
         self.channel_id = channel_id
         

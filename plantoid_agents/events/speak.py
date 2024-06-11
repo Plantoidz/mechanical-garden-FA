@@ -47,16 +47,10 @@ client = ElevenLabs(
   api_key=ELEVENLABS_API_KEY
 )
 
-def initialize_coqui_engine():
-    return CoquiEngine(
-        model_name="tts_models/multilingual/multi-dataset/xtts_v2",
-        level=logging.DEBUG,
-    )
+# engine = None
 
-engine = None
-
-if __name__ == '__main__':
-    engine = initialize_coqui_engine()
+# if __name__ == '__main__':
+#     engine = initialize_coqui_engine()
 
 # set_api_key(ELEVENLABS_API_KEY)
 
@@ -71,6 +65,7 @@ class Speak:
         chunk: int = 512,
         channels: int = 1,
         device_index: int = None,
+        local_engine: any = None,
     ) -> None:
         """
         Initializes a new instance of the Speak class.
@@ -88,6 +83,9 @@ class Speak:
         self.device_index = device_index
         self.channels = channels
         self.listen_module = Listen()
+        self.local_engine = local_engine
+        # self.coqui_engine = initialize_coqui_engine()
+
 
     def get_text_to_speech_response(self, text, eleven_voice_id, callback=None):
 
@@ -388,25 +386,33 @@ class Speak:
 
             if use_streaming:
 
-                # # generate audio stream   
-                audio_stream = client.generate(
-                    # text=self.stream_text(response),
-                    text=self.gather_response(response),
-                    # text = "hello i'm alive. Number 95",
-                    model=self.elevenlabs_model_type,
-                    voice=voice_id,
-                    stream=True,
-                    output_format="pcm_16000"
-                )
+                # # # generate audio stream   
+                # audio_stream = client.generate(
+                #     # text=self.stream_text(response),
+                #     text=self.gather_response(response),
+                #     # text = "hello i'm alive. Number 95",
+                #     model=self.elevenlabs_model_type,
+                #     voice=voice_id,
+                #     stream=True,
+                #     output_format="pcm_16000"
+                # )
 
 
                 # ############################################
 
                 # LOCAL TTS PART ###########################
-                # audio_stream = TextToAudioStream(engine)
-                # audio_stream.feed(self.gather_response(response))
 
-                # magicstream_local_websocket(audio_stream, agent.instruct_queue, agent.speech_queue, agent.speech_event, esp_id=agent.esp_id)
+                if self.local_engine is not None:
+                    logging.info("Local TTS streaming started.")
+                    # logging.info("Engine is: ", self.local_engine)
+                    # print("Engine is: ", self.local_engine)
+                    audio_stream = TextToAudioStream(self.local_engine)
+                    audio_stream.feed(self.gather_response(response))
+
+                    magicstream_local_websocket(audio_stream, agent.instruct_queue, agent.speech_queue, agent.speech_event, esp_id=agent.esp_id)
+
+                else:
+                    print("Local TTS streaming not started. No engine selected.")
 
 
                 # loop = asyncio.get_event_loop()\

@@ -22,6 +22,7 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
         io: str,
         addr: str,
         esp_id: str,
+        local_engine: any = None,
     ) -> None:
         super().__init__(
             name,
@@ -38,6 +39,7 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
             io,
             addr,
             esp_id,
+            local_engine=local_engine,
         )
         self.bidding_template = bidding_template
         self.clone_voice = True

@@ -19,7 +19,7 @@ import context.speaker_selection as speaker_selection # TODO: roll this into con
 import random
 
 class InteractionManager:
-    def __init__(self, queues: Dict[str, Any], events: Dict[str, Any]):
+    def __init__(self, queues: Dict[str, Any], events: Dict[str, Any], engines: Dict[str, Any]):
         self.speech_queue = queues["speech"]
         self.listen_queue = queues["listen"]
         self.esp_ws_queue = queues["esp_ws"]
@@ -27,6 +27,8 @@ class InteractionManager:
 
         self.speech_event = events["speech"]
         self.listen_event = events["listen"]
+
+        self.local_tts_engine = engines["local_tts"]
 
 
     def get_selection_function(self, selection_function: str) -> any:
@@ -281,6 +283,7 @@ class InteractionManager:
                 io=character_io,
                 addr = character_addr,
                 esp_id = character_esp_id,
+                local_engine = self.local_tts_engine
             )
 
             character_agents.append(character_agent)

@@ -41,8 +41,5 @@ EXPOSE 8888
 # Set environment variable to detect Docker
 ENV RUNNING_IN_DOCKER true
 
-# Set up PulseAudio to run in the background
-RUN pulseaudio --daemonize
-
 # Run mechanical_garden.py when the container launches
-CMD ["python", "mechanical_garden.py"]
+CMD pulseaudio --start && python mechanical_garden.py

@@ -8,6 +8,17 @@ import utils.config_util as config_util
 import processes.interaction_manager_process as interaction_manager_process
 import processes.websocket_server_process as websocket_server_process
 
+from RealtimeTTS import TextToAudioStream, SystemEngine, CoquiEngine, AzureEngine, ElevenlabsEngine
+
+import logging
+
+def initialize_coqui_engine():
+    logging.info("Initializing Coqui TTS engine...")
+    return CoquiEngine(
+        model_name="tts_models/multilingual/multi-dataset/xtts_v2",
+        level=logging.DEBUG,
+    )
+
 def run_program():
     print("\n\033[94mHello Mechanical Garden!\033[0m")
 
@@ -25,12 +36,16 @@ def run_program():
         "listen": ctx.Event(),
     }
 
+    engines = {
+        "local_tts": initialize_coqui_engine(),
+    }
+
     # Start the WebSocket server in a separate process
     websocket_process = ctx.Process(target=websocket_server_process.run, args=(queues, events))
     websocket_process.start()
 
     # Start the InteractionManager in a separate process
-    interaction_process = ctx.Process(target=interaction_manager_process.run, args=(queues, events))
+    interaction_process = ctx.Process(target=interaction_manager_process.run, args=(queues, events, engines))
     interaction_process.start()
 
     try:
@@ -122,5 +137,4 @@ def main():
 
 if __name__ == "__main__":
     # multiprocessing.freeze_support()
-    multiprocessing.set_start_method('fork')
     main()

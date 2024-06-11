@@ -1,6 +1,8 @@
 services:
-  web:
-    build: .
+  mg:
+    build: . # Changed from 'image' to 'build' to ensure it uses the Dockerfile in the current directory
+    container_name: mg
+    restart: always
     ports:
       - "7777:7777"
       - "8888:8888"
@@ -10,8 +12,14 @@ services:
       - /usr/share/alsa:/usr/share/alsa
       - /etc/alsa:/etc/alsa
       - /dev/snd:/dev/snd
+      - "$HOME/.config/pulse/cookie:/root/.config/pulse/cookie"
+      - "${XDG_RUNTIME_DIR}/pulse/native:/run/user/1000/pulse/native" # Change to a more specific path
     environment:
       - ENV=development
-      - PULSE_SERVER=unix:/run/user/1000/pulse/native
+      - PULSE_SERVER=unix:/run/user/1000/pulse/native # Ensure this matches the mounted path
     env_file:
       - .env
+    devices:
+      - "/dev/snd:/dev/snd"
+    group_add:
+      - audio
