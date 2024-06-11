@@ -124,8 +124,14 @@ class PlantoidDialogueAgent:
             # instruct the ESP to playback 
             loop = asyncio.get_event_loop()
             loop.run_in_executor(None, self.instruct_queue.put_nowait, (self.esp_id, "2")) # thinking
+        if(val == "<listening>"): 
+            loop = asyncio.get_event_loop()
+            loop.run_in_executor(None, self.instruct_queue.put_nowait, (self.esp_id, "1")) # listening
+        if(val == "<asleep>"):
+            loop = asyncio.get_event_loop()
+            loop.run_in_executor(None, self.instruct_queue.put_nowait, (self.esp_id, "0")) # idle
     
-    
+
     def associate_esp_websocket(self):
         # self.socket = ws
         # print("ASSOCIATE ESP WEBSOCKET", self.channel_id, esp_id, self.channel_id == esp_id)
