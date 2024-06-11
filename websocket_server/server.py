@@ -38,16 +38,12 @@ agents = []  # where all agents encountered so far are stored
 def register_esp(esp_id, ws):
     global agents
 
-    already_exists = False
-    #first check if the ESP was already registered
+    #first check if the ESP was already registered, and remove it
     for i, a in enumerate(agents):
         if a["id"] == esp_id:
-            already_exists = True
+            agents.pop(i)
             break
-    if already_exists:
-        agents[esp_id] = ws
-    else:
-        agents.append({"id": esp_id, "ws": ws})
+    agents.append({"id": esp_id, "ws": ws})
     
     logging.info(f"Registering ESP id: {esp_id} with socket: {ws}")
 
