@@ -124,18 +124,21 @@ async def check_for_instructions(instruct_queue, speech_event):
         logging.info(f"Processing task: esp={esp_id} mode={task}")
         
         ws = None
+
         for a in agents:
-            if a["id"] == esp_id:
-                ws = a["ws"]
-                logging.info(f"Found a match for {esp_id} with socket: {ws}")
-                break
+                if a["id"] == esp_id:
+                    ws = a["ws"]
+                    logging.info(f"Found a match for {esp_id} with socket: {ws}")
+                    break
 
         if ws is None:
-            for a in agents:
-                if a["ws"]:
-                    ws = a["ws"]
-                    logging.info(f"Fallback to ESP {a['id']}")
-                    break
+
+            if(task == "2" or task == "3"): ## use the fallback mode only for thinking and speaking
+                for a in agents:
+                    if a["ws"]:
+                        ws = a["ws"]
+                        logging.info(f"Fallback to ESP {a['id']}")
+                        break
 
         if ws:
             print("Sending instruction .............")

@@ -497,7 +497,7 @@ class Speak:
         #     setup_magicstream()
 
         for a in agents:
-            if(a.callback): a.callback("<asleep>")
+            if((a.callback) and (a != agent)): a.callback("<asleep>")
 
         if(agent.callback): agent.callback("<speaking>")
 
