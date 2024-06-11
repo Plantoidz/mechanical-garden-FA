@@ -38,8 +38,17 @@ agents = []  # where all agents encountered so far are stored
 def register_esp(esp_id, ws):
     global agents
 
-    # esp_ws_queue.put(esp_id)
-    agents.append({"id": esp_id, "ws": ws})
+    already_exists = False
+    #first check if the ESP was already registered
+    for i, a in enumerate(agents):
+        if a["id"] == esp_id:
+            already_exists = True
+            break
+    if already_exists:
+        agents[esp_id] = ws
+    else:
+        agents.append({"id": esp_id, "ws": ws})
+    
     logging.info(f"Registering ESP id: {esp_id} with socket: {ws}")
 
 def unregister_esp(esp_id):
@@ -96,7 +105,7 @@ async def send_stream_to_websocket(websocket, path, speech_queue, speech_event):
             await asyncio.sleep(0.0001)
 
 
-        #    logging.info(f"Sent audio stream chunk of size: {len(chunk)} bytes")
+            logging.info(f"Sent audio stream chunk of size: {len(chunk)} bytes")
 
         await websocket.send(b'')
         
