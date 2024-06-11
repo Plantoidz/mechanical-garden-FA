@@ -113,8 +113,8 @@ def magicstream_local_websocket(
 
         loop.run_in_executor(None, speech_queue.put_nowait, (esp_id, None))                    
 
-        print("GOING TO SLEEP FOR few SECONDS.. URGHHHOEUATOEHUTANHT@!@#@#$@#$!@#$!")
-        time.sleep(1)  ### TODO: remove, this is just a test !
+        # print("GOING TO SLEEP FOR few SECONDS.. URGHHHOEUATOEHUTANHT@!@#@#$@#$!@#$!")
+        # time.sleep(1)  ### TODO: remove, this is just a test !
  
         loop.run_in_executor(None, instruct_queue.put_nowait, (esp_id, "3"))                    
 
@@ -124,8 +124,14 @@ def magicstream_local_websocket(
             print(f"No playback termination message received within {timeout} seconds.")
 
         print("clearing the queue.. just in case !!!!!!!!!!!!!!!-----------")
-        with speech_queue.mutex:
-            speech_queue.clear()
+        #with speech_queue.mutex:
+        #    speech_queue.clear()
+        
+        while not speech_queue.empty():
+                speech_queue.get_nowait()
+        # except Empty:
+        #     pass
+
 
     except Exception as e:
         print(f"An error occurred while queuing audio stream: {e}")

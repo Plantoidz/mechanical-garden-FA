@@ -101,7 +101,8 @@ async def send_stream_to_websocket(websocket, path, speech_queue, speech_event):
             await asyncio.sleep(0.0001)
 
 
-            logging.info(f"Sent audio stream chunk of size: {len(chunk)} bytes")
+            #logging.info(f"Sent audio stream chunk of size: {len(chunk)} bytes")
+            print(".")
 
         await websocket.send(b'')
         
