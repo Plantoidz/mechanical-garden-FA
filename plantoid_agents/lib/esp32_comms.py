@@ -90,7 +90,7 @@ def magicstream_websocket(
         else:
             logging.warning(f"No playback termination message received within {timeout} seconds.")
 
-       print("clearing the queue.. just in case !!!!!!!!!!!!!!!-----------")
+        print("clearing the queue.. just in case !!!!!!!!!!!!!!!-----------")
 
         try:
             while not speech_queue.empty():
