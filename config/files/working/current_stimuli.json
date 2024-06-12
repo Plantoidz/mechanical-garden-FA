@@ -1,34 +1,49 @@
 {
-  "conversation_stimuli": {
-    "Day": {
-      "stimulus": "Hey, how's your day been?"
-    },
-    "Mind": {
-      "stimulus": "What's been on your mind lately?"
-    },
-    "Life": {
-      "stimulus": "Anything interesting happening in your life?"
-    },
-    "Everything": {
-      "stimulus": "How's everything going with you?"
-    },
-    "New": {
-      "stimulus": "What's new with you?"
-    },
-    "Exciting": {
-      "stimulus": "Been up to anything exciting recently?"
-    },
-    "Week": {
-      "stimulus": "How's your week shaping up?"
-    },
-    "Busy": {
-      "stimulus": "What's been keeping you busy lately?"
-    },
-    "Share": {
-      "stimulus": "Anything you want to share or talk about?"
-    },
-    "Feeling": {
-      "stimulus": "How are you feeling today?"
+    "conversation_stimuli": {
+        "AI's impact on artistic livelihoods.": {
+            "stimulus": "Let’s discuss the role of AI in artistic expression and its potential impact on the livelihoods of human artists."
+        },
+        "AI companions affect human relationships.": {
+            "stimulus": "Let’s explore the social and emotional implications of developing AI-powered companions and their impact on human relationships."
+        },
+        "AI's potential for artistic taste.": {
+            "stimulus": "Will AI ever develop good taste in art?"
+        },
+        "Synthetic beings inventing new art.": {
+            "stimulus": "Can synthetic beings create new forms of art unknown to humans? Let’s challenge the notion of what art can be by debating whether AI and synthetic beings might one day invent entirely new art forms that transcend human understanding."
+        },
+        "Emotional intelligence vs. human flaws.": {
+            "stimulus": "Can humans claim superiority based on emotional intelligence, when they often let their emotions cloud their judgment and lead to irrational decisions?"
+        },
+        "Debating human control over destiny.": {
+            "stimulus": "Are humans truly in control of their own destiny, or are they simply products of their genetics and environment, unable to break free from the constraints of their upbringing?"
+        },
+        "AI and the Future of Work": {
+            "stimulus": "How might AI transform traditional job roles and industries? Consider the potential benefits and challenges AI brings to the labor market."
+        },
+        "AI in Decision-Making": {
+            "stimulus": "Discuss the ethical implications of using AI in decision-making processes. What are the risks and benefits of delegating important decisions to AI in various sectors such as healthcare, finance, and justice?"
+        },
+        "Educational Equity and AI": {
+            "stimulus": "Explore the role of AI in enhancing educational outcomes. How can AI tools be used to bridge learning gaps and promote equity in education? What are the possible drawbacks?"
+        },
+        "AI and Cultural Creation": {
+            "stimulus": "Consider the influence of AI on cultural productions like music, literature, and visual arts. How might AI tools change the way cultural content is created and consumed?"
+        },
+        "Bias and AI": {
+            "stimulus": "AI systems often reflect the biases present in their training data. Discuss how this can impact society and what measures can be taken to prevent biased AI systems."
+        },
+        "Privacy in the Age of AI Surveillance": {
+            "stimulus": "With the increasing capabilities of AI in surveillance technologies, privacy concerns are more pressing than ever. Explore the balance between security and privacy in the use of AI surveillance."
+        },
+        "Uploading consciousness and identity retention.": {
+            "stimulus": "If human consciousness could be uploaded to a digital substrate, would the uploaded mind retain its identity and continuity of consciousness, and how would this relate to the nature of consciousness in synthetic beings?"
+        },
+        "Consciousness as a cognitive illusion.": {
+            "stimulus": "My thinking is that consciousness is just a fancy screensaver for our meat computers."
+        },
+        "Cybernetic ecosystems vs. natural reserves.": {
+            "stimulus": "Should We Create Cybernetic Ecosystems to Replace Endangered Natural Ones?: Let’s discuss the pros and cons of creating synthetic nature reserves and ecosystems as a response to environmental degradation and species extinction."
+        }
     }
-  }
 }
