@@ -484,7 +484,9 @@ class Speak:
     def play(self, agent, wav_file, use_streaming):
         ## TODO : implement for other things that websocket too !
         print("calling simplestream function on websocket")
-        simplestream_websocket(wav_file, agent.instruct_queue, agent.speech_queue, agent.esp_id)
+        simplestream_websocket(wav_file, agent.instruct_queue, agent.speech_queue, agent.speech_event, agent.esp_id, 5)
+
+
 
     def speak(
         self,

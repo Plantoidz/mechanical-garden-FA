@@ -9,7 +9,7 @@ import time
 import wave
 
 
-def simplestream_websocket(wav_file, instruct_queue, speech_queue, esp_id):
+def simplestream_websocket(wav_file, instruct_queue, speech_queue, speech_event, esp_id, timeout=20):
     #try:
         loop = asyncio.get_event_loop()
 
@@ -36,6 +36,21 @@ def simplestream_websocket(wav_file, instruct_queue, speech_queue, esp_id):
         # instruct the ESP to playback 
         loop.run_in_executor(None, instruct_queue.put, (esp_id, "3"))
         print("Adding new instructions for the Queue for BEEP")
+        
+        
+        if speech_event.wait(timeout):
+            print("SIMPLE PLAY: Playback termination message received.")
+        else:
+            print(f"SIMPLE PLAY: No playback termination message received within {timeout} seconds.")
+
+        print("clearing the queue.. just in case !!!!!!!!!!!!!!!-----------")
+        #with speech_queue.mutex:
+        #    speech_queue.clear()
+        
+        while not speech_queue.empty():
+                speech_queue.get_nowait()
+        # except Empty:
+        #     pass
 
     # except Exception as e:
     #     print(f"SIMPLE_STREAM: An error occurred while queuing audio stream: {e}")
@@ -170,6 +185,5 @@ def magicstream_local_websocket(
         print(f"An error occurred while queuing audio stream: {e}")
 
 
-# Function to convert audio chunk
 
 
