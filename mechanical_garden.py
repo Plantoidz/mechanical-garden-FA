@@ -1,6 +1,7 @@
 import os
 import multiprocessing
 from multiprocessing import Queue, Event, current_process, Manager
+import sys
 
 import utils.config_util as config_util
 # from plantoid_agents.lib.MultichannelRouter import setup_magicstream
@@ -105,6 +106,9 @@ def main():
         print("Running in Docker environment")
         run_program()
     else:
+        if sys.argv[1] == "run":
+            run_program()
+
         while True:
             show_menu()
             choice = input("\nSelect an option: ")
