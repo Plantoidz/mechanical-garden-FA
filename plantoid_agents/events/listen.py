@@ -94,20 +94,24 @@ class Listen:
         self.tts_model_type = services["speech_recognition_model"]
 
     #todo: revisit cue sounds and background music
-    def play_speech_indicator(self) -> None:
+    def play_speech_indicator(self, non_human_agent) -> None:
             
         # get the path to the speech indicator sound
-        speech_indicator_path = os.getcwd()+"/media/beep_start.wav"
-        playsound(speech_indicator_path, block=False)
+        speech_indicator_path = os.getcwd()+"/media/beep_start16.wav"
+        
+        # playsound(speech_indicator_path, block=False)
+        print("calling PLAY BEEP on non_human agent.........")
+        non_human_agent.play(speech_indicator_path, streaming=True)
 
         # mixer.init()
         # mixer.music.load(speech_indicator_path)
         # mixer.music.play(loops=1)
 
-    def play_speech_ending(self) -> None:
+    def play_speech_ending(self, non_human_agent) -> None:
         
-        speech_acknowledgement_path = os.getcwd()+"/media/beep_stop.wav"
-        playsound(speech_acknowledgement_path, block=False)
+        speech_acknowledgement_path = os.getcwd()+"/media/beep_stop16.wav"
+        #playsound(speech_acknowledgement_path, block=False)
+        non_human_agent.play(speech_acknowledgement_path, streaming=True)
 
     def play_speech_acknowledgement(self, voice_id: str) -> None:
         random_effect = random.choice([
@@ -241,7 +245,7 @@ class Listen:
             
         return max(0,thresholds[-1] + threshold_bias)
 
-    def listen_for_speech_manual(self, timeout_override: str = None): # @@@ remember to add acknowledgements afterwards
+    def listen_for_speech_manual(self, non_human_agent, timeout_override: str = None): # @@@ remember to add acknowledgements afterwards
 
         config = load_config(os.getcwd()+'/configuration.toml')
 
@@ -378,7 +382,7 @@ class Listen:
         stream.close()
         audio.terminate()
         
-        self.play_speech_ending()
+        self.play_speech_ending(non_human_agent)
 
         return audio_file_path
 
@@ -492,9 +496,9 @@ class Listen:
 
         return utterance
 
-    def recognize_speech_whisper_manual(self, timeout_override: str = None):
+    def recognize_speech_whisper_manual(self, non_human_agent, timeout_override: str = None):
 
-        self.listen_for_speech_manual(timeout_override)
+        self.listen_for_speech_manual(non_human_agent, timeout_override)
         utterance = self.recognize_whisper()
 
 
@@ -524,7 +528,7 @@ class Listen:
         # esp32_comms.XYZ()
         pass
     
-    def listen(self, characters, timeout_override: str = None, step: int = 0) -> Any:
+    def listen(self, characters, non_human_agent = None, timeout_override: str = None, step: int = 0) -> Any:
 
         # print("TTS MODEL TYPE:", self.tts_model_type)
         for character in characters:
@@ -534,7 +538,7 @@ class Listen:
             return self.recognize_speech_whisper_google(timeout_override)
         
         if self.tts_model_type == "whisper":
-            return self.recognize_speech_whisper_manual(timeout_override)
+            return self.recognize_speech_whisper_manual(non_human_agent, timeout_override)
 
         if self.tts_model_type == "deepgram":
             return self.recognize_speech_deepgram(step=step)

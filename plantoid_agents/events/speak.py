@@ -20,7 +20,7 @@ from utils.config_util import read_services_config
 #     magicstream_MPV,
 #     setup_magicstream
 # )
-from plantoid_agents.lib.esp32_comms import magicstream_websocket, magicstream_local_websocket
+from plantoid_agents.lib.esp32_comms import simplestream_websocket, magicstream_websocket, magicstream_local_websocket
 # from plantoid_agents.lib.esp32_comms import XYZ
 from plantoid_agents.events.listen import Listen
 
@@ -382,6 +382,8 @@ class Speak:
         )
         shadow_listener_thread.start()
 
+        print("STREAM AUDIO RESPONSE WITH use_streaming == ", use_streaming)
+
         try:
 
             if use_streaming:
@@ -477,6 +479,12 @@ class Speak:
             stop_event.set()
             audio_detected_event.set()
             shadow_listener_thread.join()
+
+
+    def play(self, agent, wav_file, use_streaming):
+        ## TODO : implement for other things that websocket too !
+        print("calling simplestream function on websocket")
+        simplestream_websocket(wav_file, agent.instruct_queue, agent.speech_queue, agent.esp_id)
 
     def speak(
         self,

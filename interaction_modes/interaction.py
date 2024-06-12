@@ -88,7 +88,7 @@ class PlantoidInteraction:
         speaker = self.agents[self.get_first_non_human_idx()]
         # print('speaker name === ', speaker.name)
         # print("INTRO MSG = ", intro_message)
-        speaker.speak(self.agents, intro_message, use_streaming=False)
+        speaker.speak(self.agents, intro_message, use_streaming=True)
 
         self.set_speaker_idx(self.get_first_non_human_idx(), idx_type="last")
         self.inject(speaker.name, intro_message)
@@ -125,7 +125,7 @@ class PlantoidInteraction:
             # last_speaker.speak(self.agents, speaker.name, use_streaming=False)
             # playsound(os.getcwd() + "/media/cleanse.mp3", block=False)
 
-            message = speaker.listen_for_speech(self.agents, self._step)
+            message = speaker.listen_for_speech(self.agents, self._step, self.agents[self.get_first_non_human_idx()])
             # message = "Test human message"
             self.log_conversation(speaker, message)
 

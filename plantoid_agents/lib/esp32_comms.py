@@ -6,6 +6,39 @@ from pydub import AudioSegment
 from io import BytesIO
 import pyaudio
 import time
+import wave
+
+
+def simplestream_websocket(wav_file, instruct_queue, speech_queue, esp_id):
+    #try:
+        loop = asyncio.get_event_loop()
+
+
+        # Set chunk size of 1024 samples per data frame
+        chunksize = 1024  
+
+        # Open the sound file 
+        wf = wave.open(wav_file, 'rb')
+
+        # Read data in chunks
+        chunk = wf.readframes(chunksize)
+
+        # Play the sound by writing the audio data to the stream
+        while chunk != b'':
+
+            loop.run_in_executor(None, speech_queue.put_nowait, (esp_id, chunk))
+            chunk = wf.readframes(chunksize)
+            print("SEND BEEP CHUNKS")
+
+        # Signal the end of the stream
+        loop.run_in_executor(None, speech_queue.put, (esp_id, None))
+
+        # instruct the ESP to playback 
+        loop.run_in_executor(None, instruct_queue.put, (esp_id, "3"))
+        print("Adding new instructions for the Queue for BEEP")
+
+    # except Exception as e:
+    #     print(f"SIMPLE_STREAM: An error occurred while queuing audio stream: {e}")
 
 
 def magicstream_websocket(

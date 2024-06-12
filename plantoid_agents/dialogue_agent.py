@@ -181,10 +181,10 @@ class PlantoidDialogueAgent:
             return False
 
 
-    def listen_for_speech(self, agents, step: int = 0) -> str:
+    def listen_for_speech(self, agents, step: int = 0, non_human_agent = None) -> str:
 
-        self.listen_module.play_speech_indicator()
-        user_message = self.listen_module.listen(agents, step=step)
+        self.listen_module.play_speech_indicator(non_human_agent)
+        user_message = self.listen_module.listen(agents,  non_human_agent, step=step)
 
         print("\n\033[92m" +"Human said:\033[0m\n" + user_message)
 
@@ -230,6 +230,9 @@ class PlantoidDialogueAgent:
 
         return message
     
+    def play(self, filename: str, streaming: bool = True) -> None:
+        self.speak_module.play(self, filename, streaming)
+
     def speak(
         self,
         agents,
