@@ -120,7 +120,7 @@
         "gpt_use_perceiver_resampler": true,
         "input_sample_rate": 22050,
         "output_sample_rate": 24000,
-        "output_hop_length": 256,
+        "output_hop_length": 1024, 
         "decoder_input_dim": 1024,
         "d_vector_dim": 512,
         "cond_d_vector_in_each_upsampling_layer": true,
