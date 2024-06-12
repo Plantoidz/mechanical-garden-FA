@@ -301,7 +301,7 @@ class InteractionManager:
         interaction_description: str,
         characters: List[Any],
         selection_function: any,
-        max_iters: int = 20
+        max_iters: int = 25
     ) -> None:
         """
         Starts the interaction simulation using the provided interaction mode and characters.

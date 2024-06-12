@@ -247,7 +247,7 @@ class Listen:
 
     def listen_for_speech_manual(self, non_human_agent, timeout_override: str = None): # @@@ remember to add acknowledgements afterwards
 
-        config = load_config(os.getcwd()+'/configuration.toml')
+        config = load_config()
 
         cfg = config['audio']
 

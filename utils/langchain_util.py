@@ -8,7 +8,7 @@ from utils.util import load_config
 # Load environment variables from .env file
 load_dotenv()
 
-config = load_config(os.getcwd()+"/configuration.toml")
+config = load_config()
 
 
 OPENAI_API_KEY = os.environ.get("OPENAI")

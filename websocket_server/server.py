@@ -120,7 +120,6 @@ async def check_for_instructions(instruct_queue, speech_event):
 
     while True:
         esp_id, task = await loop.run_in_executor(None, instruct_queue.get)
-        print("SERVER FOUND INSTRUCTION FOR ["+ esp_id+ "]of type = ", type(esp_id), " with instruction == ", task)
         logging.info(f"Processing task: esp={esp_id} mode={task}")
         
         ws = None
@@ -141,10 +140,8 @@ async def check_for_instructions(instruct_queue, speech_event):
                         break
 
         if ws:
-            print("Sending instruction .............")
 
             try:
-                print("PLAYBACK .............................................")
                 await ws.send(task)
 
             except websockets.exceptions.ConnectionClosed:

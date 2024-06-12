@@ -20,7 +20,15 @@ load_dotenv()
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 ELEVENLABS_API_KEY = os.environ.get("ELEVENLABS_API_KEY")
 
-config = load_config(os.getcwd()+"/configuration.toml")
+
+def get_working_path():
+    path = os.environ.get("WORKING_PATH")
+    if(not path):
+        path = os.getcwd()
+    return path
+
+
+config = load_config()
 
 # instantiate the LLM to use
 use_narrator_voice_id = config['general']['use_narrator_voice_id']

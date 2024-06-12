@@ -2,10 +2,18 @@ import toml
 import requests
 import os
 
+def get_working_path():
+    path = os.environ.get("WORKING_PATH")
+    print("WORKING PATH == " + path)
+    if(not path):
+        path = os.getcwd()
+    return path
+
+
 def load_config(config_path=None):
 
     if config_path is None:
-        config_path = os.getcwd()+"/configuration.toml"
+        config_path = get_working_path()+"/configuration.toml"
 
     return toml.load(config_path)
 

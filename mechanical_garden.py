@@ -20,7 +20,7 @@ def initialize_coqui_engine():
         level=logging.DEBUG,
     )
 
-def run_program():
+def run_program(loop: bool = True):
     print("\n\033[94mHello Mechanical Garden!\033[0m")
 
     ctx = multiprocessing.get_context('fork')
@@ -46,11 +46,11 @@ def run_program():
     websocket_process.start()
 
     # Start the InteractionManager in a separate process
-    interaction_process = ctx.Process(target=interaction_manager_process.run, args=(queues, events, engines))
+    interaction_process = ctx.Process(target=interaction_manager_process.run, args=(queues, events, engines, loop))
     interaction_process.start()
 
     try:
-        while True:
+        while interaction_process.is_alive() or loop:
             pass
     except KeyboardInterrupt:
         print("Exiting program.")
@@ -106,10 +106,12 @@ def main():
         print("Running in Docker environment")
         run_program()
     else:
-        if sys.argv[1] == "run":
-            run_program()
+        if (len(sys.argv) > 1 and sys.argv[1] == "run"):
+            run_program(loop=False)
+            exit()
 
-        while True:
+        #while True:
+        else:
             show_menu()
             choice = input("\nSelect an option: ")
             
@@ -135,7 +137,7 @@ def main():
                 test_audio()
             elif choice == '11':
                 print("Exiting program.")
-                break
+                exit()
             else:
                 print("Invalid choice. Please try again.")
 
