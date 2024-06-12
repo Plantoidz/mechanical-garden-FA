@@ -44,13 +44,12 @@ def simplestream_websocket(wav_file, instruct_queue, speech_queue, speech_event,
             print(f"SIMPLE PLAY: No playback termination message received within {timeout} seconds.")
 
         print("clearing the queue.. just in case !!!!!!!!!!!!!!!-----------")
-        #with speech_queue.mutex:
-        #    speech_queue.clear()
-        
-        while not speech_queue.empty():
+
+        try:
+            while not speech_queue.empty():
                 speech_queue.get_nowait()
-        # except Empty:
-        #     pass
+        except Empty:
+            pass
 
     # except Exception as e:
     #     print(f"SIMPLE_STREAM: An error occurred while queuing audio stream: {e}")
@@ -91,7 +90,14 @@ def magicstream_websocket(
         else:
             logging.warning(f"No playback termination message received within {timeout} seconds.")
 
-        logging.info("Playback termination message received.")
+       print("clearing the queue.. just in case !!!!!!!!!!!!!!!-----------")
+
+        try:
+            while not speech_queue.empty():
+                speech_queue.get_nowait()
+        except Empty:
+            pass
+
 
     except Exception as e:
         print(f"An error occurred while queuing audio stream: {e}")
@@ -171,14 +177,13 @@ def magicstream_local_websocket(
         else:
             print(f"No playback termination message received within {timeout} seconds.")
 
-        print("clearing the queue.. just in case !!!!!!!!!!!!!!!-----------")
-        #with speech_queue.mutex:
-        #    speech_queue.clear()
-        
-        while not speech_queue.empty():
+       print("clearing the queue.. just in case !!!!!!!!!!!!!!!-----------")
+
+        try:
+            while not speech_queue.empty():
                 speech_queue.get_nowait()
-        # except Empty:
-        #     pass
+        except Empty:
+            pass
 
 
     except Exception as e:

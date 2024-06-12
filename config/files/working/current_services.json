@@ -6,7 +6,7 @@
     "use_interruption": "False",
     "use_multichannel": "False",
     "use_websockets": "True",
-    "use_local_tts": "True",
+    "use_local_tts": "False",
     "multichannel_implementation": "MPV"
   }
   
