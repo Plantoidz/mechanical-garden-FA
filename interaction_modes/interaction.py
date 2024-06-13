@@ -24,7 +24,7 @@ class PlantoidInteraction:
         self.select_next_speaker = selection_function
         self.last_speaker_idx = 0
         self.current_speaker_idx = 0
-        self.humanness = 0.5
+        self.humanness = 0.7
         self.agent_interrupted = False
         self.interaction_timestamp = datetime.now()
 
