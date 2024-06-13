@@ -1,3 +1,25 @@
-WORKING PATH == /home/plantoidz/MECH_GARDEN/mechanical-garden-FA/
 
 [94mHello Mechanical Garden![0m
+
+[94mHello WebSocket Server![0m
+
+
+[92mLet's have a conversation.[94m
+	[90mUsing interaction mode: conversation
+	Using characters: ['DrySarcastic', 'JoyfulEmpathetic', 'MeanLady', 'ParadoxFinder', 'Simpleton', 'Plantony', 'Human']
+	Using agent type: debate
+	Using bidding template: conversation
+	Using selection function: conversation
+
+New stimulus. Resetting conversation...
+
+
+[94mEnunciating: [0m[92m
+Discutons du rôle de l'IA dans l'expression artistique et de son impact potentiel sur les moyens de subsistance des artistes humains.[0m
+inside the tunnel................. value =====================  <asleep>  for agent =  95
+inside the tunnel................. value =====================  <asleep>  for agent =  96
+inside the tunnel................. value =====================  <asleep>  for agent =  97
+inside the tunnel................. value =====================  <asleep>  for agent =  98
+inside the tunnel................. value =====================  <asleep>  for agent =  99
+inside the tunnel................. value =====================  <speaking>  for agent =  94
+STREAM AUDIO RESPONSE WITH use_streaming ==  True  and use_local_tts ==  True
