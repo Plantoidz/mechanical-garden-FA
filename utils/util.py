@@ -4,7 +4,6 @@ import os
 
 def get_working_path():
     path = os.environ.get("WORKING_PATH")
-    print("WORKING PATH == " + path)
     if(not path):
         path = os.getcwd()
     return path
