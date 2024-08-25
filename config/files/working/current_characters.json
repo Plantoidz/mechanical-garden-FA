@@ -17,8 +17,8 @@
             "default_channel": 1,
             "eleven_voice_id": "JKaCVZHc9HQGdL2pFvdk",
             "is_human": "False",
-            "io": "",
-            "addr": null
+            "io": "wifi",
+            "addr": "192.168.1.137"
         }
     ]
 }

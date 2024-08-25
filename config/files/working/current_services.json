@@ -1,7 +1,7 @@
 {
     "language_model": "claude-3-opus-20240229",
     "language_model_api": "litellm",
-    "speech_recognition_model": "google",
+    "speech_recognition_model": "deepgram",
     "speech_synthesis_model": "eleven_multilingual_v2",
     "use_interruption": "False",
     "use_multichannel": "False",

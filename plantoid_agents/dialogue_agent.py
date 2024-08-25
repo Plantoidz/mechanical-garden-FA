@@ -75,7 +75,10 @@ class PlantoidDialogueAgent:
     #     if(self.tunnel): self.tunnel.write(val.encode('ascii') + b"\n")
         if(self.socket): 
             try: 
-                self.socket.sendto(bytes(val, 'utf-8'), (self.addr, 666))
+                command = bytes(val, 'utf-8')
+                ESP_IP = self.addr
+                ESP_PORT = 1666
+                self.socket.sendto(command, (ESP_IP, ESP_PORT))
             except Exception as err:
                 print("Failed to connect to", self.addr, "with error:", err)
 

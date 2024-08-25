@@ -1,4 +1,4 @@
-from deepgram import DeepgramClient, LiveTranscriptionEvents, LiveOptions, Microphone
+from deepgram import DeepgramClient, LiveTranscriptionEvents, LiveOptions, Microphone, DeepgramClientOptions
 from dotenv import load_dotenv
 import logging, verboselogs
 import time
@@ -12,6 +12,10 @@ import sys
 # sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from plantoid_agents.lib.microphone import ModifiedMicrophone
+
+load_dotenv()
+
+DEEPGRAM_API_KEY = os.getenv("DEEPGRAM_API_KEY")
 
 @contextmanager
 def ignoreStderr():
@@ -30,6 +34,13 @@ def ignoreStderr():
 class DeepgramTranscription:
     def __init__(self, sample_rate: int = 48000, device_index: int = None, channels: int = 1, timeout: int = 5, callback=None):
         self.deepgram = DeepgramClient()
+
+        config = DeepgramClientOptions(
+            options={"keepalive": "true"} # Comment this out to see the effect of not using keepalive
+        )
+        
+        deepgram = DeepgramClient(DEEPGRAM_API_KEY, config)
+
         self.is_finals = []
         self.final_result = ""
         self.transcription_complete = False  # New flag for completion
