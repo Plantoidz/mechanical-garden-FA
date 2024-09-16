@@ -39,7 +39,7 @@ class PlantoidDebateAgent(PlantoidDialogueAgent):
             self,
             bid_system_message,
             use_content,
-            self.use_model_type,
+            # self.use_model_type,
             use_streaming,
         )
 

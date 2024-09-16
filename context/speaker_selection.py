@@ -62,6 +62,30 @@ def generate_character_bidding_template_conversation(character_header):
         << {{message_history}} >>
         ```
         Now, On the scale of 1 to 10, where 1 is "strongly agree" and 10 is "strongly disagree", rate your response to the latest message below, delimited by angle brackets (<<, >>):
+        If you are explicitly mentioned by any of the other characters or the human, always bid 10!!
+        If you are not explicitly mentioned, never bid more than 7!!
+        ```
+        << {{recent_message}} >>
+        ```
+
+        {bid_parser.get_format_instructions()}
+    """
+
+    return bidding_template
+
+def generate_character_bidding_template_conversation_OLD(character_header):
+
+    bid_parser = get_bid_parser()
+
+    bidding_template = f"""
+    
+        Here is your character description, delimited by angle brackets (<<, >>): << {character_header} >>.
+        Here is the conversation so far, delimited by angle brackets (<<, >>):
+
+        ```
+        << {{message_history}} >>
+        ```
+        Now, On the scale of 1 to 10, where 1 is "strongly agree" and 10 is "strongly disagree", rate your response to the latest message below, delimited by angle brackets (<<, >>):
         You must ignore your character description when making your bid!!!
         ```
         << {{recent_message}} >>
@@ -254,10 +278,12 @@ def select_next_speaker_with_human_clone(
 
     return idx
 
-def select_next_speaker_with_human_conversation_OLD(
+def select_next_speaker_with_human_conversation(
     step: int,
     agents: List[DialogueAgent],
     last_speaker_idx: int,
+    humanness: int = 0,
+    agent_interrupted: bool = False,
 ) -> int:
 
     # initialize bids
@@ -268,7 +294,6 @@ def select_next_speaker_with_human_conversation_OLD(
 
         if agent.is_human == True:
 
-            print("checking for human participation...")
             # last_speaker_is_human = check_last_speaker_is_human(agent)
             is_last_speaker = check_is_last_speaker(agent)
 
@@ -278,10 +303,14 @@ def select_next_speaker_with_human_conversation_OLD(
 
             else:
                 # 1 out of 3 times, will_participate = True
-                will_participate = True
+                randi = random.randint(0, 10)
+                will_participate = randi < (humanness * 10)
+
+            # # print("random m = ", randi)
+            # will_participate = (randi < (humanness * 100))
 
             # hacky to be max bid of 100, to be fixed or added to config file
-            bid = 100 if will_participate else 0
+            bid = 11 if will_participate else 0
 
         else:
 
@@ -304,20 +333,20 @@ def select_next_speaker_with_human_conversation_OLD(
     max_indices = np.where(bids == max_value)[0]
     idx = np.random.choice(max_indices)
 
-    # print("Bids:")
-    # for i, (bid, agent) in enumerate(zip(bids, agents)):
+    print("Bids:")
+    for i, (bid, agent) in enumerate(zip(bids, agents)):
 
-    #     print(f"\t{agent.name} bid: {bid}")
+        print(f"\t{agent.name} bid: {bid}")
 
-    #     if i == idx:
-    #         selected_name = agent.name
+        if i == idx:
+            selected_name = agent.name
 
-    # print(f"Next up: {selected_name}")
+    print(f"Next up: {selected_name}")
 
     return idx
 
     # todo: alternating every other turn as a config param
-def select_next_speaker_with_human_conversation(
+def select_next_speaker_with_human_conversation_OLD(
     step: int,
     agents: List[DialogueAgent],
     last_speaker_idx: int,

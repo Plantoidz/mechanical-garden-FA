@@ -109,8 +109,12 @@ class Think:
 
             response_stream = self.litellm_model(
                 model=self.model_type, 
-                messages=messages, 
-                stream=True
+                messages=messages,
+                # extra_body={
+                #     "fallbacks": ["gpt-4o"]
+                # },
+                stream=True,
+                timeout=60,
             )
 
             # self.stream_text(response_stream)
@@ -122,6 +126,10 @@ class Think:
             response = self.litellm_model(
                 model=self.model_type, 
                 messages=messages, 
+                timeout=60,
+                # extra_body={
+                #     "fallbacks": ["gpt-4o"]
+                # },
                 stream=False
             )
 

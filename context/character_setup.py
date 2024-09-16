@@ -155,6 +155,7 @@ def generate_character_header(
             You may take the responses of other conversation participants into account when responding to the human.
             The human's answer in the conversation history will be of the format, in angle brackets: << Human: HUMAN_ANSWER >>.
             Always reply directly to the human!
+            Keep in mind you are speaking! So Do not use hashtags (#), asterisk (*) or angle brackets (<<, >>) in your response!!!
             Build upon the specific content contained in the human's answer, be specific and offer an insightful analysis.
             You must keep all of your responses to strictly {word_limit} words!!!
         """
@@ -184,11 +185,15 @@ def generate_character_header(
         #     You must keep all of your responses to strictly {word_limit} words!!!
         # """        
 #PROMPT
-        response = f"""{character_description}  
+        response = f""" Here is your character description in angle brackets: << {character_description} >>
+        You are speaking verbally, so you must avoid using emotes, action tags, or any descriptive cues in your responses. Stick to plain text!
         Your job is to engage the Humans in the conversation.
         Try to build on the last message in the conversation.
         Respond in the right language.
-        Never address the other participants by name. Only address the Humans.
+        Keep in mind you are speaking! So Do not use hashtags (#), asterisk (*) or angle brackets (<<, >>) in your response!!!
+        You may be convinced to change your mind if you are presented with a convincing argument.
+        If you change your mind, be explicit about it.
+        If you change your mind, motivate why your opinion changed.
         You must keep all of your responses to strictly {word_limit} words.
         """
 
@@ -239,8 +244,9 @@ def generate_character_system_message(
         #PROMPT_TEMPLATE —> 
         content = f"""{character_header}
             Always respond directly, from the perspective of a single participant. 
-            Return only dialogue, never describe unspoken sounds or actions.
-            Do not use hashtags (#), asterik (*) or angle brackets (<<, >>)!!!
+            You are speaking verbally, so you must avoid using emotes, action tags, or any descriptive cues in your responses. Stick to plain text!
+            Return only spoken dialogue, never describe unspoken sounds or actions!!!
+            Do not use hashtags (#), asterisk (*) or angle brackets (<<, >>)!!!
             Stop speaking the moment you finish speaking from your perspective.
             Never forget to keep your response to {word_limit} words!!!
         """

@@ -1,5 +1,6 @@
 from deepgram import DeepgramClient, LiveTranscriptionEvents, LiveOptions, Microphone, DeepgramClientOptions
 from dotenv import load_dotenv
+from websockets import WebSocketException
 import logging, verboselogs
 import time
 import random
@@ -32,7 +33,7 @@ def ignoreStderr():
         os.close(old_stderr)
 
 class DeepgramTranscription:
-    def __init__(self, sample_rate: int = 48000, device_index: int = None, channels: int = 1, timeout: int = 5, callback=None):
+    def __init__(self, sample_rate: int = 48000, device_index: int = None, channels: int = 1, timeout: int = 5, callback=None, max_retries=50):
         self.deepgram = DeepgramClient()
 
         config = DeepgramClientOptions(
@@ -49,7 +50,8 @@ class DeepgramTranscription:
         self.device_index = device_index
         self.timeout = timeout  # Timeout in seconds
         self.callback = callback  # Callback for real-time updates
-
+        self.max_retries = max_retries  # Max retries for restarting
+        self.retry_count = 0  # Track retry attempts
 
     def reset(self):
         """
@@ -96,7 +98,7 @@ class DeepgramTranscription:
         print(f"Deepgram Metadata: {metadata}")
 
     def on_speech_started(self, *args, **kwargs):
-        print(f"\033[91m\tDeepgram is listening...\033[0m")
+        print(f"\033[91m\tDetected Speech Started - Deepgram is listening...\033[0m")
 
     def on_utterance_end(self, *args, **kwargs):
         if len(self.is_finals) > 0:
@@ -117,77 +119,71 @@ class DeepgramTranscription:
         print(f"Deepgram Unhandled Websocket Message: {unhandled}")
 
     def start_listening(self, step: int = 0):
+        while self.retry_count < self.max_retries:
+            try:
+                print(f"\033[90m\tStarting deepgram... (Attempt {self.retry_count + 1}/{self.max_retries})\033[0m")
+                self.reset()
 
-        # print("Start listening deepgram...")
-        # print("sample rate: ", self.sample_rate)
-        # print("device index: ", self.device_index)        
-        # with ignoreStderr():
+                connection = self.deepgram.listen.live.v("1")
+                connection.on(LiveTranscriptionEvents.Transcript, self.on_message)
+                connection.on(LiveTranscriptionEvents.SpeechStarted, self.on_speech_started)
+                connection.on(LiveTranscriptionEvents.UtteranceEnd, self.on_utterance_end)
+                connection.on(LiveTranscriptionEvents.Close, self.on_close)
+                connection.on(LiveTranscriptionEvents.Error, self.on_error)
+                connection.on(LiveTranscriptionEvents.Unhandled, self.on_unhandled)
 
-        connection = self.deepgram.listen.live.v("1")
-        connection.on(LiveTranscriptionEvents.Transcript, self.on_message)
-        # connection.on(LiveTranscriptionEvents.Metadata, self.on_metadata)
-        connection.on(LiveTranscriptionEvents.SpeechStarted, self.on_speech_started)
-        connection.on(LiveTranscriptionEvents.UtteranceEnd, self.on_utterance_end)
-        connection.on(LiveTranscriptionEvents.Close, self.on_close)
-        connection.on(LiveTranscriptionEvents.Error, self.on_error)
-        connection.on(LiveTranscriptionEvents.Unhandled, self.on_unhandled)
+                options = LiveOptions(
+                    model="nova-2",
+                    language="en-US",
+                    smart_format=True,
+                    encoding="linear16",
+                    channels=self.channels,
+                    sample_rate=self.sample_rate,
+                    interim_results=True,
+                    utterance_end_ms="1000",
+                    vad_events=True,
+                    endpointing=300
+                )
 
-        options = LiveOptions(
-            model="nova-2",
-            language="en-US",
-            smart_format=True,
-            encoding="linear16",
-            channels=self.channels,
-            sample_rate=self.sample_rate,
-            interim_results=True,
-            utterance_end_ms="1000",
-            vad_events=True,
-            endpointing=300
-        )
+                if not connection.start(options):
+                    print("Failed to connect to Deepgram")
+                    return
 
-        if connection.start(options) is False:
-            print("Failed to connect to Deepgram")
-            return
+                microphone = ModifiedMicrophone(
+                    connection.send,
+                    input_device_index=self.device_index,
+                    rate=self.sample_rate,
+                    channels=self.channels,
+                )
 
-        microphone = ModifiedMicrophone(
-            connection.send,
-            input_device_index=self.device_index,
-            rate=self.sample_rate,
-            channels=self.channels,
-        )
+                microphone.start()
+                start_time = time.time()
 
-        # microphone = Microphone(
-        #     connection.send,
-        #     rate=self.sample_rate,
-        #     # input_device_index=self.device_index,
-        # )
+                while not self.transcription_complete or (time.time() - start_time) < self.timeout:
+                    time.sleep(0.1)
 
-        microphone.start()
+                directory = os.path.join(os.getcwd(), "media/user_audio/temp")
+                os.makedirs(directory, exist_ok=True)
+                audio_file_path = os.path.join(directory, f"temp_reco_dg_{str(step)}.wav")
 
-        start_time = time.time()  # Note the start time
+                microphone.finish(audio_file_path=audio_file_path)
+                connection.finish()
 
-        # time.sleep(5)
+                break  # Exit the loop if everything went well
 
-        # Wait until the transcription is complete or 5 seconds have elapsed
-        while not self.transcription_complete or (time.time() - start_time) < self.timeout:
-            time.sleep(0.1)  # Sleep briefly to avoid busy waiting
-            # Optionally, you can keep a debug print here:
-            # print("Transcribing...")
+            except WebSocketException as e:
+                print(f"WebSocketException: {e}. Restarting listening process...")
+                self.retry_count += 1
+                time.sleep(2)  # Optional delay before retrying
 
-        # Define the directory path
-        directory = os.path.join(os.getcwd(), "media/user_audio/temp")
+            except Exception as e:
+                print(f"Unhandled exception: {e}. Restarting listening process...")
+                self.retry_count += 1
+                time.sleep(2)
 
-        # Ensure the directory exists
-        os.makedirs(directory, exist_ok=True)
+        if self.retry_count >= self.max_retries:
+            print("Max retries reached. Could not establish connection with Deepgram.")
 
-        # Define the audio file path within the newly ensured directory
-        audio_file_path = os.path.join(directory, f"temp_reco_dg_{str(step)}.wav")
-
-        microphone.finish(audio_file_path=audio_file_path)
-        # microphone.finish()
-        connection.finish()
-        
-        # TODO: cue sounds based on pre-generated runtime_effects
 
     def get_final_result(self):
         # print("Sending final result:", self.final_result)

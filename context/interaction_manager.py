@@ -29,7 +29,7 @@ class InteractionManager:
         """
         if selection_function == 'conversation':
             print("\n\n\033[92mLet's have a conversation.\033[94m")
-            return speaker_selection.select_next_speaker_with_human_conversation
+            return speaker_selection.select_next_speaker_with_human_conversation_OLD
             # todo: enable this to be a config parameter
             # return speaker_selection.select_random_speaker
         

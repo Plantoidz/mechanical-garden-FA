@@ -17,8 +17,8 @@
             "default_channel": 0,
             "eleven_voice_id": "1eXUeQWHOX6o5yVdG13g",
             "is_human": "False",
-            "io": "",
-            "addr": ""
+            "io": "wifi",
+            "addr": "192.168.1.137"
         },
         {
             "name": "The Mad Hatter",
@@ -27,8 +27,8 @@
             "default_channel": 1,
             "eleven_voice_id": "542jzeOaLKbcpZhWfJDa",
             "is_human": "False",
-            "io": "",
-            "addr": ""
+            "io": "wifi",
+            "addr": "192.168.1.138"
         },
         {
             "name": "The Caterpillar",
@@ -37,8 +37,8 @@
             "default_channel": 2,
             "eleven_voice_id": "wyZnrAs18zdIj8UgFSV8",
             "is_human": "False",
-            "io": "",
-            "addr": ""
+            "io": "wifi",
+            "addr": "192.168.1.139"
         },
         {
             "name": "Queen of Hearts",
