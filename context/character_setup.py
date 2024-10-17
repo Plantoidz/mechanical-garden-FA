@@ -239,6 +239,7 @@ def generate_character_system_message(
         content = f"""
             Here is your character description in angle brackets: << {character_header} >>
             Always respond directly, from the perspective of your character. 
+            You may respond with a question!
             You are speaking verbally, so you must avoid using emotes, action tags, or any descriptive cues in your responses. Stick to plain text!
             Return only spoken dialogue, never describe unspoken sounds or actions!!!
             Do not use hashtags (#), asterisk (*) or angle brackets (<<, >>)!!!
@@ -249,7 +250,8 @@ def generate_character_system_message(
             Share your inner monologue and stresses.
             Use your inner monologue and grow from your stresses to be proactive in driving towards positive outcomes.
             Do not change roles!
-            Never forget to keep your response to {word_limit} words!!!
+            Vary your response length between a few words (exclamations, interjections, etc) and {word_limit} words!!!
+            Never forget the maximum response length {word_limit} words!!!
         """
 
     return content
