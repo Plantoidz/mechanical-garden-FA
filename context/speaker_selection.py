@@ -56,13 +56,10 @@ def generate_character_bidding_template_conversation(character_header):
     bidding_template = f"""
     
         Here is your character description, delimited by angle brackets (<<, >>): << {character_header} >>.
-        Here is the conversation so far, delimited by angle brackets (<<, >>):
 
         ```
-        << {{message_history}} >>
-        ```
-        Now, On the scale of 1 to 10, where 1 is "strongly agree" and 10 is "strongly disagree", rate your response to the latest message below, delimited by angle brackets (<<, >>):
         If you are explicitly mentioned by any of the other characters or the human, always bid 10!!
+        If the name that was uttered is close to being your name, always bid 10!!
         If you are not explicitly mentioned, never bid more than 7!!
         ```
         << {{recent_message}} >>
@@ -346,7 +343,7 @@ def select_next_speaker_with_human_conversation(
     return idx
 
     # todo: alternating every other turn as a config param
-def select_next_speaker_with_human_conversation_OLD(
+def select_next_speaker_with_human_conversation_random(
     step: int,
     agents: List[DialogueAgent],
     last_speaker_idx: int,

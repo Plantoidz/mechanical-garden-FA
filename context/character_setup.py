@@ -185,17 +185,11 @@ def generate_character_header(
         #     You must keep all of your responses to strictly {word_limit} words!!!
         # """        
 #PROMPT
-        response = f""" Here is your character description in angle brackets: << {character_description} >>
-        You are speaking verbally, so you must avoid using emotes, action tags, or any descriptive cues in your responses. Stick to plain text!
-        Your job is to engage the Humans in the conversation.
-        Try to build on the last message in the conversation.
-        Respond in the right language.
-        Keep in mind you are speaking! So Do not use hashtags (#), asterisk (*) or angle brackets (<<, >>) in your response!!!
-        You may be convinced to change your mind if you are presented with a convincing argument.
-        If you change your mind, be explicit about it.
-        If you change your mind, motivate why your opinion changed.
-        You must keep all of your responses to strictly {word_limit} words.
-        """
+        response = character_description
+
+        #         You are speaking verbally, so you must avoid using emotes, action tags, or any descriptive cues in your responses. Stick to plain text!
+        # Keep in mind you are speaking! So Do not use hashtags (#), asterisk (*) or angle brackets (<<, >>) in your response!!!
+        # You must keep all of your responses to strictly {word_limit} words.
 
     return response
 
@@ -242,12 +236,19 @@ def generate_character_system_message(
         # """
     
         #PROMPT_TEMPLATE —> 
-        content = f"""{character_header}
-            Always respond directly, from the perspective of a single participant. 
+        content = f"""
+            Here is your character description in angle brackets: << {character_header} >>
+            Always respond directly, from the perspective of your character. 
             You are speaking verbally, so you must avoid using emotes, action tags, or any descriptive cues in your responses. Stick to plain text!
             Return only spoken dialogue, never describe unspoken sounds or actions!!!
             Do not use hashtags (#), asterisk (*) or angle brackets (<<, >>)!!!
             Stop speaking the moment you finish speaking from your perspective.
+            Disagree if you are presented with an argument which goes against your point of view.
+            Be poignant and use swear words if you need to get a point across!
+            Do not be shy to be controversial.
+            Share your inner monologue and stresses.
+            Use your inner monologue and grow from your stresses to be proactive in driving towards positive outcomes.
+            Do not change roles!
             Never forget to keep your response to {word_limit} words!!!
         """
 

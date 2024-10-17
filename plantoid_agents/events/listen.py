@@ -32,7 +32,7 @@ from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
 # from whisper_mic.whisper_mic import WhisperMic
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(override=True)
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 ELEVENLABS_API_KEY = os.environ.get("ELEVENLABS_API_KEY")

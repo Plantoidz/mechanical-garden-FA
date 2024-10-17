@@ -28,6 +28,10 @@
         "description": "Gi's 30th: A birthday party celebrating the future of digital art"
     },
     {
+        "stimuli": "stimuli/dimi40.json",
+        "description": "Dimi's 40th: A birthday party celebrating Research and Arts"
+    },
+    {
         "stimuli": "stimuli/gi30-it.json",
         "description": "ITALIAN - Gi's 30th: A birthday party celebrating the future of digital art"
     },

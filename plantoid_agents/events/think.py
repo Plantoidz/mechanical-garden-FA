@@ -31,11 +31,14 @@ from litellm.utils import CustomStreamWrapper
 # https://github.com/BerriAI/litellm/blob/main/litellm/utils.py
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(override=True)
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 ELEVENLABS_API_KEY = os.environ.get("ELEVENLABS_API_KEY")
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
+
+print("ANTHROPIC API KEY:", ANTHROPIC_API_KEY)
+
 
 class Think:
     """
