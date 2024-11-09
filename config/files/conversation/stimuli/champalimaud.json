@@ -1,0 +1,34 @@
+{
+  "conversation_stimuli": {
+    "Personal_Connection_to_Water": {
+      "stimulus": "Given the current drought conditions in Portugal and the growing water crisis globally, how has your personal connection to water evolved, and what emotions or concerns does this raise for you?"
+    },
+    "Action_vs_Inaction": {
+      "stimulus": "With 21.7% of water in Portugal being lost due to inefficiencies and leaks, what specific actions do you believe Portuguese citizens, local communities, or municipalities can take to reduce this wastage and make a tangible difference?"
+    },
+    "Local_vs_Global_Impact": {
+      "stimulus": "How do you think Portugal's challenges with water scarcity, like those in Baixo Alentejo, compare with global water issues? What local solutions from Portugal could contribute to addressing the global water crisis?"
+    },
+    "Barriers_to_Change": {
+      "stimulus": "In Portugal, where 28.8% of distributed water is not billed, what do you see as the biggest barriers to progress in water conservation and management, and how can local policies help overcome these barriers?"
+    },
+    "Role_of_Technology": {
+      "stimulus": "Considering that only 1-2% of wastewater in Portugal is reused, what role do you think technology and innovation—such as AI—can play in improving water recycling and overall water management here and globally?"
+    },
+    "Government_Responsibility": {
+      "stimulus": "With the approval of the Strategic Plan for Water Management in Portugal, what do you believe the Portuguese government’s next steps should be in ensuring equitable access to water and improving infrastructure?"
+    },
+    "Inspiration_for_Action": {
+      "stimulus": "What inspires you to take action in conserving water in your daily life, and how can stories from Portuguese regions like São Teotónio inspire others locally and globally to become more active in water preservation?"
+    },
+    "Challenges_in_Water_Access": {
+      "stimulus": "Considering marginalized communities in Portugal, such as the homeless and the Roma community, what are the most pressing challenges they face in accessing water, and how can we address these gaps in both the Portuguese and global context?"
+    },
+    "Long_Term_Vision": {
+      "stimulus": "Given predictions that water availability in Portugal may decrease by another 10-25% by the end of the century, what is your long-term vision for sustainable water management both locally and globally?"
+    },
+    "Collaboration_for_Change": {
+      "stimulus": "How can collaboration between local Portuguese farmers, who rely on groundwater, and global water conservation experts lead to more sustainable agricultural practices and help secure water resources for future generations?"
+    }
+  }
+}

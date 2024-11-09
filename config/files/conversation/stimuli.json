@@ -78,5 +78,21 @@
     {
         "stimuli": "stimuli/sentience-fr.json",
         "description": "FRENCH: Is AI Alive? Exploring the Boundaries of Sentience"
+    },
+    {
+        "stimuli": "stimuli/ocean.json",
+        "description": "Ocean Whalesoid"
+    },
+    {
+        "stimuli": "stimuli/ocean-fr.json",
+        "description": "Ocean Whalesoid FR"
+    },
+    {
+        "stimuli": "stimuli/champalimaud.json",
+        "description": "Ocean Whalesoid"
+    },
+    {
+        "stimuli": "stimuli/worldsim.json",
+        "description": "Worldsim"
     }
 ]

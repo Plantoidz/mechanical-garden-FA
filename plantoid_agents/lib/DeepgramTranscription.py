@@ -134,7 +134,7 @@ class DeepgramTranscription:
 
                 options = LiveOptions(
                     model="nova-2",
-                    language="en-US",
+                    language="fr",
                     smart_format=True,
                     encoding="linear16",
                     channels=self.channels,

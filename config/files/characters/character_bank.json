@@ -38,5 +38,25 @@
     {
         "stimuli": "dimi40.json",
         "description": "Dimi 40, for his birthday."
+    },
+    {
+        "stimuli": "ocean.json",
+        "description": "Ocean Characters"
+    },
+    {
+        "stimuli": "champalimaud.json",
+        "description": "Ocean Characters"
+    },
+    {
+        "stimuli": "synesthesia.json",
+        "description": "Synesthesia Characters"
+    },
+    {
+        "stimuli": "synesthesia.json",
+        "description": "Synesthesia Characters"
+    },
+    {
+        "stimuli": "plantonys.json",
+        "description": "Plantonys"
     }
 ]

@@ -88,7 +88,7 @@ class PlantoidInteraction:
         speaker = self.agents[self.get_first_non_human_idx()]
         # print('speaker name === ', speaker.name)
         # print("INTRO MSG = ", intro_message)
-        speaker.speak(self.agents, intro_message, use_streaming=False)
+        # speaker.speak(self.agents, intro_message, use_streaming=False)
 
         self.set_speaker_idx(self.get_first_non_human_idx(), idx_type="last")
         self.inject(speaker.name, intro_message)
@@ -130,12 +130,14 @@ class PlantoidInteraction:
         else:
 
             # 2. next speaker sends message
-            message = speaker.send()
-            speaker.speak(
-                self.agents,
-                message,
-                interruption_callback = self.interruption_callback,
-            )
+            message = speaker.send(use_streaming=True)
+            self.print_message_stream(message)
+            # speaker.stream_text(message)
+            # speaker.speak(
+            #     self.agents,
+            #     message,
+            #     interruption_callback = self.interruption_callback,
+            # )
             self.log_conversation(speaker, message)
 
         # 3. everyone receives message
@@ -192,3 +194,13 @@ class PlantoidInteraction:
                         f.write(f"{attr}: {value}\n")
                 f.write("\n")
             f.write("========================================\n")
+
+    def print_message_stream(self, message: str):
+
+        for chunk in message:
+            # print(part.choices[0].delta.content or "")
+
+            if 'choices' in chunk and chunk['choices'][0].get('delta', {}).get('content'):
+                delta = chunk.choices[0].delta
+                text_chunk = delta.content
+                print(text_chunk, end='', flush=True)

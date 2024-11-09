@@ -126,7 +126,7 @@ class PlantoidDialogueAgent:
 
         return user_message
 
-    def send(self) -> str:
+    def send(self, use_streaming: bool = True) -> str:
         """
         Applies the chatmodel to the message history
         and returns the message string
@@ -157,7 +157,7 @@ class PlantoidDialogueAgent:
             self.system_message,
             use_content,
             # self.use_model_type,
-            self.use_streaming,
+            use_streaming,
         )
 
         print("\n" + PURPLE + self.name, 'says:' + ENDC)
@@ -220,5 +220,6 @@ class PlantoidDialogueAgent:
             return []  # Return an empty list if the input list is empty
         
         return [lst[0]] + lst[-n_messages:] if len(lst) > n_messages else lst
+
 
 #TODO: do not commingle classes and functions here
