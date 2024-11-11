@@ -24,7 +24,7 @@ class PlantoidInteraction:
         self.select_next_speaker = selection_function
         self.last_speaker_idx = 0
         self.current_speaker_idx = 0
-        self.humanness = 0.5 #1 # 0.5
+        self.humanness = 1 #1 # 0.5
         self.agent_interrupted = False
         self.interaction_timestamp = datetime.now()
 
@@ -89,6 +89,7 @@ class PlantoidInteraction:
         # print('speaker name === ', speaker.name)
         # print("INTRO MSG = ", intro_message)
         speaker.speak(self.agents, intro_message, use_streaming=False)
+        self.log_conversation(speaker, intro_message)
 
         self.set_speaker_idx(self.get_first_non_human_idx(), idx_type="last")
         self.inject(speaker.name, intro_message)

@@ -78,5 +78,9 @@
     {
         "stimuli": "stimuli/sentience-fr.json",
         "description": "FRENCH: Is AI Alive? Exploring the Boundaries of Sentience"
+    },
+    {
+        "stimuli": "stimuli/champalimaud.json",
+        "description": "Champalimaud: Whalesoid"
     }
 ]

@@ -38,5 +38,9 @@
     {
         "stimuli": "dimi40.json",
         "description": "Dimi 40, for his birthday."
+    },
+    {
+        "stimuli": "champalimaud.json",
+        "description": "Whalesoid champalimaud."
     }
 ]

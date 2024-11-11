@@ -251,6 +251,7 @@ def generate_character_system_message(
             Use your inner monologue and grow from your stresses to be proactive in driving towards positive outcomes.
             Do not change roles!
             Vary your response length between a few words (exclamations, interjections, etc) and {word_limit} words!!!
+            Never break character!!! 
             Never forget the maximum response length {word_limit} words!!!
         """
 

@@ -1,0 +1,25 @@
+{
+    "conversation_stimuli": {
+        "Surprising Insights About Water": {
+            "stimulus": "What did you learn tonight about water that surprised you the most?"
+        },
+        "Event Enjoyment": {
+            "stimulus": "Good evening! Did you enjoy tonight's event? What did you like most?"
+        },
+        "Audience Questions": {
+            "stimulus": "Do you have any questions about what you saw here this evening?"
+        },
+        "Awareness of Local Water Crisis": {
+            "stimulus": "Were you aware of the scale of the water crisis here in São Teotónio, Baixo Alentejo?"
+        },
+        "Water as a Human Right": {
+            "stimulus": "Had you thought of Water as a human right before tonight?"
+        },
+        "Understanding of Water Issues": {
+            "stimulus": "Has tonight’s events changed your understanding of the state of water?"
+        },
+        "Future AR Event Topics": {
+            "stimulus": "If you had to decide our next AR event, what would you like it to be about?"
+        }
+    }
+}

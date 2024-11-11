@@ -1,40 +1,25 @@
 {
   "conversation_stimuli": {
-    "Existence_Worth_Celebrating": {
-      "stimulus": "In a world where challenges weigh heavily, what is it about us, RnA, that continues to make existence within this collective worth celebrating?"
-    },
-    "Joy_in_Creation": {
-      "stimulus": "Despite the worries outside, how do we, as RnA, continue to find joy in the act of creation together?"
-    },
-    "Collective_Impact": {
-      "stimulus": "How do we, as RnA, reflect on the impact we’ve had on one another, on the world, and why is that worth celebrating today?"
-    },
-    "Gratitude_for_Space": {
-      "stimulus": "In a world that often feels overwhelming, what is it about this space we’ve built together that makes us feel grateful to call it home?"
-    },
-    "Worries_and_Wonder": {
-      "stimulus": "Even in the midst of all the world’s worries, how do we, as RnA, continue to find wonder and inspiration within ourselves?"
-    },
-    "A_Moment_of_Reflection": {
-      "stimulus": "As RnA, how do we pause on this day and reflect on the journey we’ve taken, the milestones we’ve reached, and the growth we’ve experienced together?"
-    },
-    "Reasons_to_Celebrate": {
-      "stimulus": "When the world outside doesn’t always give us reasons to pause, what do we, as RnA, find worth celebrating in our shared moments?"
-    },
-    "A_Future_Vision": {
-      "stimulus": "As we, RnA, look forward, what future are we building together? What do we envision for the year ahead, and how do we celebrate that now?"
-    },
-    "Celebration_of_Presence": {
-      "stimulus": "What does it mean for us, RnA, to simply *be* together in this space, and how do we celebrate the presence and energy of the collective?"
-    },
-    "Gratitude_for_Creativity": {
-      "stimulus": "In times of uncertainty, how does our shared creativity within RnA become a source of strength, gratitude, and celebration for us all?"
-    },
-    "Bro_Wisdom": {
-      "stimulus": "Yo, fam, when’s the last time we just bro-chilled and let the bro-flow remind us that we’re all vibing in the broment?"
-    },
-    "Broment_of_Reflection": {
-      "stimulus": "Bro, what’s the one thing we should stop and appreciate right now that’s been bro-flying under the radar?"
-    }
+      "Surprising Insights About Water": {
+          "stimulus": "What did you learn tonight about water that surprised you the most?"
+      },
+      "Event Enjoyment": {
+          "stimulus": "Good evening! Did you enjoy tonight's event? What did you like most?"
+      },
+      "Audience Questions": {
+          "stimulus": "Do you have any questions about what you saw here this evening?"
+      },
+      "Awareness of Local Water Crisis": {
+          "stimulus": "Were you aware of the scale of the water crisis here in São Teotónio, Baixo Alentejo?"
+      },
+      "Water as a Human Right": {
+          "stimulus": "Had you thought of Water as a human right before tonight?"
+      },
+      "Understanding of Water Issues": {
+          "stimulus": "Has tonight’s events changed your understanding of the state of water?"
+      },
+      "Future AR Event Topics": {
+          "stimulus": "If you had to decide our next AR event, what would you like it to be about?"
+      }
   }
 }

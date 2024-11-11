@@ -379,9 +379,9 @@ class Speak:
                     voice=Voice(
                         voice_id=voice_id,
                         settings=VoiceSettings(
-                            stability=0.55,
+                            stability=1,
                             similarity_boost=1.0,
-                            style=0.25,
+                            #style=0.25,
                             use_speaker_boost=True,
                         )
                     ),
