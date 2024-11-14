@@ -2,7 +2,7 @@ import socket
 import time
 
 # Replace with the IP address of your ESP8266
-ESP_IP = '192.168.11.145'
+ESP_IP = '192.168.1.145'
 ESP_PORT = 1666
 LOCAL_PORT = 1667  # Local port to listen on
 
