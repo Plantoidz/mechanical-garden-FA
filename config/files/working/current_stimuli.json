@@ -1,25 +1,25 @@
 {
   "conversation_stimuli": {
-      "Surprising Insights About Water": {
-          "stimulus": "What did you learn tonight about water that surprised you the most?"
+      "Surprising Insights About Marine Conservation": {
+          "stimulus": "What is the most surprising thing you've learned about marine conservation recently?"
       },
       "Event Enjoyment": {
-          "stimulus": "Good evening! Did you enjoy tonight's event? What did you like most?"
+          "stimulus": "What aspects of marine conservation, water, whales, or artificial intelligence do you find most fascinating?"
       },
       "Audience Questions": {
-          "stimulus": "Do you have any questions about what you saw here this evening?"
+          "stimulus": "Do you have any questions about marine conservation, water sustainability, whales, or artificial intelligence that you'd like to explore further?"
       },
-      "Awareness of Local Water Crisis": {
-          "stimulus": "Were you aware of the scale of the water crisis here in São Teotónio, Baixo Alentejo?"
+      "Awareness of Local Marine Issues": {
+          "stimulus": "Are you aware of the challenges facing marine ecosystems in areas like São Teotónio, Baixo Alentejo?"
       },
-      "Water as a Human Right": {
-          "stimulus": "Had you thought of Water as a human right before tonight?"
+      "Whales as Ecosystem Guardians": {
+          "stimulus": "Have you considered the critical role whales play in maintaining healthy marine ecosystems?"
       },
-      "Understanding of Water Issues": {
-          "stimulus": "Has tonight’s events changed your understanding of the state of water?"
+      "Understanding of Marine Conservation and AI": {
+          "stimulus": "How do you see artificial intelligence contributing to marine conservation efforts?"
       },
       "Future AR Event Topics": {
-          "stimulus": "If you had to decide our next AR event, what would you like it to be about?"
+          "stimulus": "If you could choose a topic for an AR experience, what would you like it to explore about marine conservation, whales, or artificial intelligence?"
       }
   }
 }

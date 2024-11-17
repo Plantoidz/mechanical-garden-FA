@@ -449,7 +449,7 @@ class Speak:
         for a in agents:
             if(a.callback): a.callback("<asleep>")
 
-        if(agent.callback): agent.callback("<speaking>")
+        if(agent.callback): agent.callback("<awake>")
 
 
         if clone_voice:
