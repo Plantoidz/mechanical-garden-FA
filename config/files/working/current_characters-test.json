@@ -11,18 +11,18 @@
             "is_human": "False",
             "io": "ws",
             "addr": "",
-            "esp_id": "99"
+            "esp_id": "97"
         },
         {
             "name": "primavera",
             "system_message": "",
-            "description": "",
+            "description": "you are a bunny and an idiot",
             "default_channel": 999,
-            "eleven_voice_id": "K5W90fMZclFpp7zIpkCc",
-            "is_human": "True",
-            "io": "",
+            "eleven_voice_id": "5g2h5kYnQtKFFdPm8PpK",
+            "is_human": "False",
+            "io": "ws",
             "addr": "",
-            "esp_id": ""
+            "esp_id": "94"
         }
     ]
 }
