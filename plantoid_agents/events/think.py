@@ -1,4 +1,4 @@
-from typing import Callable, List, Union, Any
+from typing import Callable, List, Union, Any, Generator
 import types
 
 import openai
@@ -60,29 +60,7 @@ class Think:
         self.litellm_model = completion
         self.model_type = services["language_model"]
         self.use_model_api = services["language_model_api"]
-
-    def stream_text(self, response_stream):
-
-        for chunk in response_stream:
-            if chunk.choices[0].delta and chunk.choices[0].delta.content:
-                delta = chunk.choices[0].delta
-                text_chunk = delta.content
-                # yield text_chunk
-                print(text_chunk, end='', flush=True)
-
-    def gather_response(self, response_stream):
-        full_text = ""
-        for chunk in response_stream:
-            if chunk.choices[0].delta and chunk.choices[0].delta.content:
-                delta = chunk.choices[0].delta
-                text_chunk = delta.content
-                full_text += text_chunk
-                print(text_chunk, end='', flush=True)
-        return full_text
     
-    def format_response_type(self, response: Any) -> Any:
-        return response.response_uptil_now if isinstance(response, CustomStreamWrapper) else response
-
     def generate_bid_template(self, bidding_template, message_history) -> SystemMessage:
 
         bid_system_message = PromptTemplate(
@@ -117,10 +95,18 @@ class Think:
                 #     "fallbacks": ["gpt-4o"]
                 # },
                 stream=True,
-                timeout=60,
+                # timeout=60,
             )
 
-            # self.stream_text(response_stream)
+            # response_stream = completion(
+            #     model="ollama/llama3", 
+            #     # model="claude-3-5-sonnet-20240620", # 
+            #     messages=[{ "content": "respond in 20 words. hot dogs or hamburgers?","role": "user"}], 
+            #     # api_base="http://localhost:11434",
+            #     stream=True
+            # )
+
+            # # self.stream_text(response_stream)
 
             return response_stream
         
@@ -221,3 +207,22 @@ class Think:
     #         )
 
     #         return response
+
+        # def stream_text(self, response_stream):
+
+    #     for chunk in response_stream:
+    #         if chunk.choices[0].delta and chunk.choices[0].delta.content:
+    #             delta = chunk.choices[0].delta
+    #             text_chunk = delta.content
+    #             # yield text_chunk
+    #             print(text_chunk, end='', flush=True)
+
+    # def gather_response(self, response_stream):
+    #     full_text = ""
+    #     for chunk in response_stream:
+    #         if chunk.choices[0].delta and chunk.choices[0].delta.content:
+    #             delta = chunk.choices[0].delta
+    #             text_chunk = delta.content
+    #             full_text += text_chunk
+    #             # print(text_chunk, end='', flush=True)
+    #     return full_text

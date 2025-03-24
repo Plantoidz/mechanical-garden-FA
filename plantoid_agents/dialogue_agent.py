@@ -61,6 +61,7 @@ class PlantoidDialogueAgent:
         #TODO: do not hardcode!
         # self.use_model_type = "litellm"
         self.use_streaming = True
+        self.stream_transcript = ""
 
 
     def tunnel_wifi(self, val):
@@ -161,8 +162,6 @@ class PlantoidDialogueAgent:
         )
 
         print("\n" + PURPLE + self.name, 'says:' + ENDC)
-        # formatted_message = self.think_module.format_response_type(message)
-        # print(formatted_message)
 
         return message
     
@@ -197,6 +196,9 @@ class PlantoidDialogueAgent:
             clone_voice = clone_voice,
             create_clone = create_clone,
         )
+
+        return self.stream_transcript
+
     
     def receive(self, name: str, message: Union[str, CustomStreamWrapper]) -> None:
 
@@ -205,12 +207,12 @@ class PlantoidDialogueAgent:
         """
         # NOTE: stream data is not available to stringify until after speech
         # generator has not iterated before this point!
-        formatted_message = self.think_module.format_response_type(message)
+        # formatted_message = self.speak_module.format_response_type(message)
 
         # print(self.name, 'says:')
         # print(formatted_message)
 
-        self.message_history.append(f"{name}: {formatted_message}")
+        self.message_history.append(f"{name}: {message}")
 
     def clip_history(self, lst, n_messages=5):
         """

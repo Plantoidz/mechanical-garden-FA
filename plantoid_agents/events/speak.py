@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Type
+from typing import Any, Dict, List, Type, Generator
 import pyaudio
 import wave
 # import audioop
@@ -21,6 +21,9 @@ from dotenv import load_dotenv
 from elevenlabs.client import ElevenLabs, AsyncElevenLabs
 from elevenlabs import stream, Voice, VoiceSettings, play
 from utils.util import str_to_bool
+
+from litellm.utils import CustomStreamWrapper
+
 
 # https://elevenlabs.io/docs/api-reference/edit-voice
 
@@ -69,6 +72,11 @@ class Speak:
         self.channels = channels
         self.listen_module = Listen()
 
+        # self.full_text = ""  # Buffer to store the full text
+
+        print("INIT SPEAK MODULE")
+
+
     def get_text_to_speech_response(self, text, eleven_voice_id, callback=None):
 
         headers = {
@@ -115,36 +123,24 @@ class Speak:
 
             raise Exception("Error: " + str(status) + ": "+ str(message))
         
-    def stream_text(self, response_stream):
-
+    def capture_and_stream_text(self, response_stream, agent):
+        """
+        Capture the full text from a response stream while yielding chunks for streaming.
+        """
         if isinstance(response_stream, str):
-            return response_stream
+            agent.stream_transcript = response_stream
+            yield response_stream
+            return
+        
+        # self.clear_full_text()
 
         for chunk in response_stream:
             if 'choices' in chunk and chunk['choices'][0].get('delta', {}).get('content'):
                 delta = chunk.choices[0].delta
                 text_chunk = delta.content
-                yield text_chunk
+                agent.stream_transcript += text_chunk  # Append to the buffer
+                yield text_chunk  # Yield the current chunk
                 print(text_chunk, end='', flush=True)
-
-    def format_response_type(self, response: Any) -> Any:
-        return self.stream_text(response) if isinstance(response, types.GeneratorType) else response
-
-    # def play_background_music(self, loops=-1) -> None:
-
-    #     # get the path to the background music
-    #     background_music_path = os.getcwd()+"/media/ambient3.mp3"
-
-    #     mixer.init()
-    #     mixer.music.load(background_music_path)
-    #     mixer.music.play(loops)
-
-    # #todo: rename function and make this more general — cue sounds not just background music
-    # def stop_background_music(self) -> None:
-
-    #     if mixer.get_init() is not None:
-    #         print('stop background music')
-    #         mixer.music.stop()
 
     def get_voice_clone_files(self):
 
@@ -323,25 +319,6 @@ class Speak:
                     # # print("Runtime effect: ", runtime_effect)
                     # playsound(runtime_effect, block=False)
 
-    # def select_random_runtime_effect(self, voice_id):
-    #     """
-    #     Selects a random file from the specified directory.
-    #     """
-    #     directory = os.getcwd() + "/media/runtime_effects"
-    #     prefix = f"{voice_id}_"
-        
-    #     # List all files that start with the given voice ID
-    #     files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f)) and f.startswith(prefix)]
-        
-    #     # Check if there are any matching files
-    #     if not files:
-    #         return None  # Return None or raise an Exception if no matching files are found
-
-    #     # Randomly select a file
-    #     random_file = random.choice(files)
-    #     return os.path.join(directory, random_file)
-
-
     def stream_audio_response(
         self,
         agent: Any,
@@ -374,7 +351,7 @@ class Speak:
 
                 # generate audio stream   
                 audio_stream = client.generate(
-                    text=self.stream_text(response),
+                    text=self.capture_and_stream_text(response, agent),
                     model=self.elevenlabs_model_type,
                     voice=Voice(
                         voice_id=voice_id,
@@ -403,6 +380,7 @@ class Speak:
 
                 else:
                     stream(audio_stream)
+                    # self.clear_full_text()
             
             else:
                 audio = client.generate(
@@ -480,3 +458,51 @@ class Speak:
                 interruption_callback=interruption_callback,
                 use_streaming=use_streaming,
             )
+
+    # def select_random_runtime_effect(self, voice_id):
+    #     """
+    #     Selects a random file from the specified directory.
+    #     """
+    #     directory = os.getcwd() + "/media/runtime_effects"
+    #     prefix = f"{voice_id}_"
+        
+    #     # List all files that start with the given voice ID
+    #     files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f)) and f.startswith(prefix)]
+        
+    #     # Check if there are any matching files
+    #     if not files:
+    #         return None  # Return None or raise an Exception if no matching files are found
+
+    #     # Randomly select a file
+    #     random_file = random.choice(files)
+    #     return os.path.join(directory, random_file)
+
+        # def format_response_type(self, response: Any) -> Any:
+    #     return self.stream_text(response) if isinstance(response, types.GeneratorType) else response
+
+    # def play_background_music(self, loops=-1) -> None:
+
+    #     # get the path to the background music
+    #     background_music_path = os.getcwd()+"/media/ambient3.mp3"
+
+    #     mixer.init()
+    #     mixer.music.load(background_music_path)
+    #     mixer.music.play(loops)
+
+    # #todo: rename function and make this more general — cue sounds not just background music
+    # def stop_background_music(self) -> None:
+
+    #     if mixer.get_init() is not None:
+    #         print('stop background music')
+    #         mixer.music.stop()
+
+        # def format_response_type(self, response: Any) -> Any:
+
+        # if isinstance(response, CustomStreamWrapper):
+        #     # print("Formatting response type - Custom Stream Wrapper", response.response_uptil_now)
+        #     return response.response_uptil_now
+        # if isinstance(response, Generator):
+        #     # print("Formatting response type - Generator")
+        #     return "Hello i am plantoid"
+        # else:
+        #     return response

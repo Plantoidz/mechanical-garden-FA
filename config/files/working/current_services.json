@@ -1,5 +1,5 @@
 {
-    "language_model": "claude-3-5-sonnet-20240620",
+    "language_model": "ollama/llama3",
     "language_model_api": "litellm",
     "speech_recognition_model": "deepgram",
     "speech_synthesis_model": "eleven_multilingual_v2",

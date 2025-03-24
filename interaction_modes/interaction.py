@@ -131,7 +131,7 @@ class PlantoidInteraction:
 
             # 2. next speaker sends message
             message = speaker.send()
-            speaker.speak(
+            message = speaker.speak(
                 self.agents,
                 message,
                 interruption_callback = self.interruption_callback,
@@ -159,10 +159,10 @@ class PlantoidInteraction:
         # Path for the log file
         log_file_path = os.path.join(log_dir, f"interaction_{self.interaction_timestamp}.log")
 
-        formatted_message = agent.think_module.format_response_type(message)
+        # formatted_message = agent.speak_module.format_response_type(message)
 
         with open(log_file_path, "a") as f:
-            f.write(f"{datetime.now()} - {agent.name} says: {formatted_message}\n")
+            f.write(f"{datetime.now()} - {agent.name} says: {message}\n")
 
     def log_agents(self):
 
