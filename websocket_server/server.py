@@ -160,10 +160,9 @@ async def check_for_instructions(instruct_queue, speech_event):
         #     loop.run_in_executor(None, instruct_queue.put, (agent_esp_id, instruction))
 
 
-def run_websocket_server(queues, events):
+async def start_server(queues, events):
     logging.info("Starting server")
-    loop = asyncio.get_event_loop()
-
+    
     speech_queue = queues["speech"] ### this is used by the orchestrator to send the audio chunks to the server
     # listen_queue = queues["listen"]
     
@@ -175,17 +174,34 @@ def run_websocket_server(queues, events):
     
     instruct_queue = queues["instruct"]
 
-    orchestrate_stream = websockets.serve(lambda ws, path: orchestrate_instructions(ws, path, instruct_queue, speech_event), '', ORCHESTRATE_PORT, ping_interval=None)
-    loop.run_until_complete(orchestrate_stream)
-
-    speech_stream = websockets.serve(lambda ws, path: send_stream_to_websocket(ws, path, speech_queue, speech_event), '', SPEECH_PORT, ping_interval=None)
-    loop.run_until_complete(speech_stream)
-
+    orchestrate_server = await websockets.serve(lambda ws, path: orchestrate_instructions(ws, path, instruct_queue, speech_event), '', ORCHESTRATE_PORT, ping_interval=None)
+    speech_server = await websockets.serve(lambda ws, path: send_stream_to_websocket(ws, path, speech_queue, speech_event), '', SPEECH_PORT, ping_interval=None)
+    
     # if listen_queue is not None:
-    #     listen_stream = websockets.serve(lambda ws, path: transcribe_audio(ws, path, esp_ws_queue, listen_queue, listen_event), '', LISTEN_PORT, ping_interval=None)
-    #     loop.run_until_complete(listen_stream)
+    #     listen_server = await websockets.serve(lambda ws, path: transcribe_audio(ws, path, esp_ws_queue, listen_queue, listen_event), '', LISTEN_PORT, ping_interval=None)
+    
+    return orchestrate_server, speech_server
 
-    loop.run_forever()
+def run_websocket_server(queues, events):
+    """
+    Main entrypoint that sets up and runs the websocket server
+    """
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    
+    servers = loop.run_until_complete(start_server(queues, events))
+    
+    try:
+        logging.info(f"WebSocket server running on ports {ORCHESTRATE_PORT}, {SPEECH_PORT}")
+        loop.run_forever()
+    except KeyboardInterrupt:
+        logging.info("Server stopped by keyboard interrupt")
+    finally:
+        # Clean shutdown
+        for server in servers:
+            server.close()
+        loop.run_until_complete(asyncio.gather(*[server.wait_closed() for server in servers]))
+        loop.close()
 
 if __name__ == '__main__':
     run_websocket_server()
