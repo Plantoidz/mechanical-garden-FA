@@ -135,10 +135,11 @@ class Speak:
             raise Exception("Error: " + str(status) + ": "+ str(message))
         
         
-    def gather_response(self, response_stream):
+    def gather_response(self, response_stream, agent):
         full_text = ""
 
         if isinstance(response_stream, str):
+            agent.stream_transcript = response_stream  # Append to the buffer
             return response_stream
     
         for chunk in response_stream:
@@ -146,23 +147,25 @@ class Speak:
                 delta = chunk.choices[0].delta
                 text_chunk = delta.content
                 full_text += text_chunk
+                agent.stream_transcript += text_chunk  # Append to the buffer
                 print(text_chunk, end='', flush=True)
+                
         return full_text
     
-    def stream_text(self, response_stream):
+    # def stream_text(self, response_stream):
 
-        if isinstance(response_stream, str):
-            return response_stream
+    #     if isinstance(response_stream, str):
+    #         return response_stream
 
-        for chunk in response_stream:
-            if 'choices' in chunk and chunk['choices'][0].get('delta', {}).get('content'):
-                delta = chunk.choices[0].delta
-                text_chunk = delta.content
-                yield text_chunk
-                print(text_chunk, end='', flush=True)
+    #     for chunk in response_stream:
+    #         if 'choices' in chunk and chunk['choices'][0].get('delta', {}).get('content'):
+    #             delta = chunk.choices[0].delta
+    #             text_chunk = delta.content
+    #             yield text_chunk
+    #             print(text_chunk, end='', flush=True)
 
-    def format_response_type(self, response: Any) -> Any:
-        return self.stream_text(response) if isinstance(response, types.GeneratorType) else response
+    # def format_response_type(self, response: Any) -> Any:
+    #     return self.stream_text(response) if isinstance(response, types.GeneratorType) else response
 
 
     # def play_background_music(self, loops=-1) -> None:
@@ -402,7 +405,7 @@ class Speak:
                             # logging.info("Engine is: ", self.local_engine)
                             # print("Engine is: ", self.local_engine)
                             audio_stream = TextToAudioStream(self.local_engine)
-                            audio_stream.feed(self.gather_response(response))
+                            audio_stream.feed(self.gather_response(response, agent))
 
                             magicstream_local_websocket(audio_stream, agent.instruct_queue, agent.speech_queue, agent.speech_event, esp_id=agent.esp_id)
 
@@ -413,7 +416,7 @@ class Speak:
                         # # generate ElevenLabs audio stream   
                         audio_stream = client.generate(
                             # text=self.stream_text(response),
-                            text=self.gather_response(response),
+                            text=self.gather_response(response, agent),
                             # text = "hello i'm alive. Number 95",
                             model=self.elevenlabs_model_type,
                             voice=voice_id,

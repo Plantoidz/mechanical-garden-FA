@@ -58,28 +58,6 @@ class Think:
         self.model_type = services["language_model"]
         self.use_model_api = services["language_model_api"]
 
-    def stream_text(self, response_stream):
-
-        for chunk in response_stream:
-            if chunk.choices[0].delta and chunk.choices[0].delta.content:
-                delta = chunk.choices[0].delta
-                text_chunk = delta.content
-                # yield text_chunk
-                print(text_chunk, end='', flush=True)
-
-    def gather_response(self, response_stream):
-        full_text = ""
-        for chunk in response_stream:
-            if chunk.choices[0].delta and chunk.choices[0].delta.content:
-                delta = chunk.choices[0].delta
-                text_chunk = delta.content
-                full_text += text_chunk
-                print(text_chunk, end='', flush=True)
-        return full_text
-    
-    def format_response_type(self, response: Any) -> Any:
-        return response.response_uptil_now if isinstance(response, CustomStreamWrapper) else response
-
     def generate_bid_template(self, bidding_template, message_history) -> SystemMessage:
 
         bid_system_message = PromptTemplate(
@@ -112,8 +90,6 @@ class Think:
                 messages=messages, 
                 stream=True
             )
-
-            # self.stream_text(response_stream)
 
             return response_stream
         
@@ -212,3 +188,25 @@ class Think:
     #         )
 
     #         return response
+
+    #     def stream_text(self, response_stream):
+
+    #     for chunk in response_stream:
+    #         if chunk.choices[0].delta and chunk.choices[0].delta.content:
+    #             delta = chunk.choices[0].delta
+    #             text_chunk = delta.content
+    #             # yield text_chunk
+    #             print(text_chunk, end='', flush=True)
+
+    # def gather_response(self, response_stream):
+    #     full_text = ""
+    #     for chunk in response_stream:
+    #         if chunk.choices[0].delta and chunk.choices[0].delta.content:
+    #             delta = chunk.choices[0].delta
+    #             text_chunk = delta.content
+    #             full_text += text_chunk
+    #             print(text_chunk, end='', flush=True)
+    #     return full_text
+    
+    # def format_response_type(self, response: Any) -> Any:
+    #     return response.response_uptil_now if isinstance(response, CustomStreamWrapper) else response

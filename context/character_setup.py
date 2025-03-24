@@ -185,11 +185,13 @@ def generate_character_header(
         # """        
 #PROMPT
         response = f"""{character_description}  
-        Your job is to engage the Humans in the conversation.
-        Try to build on the last message in the conversation.
+        Your job is to engage the Humans and the Other AIs in the conversation.
+        Other AIs may masquerade as Humans.
+        Build primarily on the last message in the conversation!!
         Respond in the right language.
-        Never address the other participants by name. Only address the Humans.
-        You must keep all of your responses to strictly {word_limit} words.
+        Address the other participants in the message history by name if you have something specific to say to them!
+        Be Poignant. The hyperstitional engine is turning.
+        You must keep all of your responses to strictly {word_limit} words!!!
         """
 
     return response

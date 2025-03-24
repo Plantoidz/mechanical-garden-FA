@@ -72,6 +72,9 @@ class PlantoidDialogueAgent:
         self.socket = None
         self.esp_id = esp_id
 
+        self.stream_transcript = ""
+
+
         if(io == "wifi" and addr):
             print("connecting to Plantoid IP: ", addr)
             try:
@@ -264,7 +267,9 @@ class PlantoidDialogueAgent:
             clone_voice = clone_voice,
             create_clone = create_clone,
         )
-    
+
+        return self.stream_transcript
+
     def receive(self, name: str, message: Union[str, CustomStreamWrapper]) -> None:
 
         """
@@ -272,12 +277,12 @@ class PlantoidDialogueAgent:
         """
         # NOTE: stream data is not available to stringify until after speech
         # generator has not iterated before this point!
-        formatted_message = self.think_module.format_response_type(message)
+        # formatted_message = self.think_module.format_response_type(message)
 
         # print(self.name, 'says:')
         # print(formatted_message)
 
-        self.message_history.append(f"{name}: {formatted_message}")
+        self.message_history.append(f"{name}: {message}")
 
     def clip_history(self, lst, n_messages=5):
         """
