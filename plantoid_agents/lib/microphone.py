@@ -6,7 +6,7 @@ import inspect
 import asyncio
 import threading
 from typing import Optional
-import logging, verboselogs
+import logging
 import wave
 
 # from .errors import DeepgramMicrophoneError

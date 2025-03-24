@@ -7,9 +7,7 @@ sounddevice
 soundcard
 numpy
 nltk
-speechrecognition
 pyserial
-playsound
 toml
 pygame
 keyboard

@@ -17,8 +17,6 @@ import whisper
 import torch
 import threading
 # import pygame.mixer as mixer
-
-from playsound import playsound
 from dotenv import load_dotenv
 from elevenlabs import stream
 from utils.util import load_config, str_to_bool
@@ -28,6 +26,7 @@ from collections import deque
 
 from utils.config_util import read_services_config
 from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
+import pygame.mixer as mixer
 # from plantoid_agents.lib.esp32_comms import XYZ
 
 # from whisper_mic.whisper_mic import WhisperMic
@@ -126,10 +125,10 @@ class Listen:
         # Check if the file exists before trying to play it
         if os.path.exists(file_path):
             print(f"\n\033[94m{random_effect}\033[0m")
-            playsound(file_path, block=False)
-            # mixer.init()
-            # mixer.music.load(file_path)
-            # mixer.music.play(loops=1)
+            # playsound(file_path, block=False)
+            mixer.init()
+            mixer.music.load(file_path)
+            mixer.music.play(loops=1)
         else:
             # Print a warning message if the file does not exist
             print("\033[90m\nThe specified audio effect file does not exist. Skipping playback.\033[0m")

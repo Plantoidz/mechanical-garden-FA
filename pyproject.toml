@@ -1,0 +1,41 @@
+[project]
+name = "mechanical-garden-fa"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "av>=14.2.0",
+    "ctranslate2==4.4.0",
+    "deepgram-sdk>=3.10.1",
+    "elevenlabs>=1.54.0",
+    "faster-whisper>=1.1.1",
+    "keyboard>=0.13.5",
+    "langchain>=0.3.21",
+    "litellm>=1.63.14",
+    "llvmlite>=0.44.0",
+    "nltk>=3.9.1",
+    "numba==0.61.0",
+    "ollama>=0.4.7",
+    "openai>=1.68.2",
+    "openai-whisper>=20240930",
+    "pyaudio>=0.2.14",
+    "pydub>=0.25.1",
+    "pygame>=2.6.1",
+    "pyserial>=3.5",
+    "python-dotenv>=1.0.1",
+    "realtimetts==0.4.55",
+    "requests>=2.32.3",
+    "serial>=0.0.97",
+    "simpleaichat>=0.2.2",
+    "soundcard>=0.4.4",
+    "sounddevice>=0.5.1",
+    "speechrecognition>=3.14.2",
+    "tenacity>=9.0.0",
+    "text-generation>=0.7.0",
+    "toml>=0.10.2",
+    "torch>=2.6.0",
+    "transformers>=4.50.0",
+    "wave>=0.0.2",
+    "websocket-client>=1.8.0",
+]

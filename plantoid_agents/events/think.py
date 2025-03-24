@@ -12,9 +12,6 @@ from utils.config_util import read_services_config
 from config.scripts.default_prompt_config import default_chat_completion_config, default_completion_config
 # from utils.util import load_config, str_to_bool
 
-
-from langchain_community.chat_models import ChatLiteLLM, ChatOpenAI
-from langchain_community.chat_models.huggingface import ChatHuggingFace
 from langchain.output_parsers import RegexParser
 from langchain.prompts import PromptTemplate
 
@@ -22,8 +19,6 @@ from langchain.schema import (
     HumanMessage,
     SystemMessage,
 )
-
-from config.scripts.select_llm import get_llm
 
 from simpleaichat import AsyncAIChat, AIChat
 from litellm import completion, acompletion
@@ -52,7 +47,7 @@ class Think:
         """
         services = read_services_config()
 
-        self.langchain_model = get_llm()
+        self.langchain_model = None # Note Deprecated
         self.ai_chat_model = AIChat
         self.litellm_model = completion
         self.model_type = services["language_model"]

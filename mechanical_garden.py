@@ -38,7 +38,7 @@ def run_program(loop: bool = True):
     }
 
     engines = {
-        "local_tts": initialize_coqui_engine(),
+        "local_tts": None, #initialize_coqui_engine(),
     }
 
     # Start the WebSocket server in a separate process

@@ -1,9 +1,7 @@
 from deepgram import DeepgramClient, LiveTranscriptionEvents, LiveOptions, Microphone
 from dotenv import load_dotenv
-import logging, verboselogs
 import time
 import random
-from playsound import playsound
 from ctypes import *
 from contextlib import contextmanager
 import os
