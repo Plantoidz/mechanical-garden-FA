@@ -34,13 +34,12 @@ def ignoreStderr():
 
 class DeepgramTranscription:
     def __init__(self, sample_rate: int = 48000, device_index: int = None, channels: int = 1, timeout: int = 5, callback=None, max_retries=50):
-        self.deepgram = DeepgramClient()
 
         config = DeepgramClientOptions(
             options={"keepalive": "true"} # Comment this out to see the effect of not using keepalive
         )
         
-        deepgram = DeepgramClient(DEEPGRAM_API_KEY, config)
+        self.deepgram = DeepgramClient(DEEPGRAM_API_KEY, config)
 
         self.is_finals = []
         self.final_result = ""
