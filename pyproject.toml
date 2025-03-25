@@ -24,6 +24,7 @@ dependencies = [
     "pygame>=2.6.1",
     "pyserial>=3.5",
     "python-dotenv>=1.0.1",
+    "realtimestt==0.3.100",
     "realtimetts==0.4.55",
     "requests>=2.32.3",
     "serial>=0.0.97",
@@ -36,6 +37,7 @@ dependencies = [
     "toml>=0.10.2",
     "torch>=2.6.0",
     "transformers>=4.50.0",
+    "uvloop>=0.21.0",
     "wave>=0.0.2",
     "websocket-client>=1.8.0",
 ]

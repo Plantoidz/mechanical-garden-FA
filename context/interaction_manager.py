@@ -200,7 +200,11 @@ class InteractionManager:
 
         if use_message_type == 'raw':
 
-            character_system_message = character_setup.get_raw_system_message(character_system_message_input)
+            character_system_message = character_setup.get_raw_system_message(character_description)
+            character_system_message = character_setup.get_thin_instruction_addendum(
+                word_limit,
+                character_system_message
+            )
         
         if use_message_type == 'specified':
 
@@ -261,7 +265,7 @@ class InteractionManager:
                 interaction_mode_name,
                 interaction_description,
                 interaction_addendum,
-                use_message_type='specified'
+                use_message_type="raw" #specified'
             )
 
             bidding_template = bidding_function(character_description)

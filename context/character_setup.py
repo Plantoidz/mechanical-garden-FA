@@ -201,6 +201,21 @@ def get_raw_system_message(
 ):
     return system_message
 
+def get_thin_instruction_addendum(
+    word_limit,
+    system_message,
+):
+    system_message = f"""
+        CHARACTER DESCRIPTION:
+        {system_message}
+
+        INSTRUCTIONS:
+        You have the conversation history available to you.
+        Respond to the human's messages paying particular attention to the latest messages,
+        which are at the end of the conversation history.
+        Never forget to keep your response to {word_limit} words!!!
+    """
+    return system_message
 
 def generate_character_system_message(
     # topic,

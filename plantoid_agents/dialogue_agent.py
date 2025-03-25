@@ -73,6 +73,7 @@ class PlantoidDialogueAgent:
         self.esp_id = esp_id
 
         self.stream_transcript = ""
+        self.message_history_length = 5
 
 
         if(io == "wifi" and addr):
@@ -204,7 +205,7 @@ class PlantoidDialogueAgent:
 
         print("\n\n" + PURPLE + self.name + ' is thinking...' + ENDC)
 
-        self.message_history = self.clip_history(self.message_history, n_messages=5)
+        self.message_history = self.clip_history(self.message_history, n_messages=self.message_history_length)
 
         use_content = "\n".join(self.message_history + [self.prefix])
         # print("use_content:", use_content)
