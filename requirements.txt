@@ -7,14 +7,10 @@ sounddevice
 soundcard
 numpy
 nltk
-speechrecognition
 pyserial
-playsound
 toml
 pygame
 keyboard
-torch
-openai-whisper
 langchain
 langchain-community
 huggingface_hub

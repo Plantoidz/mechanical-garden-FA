@@ -6,7 +6,6 @@ from elevenlabs import play, stream, save
 from elevenlabs.client import ElevenLabs
 import os
 from datetime import datetime
-from playsound import playsound
 from plantoid_agents.events.speak import Speak
 
 

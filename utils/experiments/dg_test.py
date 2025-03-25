@@ -3,7 +3,6 @@
 # SPDX-License-Identifier: MIT
 
 from dotenv import load_dotenv
-import logging, verboselogs
 from time import sleep
 
 from deepgram import (

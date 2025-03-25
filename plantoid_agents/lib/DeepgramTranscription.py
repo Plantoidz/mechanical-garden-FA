@@ -1,10 +1,8 @@
 from deepgram import DeepgramClient, LiveTranscriptionEvents, LiveOptions, Microphone, DeepgramClientOptions
 from dotenv import load_dotenv
 from websockets import WebSocketException
-import logging, verboselogs
 import time
 import random
-from playsound import playsound
 from ctypes import *
 from contextlib import contextmanager
 import os

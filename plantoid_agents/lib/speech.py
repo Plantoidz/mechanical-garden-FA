@@ -10,7 +10,6 @@ import audioop
 import struct
 
 from simpleaichat import AIChat
-from whisper_mic.whisper_mic import WhisperMic
 from elevenlabs import play, stream, save
 from elevenlabs.client import ElevenLabs
 
@@ -18,7 +17,6 @@ import numpy as np
 
 from collections import deque
 
-from playsound import playsound
 
 from dotenv import load_dotenv
 
