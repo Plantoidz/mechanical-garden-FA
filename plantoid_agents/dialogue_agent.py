@@ -3,9 +3,9 @@ from typing import Callable, List, Union
 import socket
 
 # import plantoid_agents.lib.speech as PlantoidSpeech
-from plantoid_agents.events.listen import Listen
-from plantoid_agents.events.speak import Speak
-from plantoid_agents.events.think import Think
+from plantoid_agents.tools.listen import Listen
+from plantoid_agents.tools.speak import Speak
+from plantoid_agents.tools.think import Think
 from plantoid_agents.lib.text_content import *
 
 # TEMP

@@ -25,9 +25,12 @@ from contextlib import contextmanager
 from collections import deque
 
 from utils.config_util import read_services_config
-from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
+from plantoid_agents.modules.deepgram.DeepgramTranscription import DeepgramTranscription
 
 # from whisper_mic.whisper_mic import WhisperMic
+
+from RealtimeSTT import AudioToTextRecorder
+
 
 # Load environment variables from .env file
 load_dotenv(override=True)
@@ -459,17 +462,27 @@ class Listen:
             fp16=False,
         )
 
-        utterance = result["text"]
+    #     utterance = result["text"]
 
+    #     return utterance
+
+    def recognize_speech_whisper(self, timeout_override: str = None):
+
+        utterance = ""
+
+        print("Wait until it says 'speak now'")
+        with AudioToTextRecorder() as recorder:
+            utterance = recorder.text()
+        
         return utterance
-
-    def recognize_speech_whisper_manual(self, timeout_override: str = None):
-
-        self.listen_for_speech_manual(timeout_override)
-        utterance = self.recognize_whisper()
-
-
-        return utterance
+    
+        # recorder = AudioToTextRecorder(
+        #     # input_device_index=7,
+        #     enable_realtime_transcription=True,
+        #     use_main_model_for_realtime=True,
+        #     print_transcription_time=True,
+        #     on_realtime_transcription_update=process_text,
+        # )
     
     def recognize_speech_whisper_google(self, timeout_override: str = None):
         try:
@@ -491,6 +504,7 @@ class Listen:
 
         return utterance
     
+    
     def listen(self, characters, timeout_override: str = None, step: int = 0) -> Any:
 
         # print("TTS MODEL TYPE:", self.tts_model_type)
@@ -501,16 +515,7 @@ class Listen:
             return self.recognize_speech_whisper_google(timeout_override)
         
         if self.tts_model_type == "whisper":
-            return self.recognize_speech_whisper_manual(timeout_override)
+            return self.recognize_speech_whisper(timeout_override)
 
         if self.tts_model_type == "deepgram":
             return self.recognize_speech_deepgram(step=step)
-
-    # def runtime_ack_sound(self):
-    #     try:
-    #         random_effect = random.choice([
-    #     'oh', 'oh.', 'oh?', 'um', 'hrm', 'hrmmmmm', 'interesting!', 'okay', 'i see', 'right', 'really?', 'really.', 'oh, really?', 'ah', 'mhm.', 'ooh', 'ahh', 'hmm', 'huh.', 'huh!', 'huh??', 'kay.'])
-    #         file_path = os.path.join(os.getcwd(), "media", "runtime_effects", f"{self.voice_id}_{random_effect}.mp3")
-    #         playsound(file_path, block=False)
-    #     except FileNotFoundError:
-    #         print("\033[90m\nThis effect wasn't generated at runtime.\033[0m")

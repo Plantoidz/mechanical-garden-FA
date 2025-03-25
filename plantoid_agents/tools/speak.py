@@ -15,7 +15,7 @@ import threading
 
 from utils.config_util import read_services_config
 from plantoid_agents.lib.MultichannelRouter import magicstream, magicstream_MPV, setup_magicstream
-from plantoid_agents.events.listen import Listen
+from plantoid_agents.tools.listen import Listen
 
 from dotenv import load_dotenv
 from elevenlabs.client import ElevenLabs, AsyncElevenLabs
@@ -27,7 +27,7 @@ from litellm.utils import CustomStreamWrapper
 
 # https://elevenlabs.io/docs/api-reference/edit-voice
 
-from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
+from plantoid_agents.modules.deepgram.DeepgramTranscription import DeepgramTranscription
 
 # Load environment variables from .env file
 load_dotenv(override=True)
