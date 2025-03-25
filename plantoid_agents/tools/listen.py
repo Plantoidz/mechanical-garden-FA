@@ -26,6 +26,7 @@ from collections import deque
 
 from utils.config_util import read_services_config
 from plantoid_agents.modules.deepgram.DeepgramTranscription import DeepgramTranscription
+from plantoid_agents.modules.whisper.transcriber import WhisperTranscriber
 
 # from whisper_mic.whisper_mic import WhisperMic
 
@@ -467,13 +468,9 @@ class Listen:
     #     return utterance
 
     def recognize_speech_whisper(self, timeout_override: str = None):
-
-        utterance = ""
-
         print("Wait until it says 'speak now'")
-        with AudioToTextRecorder() as recorder:
-            utterance = recorder.text()
-        
+        transcriber = WhisperTranscriber()
+        utterance = transcriber.transcribe()
         return utterance
     
         # recorder = AudioToTextRecorder(

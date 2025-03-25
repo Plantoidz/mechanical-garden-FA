@@ -1,0 +1,34 @@
+[
+    {
+        "stimuli": "stimuli/childhood.json",
+        "description": "Childhood Memories and Experiences"
+    },
+    {
+        "stimuli": "stimuli/dreams.json",
+        "description": "Dreams and Aspirations"
+    },
+    {
+        "stimuli": "stimuli/problem_solving.json",
+        "description": "Problem Solving Approach"
+    },
+    {
+        "stimuli": "stimuli/values.json",
+        "description": "Core Values and Beliefs"
+    },
+    {
+        "stimuli": "stimuli/proud.json",
+        "description": "Proud Moments"
+    },
+    {
+        "stimuli": "stimuli/future.json",
+        "description": "Future Concerns and Fears"
+    },
+    {
+        "stimuli": "stimuli/social.json",
+        "description": "Social Interaction Style"
+    },
+    {
+        "stimuli": "stimuli/strengths.json",
+        "description": "Strengths and Weaknesses"
+    }
+] 

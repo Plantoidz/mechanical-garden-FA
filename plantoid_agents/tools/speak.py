@@ -441,7 +441,7 @@ class Speak:
             self.stream_audio_response(
                 agent,
                 response,
-                voice,
+                voice.voice_id if isinstance(voice, Voice) else voice_id,
                 channel_id,
                 bg_callback=bg_callback,
                 interruption_callback=interruption_callback,
