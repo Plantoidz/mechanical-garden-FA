@@ -71,8 +71,7 @@ class Speak:
         self.device_index = device_index
         self.channels = channels
         self.listen_module = Listen()
-
-        # self.full_text = ""  # Buffer to store the full text
+        self.processed_files = set()  # Track which files have been processed
 
         print("INIT SPEAK MODULE")
 
@@ -143,7 +142,9 @@ class Speak:
                 print(text_chunk, end='', flush=True)
 
     def get_voice_clone_files(self):
-
+        """
+        Get all voice clone files from the temp directory.
+        """
         # Define the directory path where you want to list the files
         directory_path = os.getcwd()+"/media/user_audio/temp"
 
@@ -155,18 +156,25 @@ class Speak:
 
         return files_full_path
 
+    def get_new_voice_files(self):
+        """
+        Get only the new voice files that haven't been processed yet.
+        """
+        all_files = self.get_voice_clone_files()
+        new_files = [f for f in all_files if f not in self.processed_files]
+        return new_files
+
     def clone_voice(
         self,
         voice_set_callback: Any,
         cloned_voice_id: str = None,
         create_clone: bool = False
     ):
-
-        voice_file_paths = self.get_voice_clone_files() #[os.getcwd()+"/media/user_audio/temp_reco.wav"]
-        voice_files = [open(file_, 'rb') for file_ in voice_file_paths]
-        print("Using voice files: ", voice_file_paths)
-
         if create_clone:
+            # For initial clone, use all files
+            voice_file_paths = self.get_voice_clone_files()
+            voice_files = [open(file_, 'rb') for file_ in voice_file_paths]
+            print("Using voice files for initial clone: ", voice_file_paths)
             
             print('Creating a clone of the user voice...')
 
@@ -182,19 +190,31 @@ class Speak:
                 print("Cloned voice ID: ", cloned_voice_id)
                 voice_set_callback(cloned_voice_id)
 
-
+            # Mark all files as processed after initial clone
+            self.processed_files.update(voice_file_paths)
         else:
-            print('Using the previously cloned voice...')
+            # For subsequent edits, only use new files
+            new_files = self.get_new_voice_files()
+            if new_files:
+                voice_files = [open(file_, 'rb') for file_ in new_files]
+                print("Using new voice files for edit: ", new_files)
+                
+                print('Updating the voice clone with new samples...')
 
-            client.voices.edit(
-                name="You",
-                description="A clone of the user's voice",
-                voice_id=cloned_voice_id,
-                files=voice_files,
-            )
+                client.voices.edit(
+                    name="You",
+                    description="A clone of the user's voice",
+                    voice_id=cloned_voice_id,
+                    files=voice_files,
+                )
+                
+                # Mark new files as processed
+                self.processed_files.update(new_files)
+            else:
+                print('No new voice files to process')
 
         voice = Voice(
-            voice_id=cloned_voice_id, #'NE1ZIqHDl04rAu3fkYQH',
+            voice_id=cloned_voice_id,
             settings=VoiceSettings(
                 stability=0.61,
                 similarity_boost=0.85,
@@ -202,13 +222,6 @@ class Speak:
                 use_speaker_boost=True,
             )
         )
-
-        # voice = client.clone(
-        #     # api_key=os.getenv("ELEVENLABS_API_KEY"),
-        #     name="You",
-        #     description="A clone of the user's voice", # Optional
-        #     files=voice_file_paths,
-        # )
 
         return voice
     

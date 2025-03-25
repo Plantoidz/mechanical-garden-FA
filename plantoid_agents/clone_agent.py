@@ -18,10 +18,11 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
     ) -> None:
         super().__init__(name, is_human, system_message, eleven_voice_id, channel_id, io, addr)
         self.bidding_template = bidding_template
-        self.clone_voice = True
-        self.create_clone = True
+        self.clone_voice = False
+        self.create_clone = False
         self.timeout_override_seconds = 5
-        self.clone_from_single_clip = True
+        self.clone_clip_limit = 5
+        self.clone_clip_index = 0
 
     def speak(self, agents, message: str, use_streaming: bool = True) -> None:
         """
@@ -46,16 +47,20 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
 
         # if self.create_clone == False:
         #     self.timeout_override_seconds = 5
+        self.clone_clip_index += 1
 
+        if self.clone_clip_index >= self.clone_clip_limit:
+            print("CLIP LIMIT REACHED")
+            self.clone_voice = False
 
     def set_create_clone(self, voice_id: str) -> None:
         print("CALL SET CREATE CLONE")
-        self.create_clone = False
-        self.eleven_voice_id = voice_id
-        # self.timeout_override_seconds = 5
 
-        if self.clone_from_single_clip:
-            self.clone_voice = False
+        self.eleven_voice_id = voice_id
+        self.create_clone = False
+
+
+
 
 
     # def listen_for_speech(self, agents, step: int = 0) -> str:
