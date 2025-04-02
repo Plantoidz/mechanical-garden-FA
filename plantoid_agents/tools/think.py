@@ -1,4 +1,4 @@
-from typing import Callable, List, Union, Any
+from typing import Callable, List, Union, Any, Generator
 import types
 
 import openai
@@ -26,11 +26,14 @@ from litellm.utils import CustomStreamWrapper
 # https://github.com/BerriAI/litellm/blob/main/litellm/utils.py
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(override=True)
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 ELEVENLABS_API_KEY = os.environ.get("ELEVENLABS_API_KEY")
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
+
+print("ANTHROPIC API KEY:", ANTHROPIC_API_KEY)
+
 
 class Think:
     """
@@ -53,6 +56,7 @@ class Think:
         self.model_type = services["language_model"]
         self.use_model_api = services["language_model_api"]
 
+    
     def generate_bid_template(self, bidding_template, message_history) -> SystemMessage:
 
         bid_system_message = PromptTemplate(
@@ -82,9 +86,23 @@ class Think:
 
             response_stream = self.litellm_model(
                 model=self.model_type, 
-                messages=messages, 
-                stream=True
+                messages=messages,
+                # extra_body={
+                #     "fallbacks": ["gpt-4o"]
+                # },
+                stream=True,
+                # timeout=60,
             )
+
+            # response_stream = completion(
+            #     model="ollama/llama3", 
+            #     # model="claude-3-5-sonnet-20240620", # 
+            #     messages=[{ "content": "respond in 20 words. hot dogs or hamburgers?","role": "user"}], 
+            #     # api_base="http://localhost:11434",
+            #     stream=True
+            # )
+
+            # # self.stream_text(response_stream)
 
             return response_stream
         
@@ -93,6 +111,10 @@ class Think:
             response = self.litellm_model(
                 model=self.model_type, 
                 messages=messages, 
+                timeout=60,
+                # extra_body={
+                #     "fallbacks": ["gpt-4o"]
+                # },
                 stream=False
             )
 
@@ -184,7 +206,7 @@ class Think:
 
     #         return response
 
-    #     def stream_text(self, response_stream):
+        # def stream_text(self, response_stream):
 
     #     for chunk in response_stream:
     #         if chunk.choices[0].delta and chunk.choices[0].delta.content:
@@ -200,8 +222,5 @@ class Think:
     #             delta = chunk.choices[0].delta
     #             text_chunk = delta.content
     #             full_text += text_chunk
-    #             print(text_chunk, end='', flush=True)
+    #             # print(text_chunk, end='', flush=True)
     #     return full_text
-    
-    # def format_response_type(self, response: Any) -> Any:
-    #     return response.response_uptil_now if isinstance(response, CustomStreamWrapper) else response

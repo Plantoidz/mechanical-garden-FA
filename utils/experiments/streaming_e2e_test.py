@@ -1,7 +1,7 @@
 from elevenlabs import play, stream, save
 from elevenlabs.client import ElevenLabs
 from litellm import completion, acompletion
-from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
+from plantoid_agents.modules.deepgram.DeepgramTranscription import DeepgramTranscription
 import traceback
 import asyncio
 from simpleaichat import AIChat, AsyncAIChat

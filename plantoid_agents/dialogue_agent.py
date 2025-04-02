@@ -4,9 +4,9 @@ import asyncio
 import socket
 
 # import plantoid_agents.lib.speech as PlantoidSpeech
-from plantoid_agents.events.listen import Listen
-from plantoid_agents.events.speak import Speak
-from plantoid_agents.events.think import Think
+from plantoid_agents.tools.listen import Listen
+from plantoid_agents.tools.speak import Speak
+from plantoid_agents.tools.think import Think
 from plantoid_agents.lib.text_content import *
 
 # TEMP
@@ -41,6 +41,7 @@ class PlantoidDialogueAgent:
         addr: str,
         esp_id: str,
         local_engine: any = None,
+        device_index: int = None,
     ) -> None:
         # self.ctx = get_context('spawn')
         # self.speech_queue = self.ctx.Queue()
@@ -64,7 +65,7 @@ class PlantoidDialogueAgent:
         self.eleven_voice_id = eleven_voice_id
         self.think_module = Think()
         self.speak_module = Speak(local_engine=self.local_engine)
-        self.listen_module = Listen()
+        self.listen_module = Listen(device_index=device_index)
         self.channel_id = channel_id
         
         self.tunnel = None
@@ -92,6 +93,7 @@ class PlantoidDialogueAgent:
         #TODO: do not hardcode!
         # self.use_model_type = "litellm"
         self.use_streaming = True
+        self.stream_transcript = ""
 
         # Start a thread to check the queue for matching esp_id
         # self.register_esp_thread = threading.Thread(target=self.associate_esp_websocket)
@@ -114,7 +116,10 @@ class PlantoidDialogueAgent:
     #     if(self.tunnel): self.tunnel.write(val.encode('ascii') + b"\n")
         if(self.socket): 
             try: 
-                self.socket.sendto(bytes(val, 'utf-8'), (self.addr, 666))
+                command = bytes(val, 'utf-8')
+                ESP_IP = self.addr
+                ESP_PORT = 1666
+                self.socket.sendto(command, (ESP_IP, ESP_PORT))
             except Exception as err:
                 print("Failed to connect to", self.addr, "with error:", err)
 
@@ -229,8 +234,6 @@ class PlantoidDialogueAgent:
         )
 
         print("\n" + PURPLE + self.name, 'says:' + ENDC)
-        # formatted_message = self.think_module.format_response_type(message)
-        # print(formatted_message)
 
         return message
     

@@ -14,7 +14,7 @@
             "bidding_template": "debate",
             "description": "Multi-participant debate with a moderator, optionally including humans."
         },
-        "doppelganger": {
+        "clone": {
             "current_mode": "clone",
             "agent_type": "clone",
             "selection_function": "clone",

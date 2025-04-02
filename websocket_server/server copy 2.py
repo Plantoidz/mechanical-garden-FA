@@ -2,7 +2,6 @@ import time
 import pyaudio
 import numpy as np
 import asyncio
-import uvloop
 import websockets
 import wave
 import logging
@@ -163,42 +162,33 @@ async def check_for_instructions(instruct_queue, speech_event):
 
 def run_websocket_server(queues, events):
     logging.info("Starting server")
+    loop = asyncio.get_event_loop()
+
+    speech_queue = queues["speech"] ### this is used by the orchestrator to send the audio chunks to the server
+    # listen_queue = queues["listen"]
     
-    speech_queue = queues["speech"]
+    # this is can deleted I think
+    # esp_ws_queue = queues["esp_ws"]  ### this is used by the server to register the ESP in the orchestrator
+
     speech_event = events["speech"]
+    # listen_event = events["listen"]
+    
     instruct_queue = queues["instruct"]
 
-    async def start_servers():
-        orchestrate_stream = websockets.serve(
-            lambda ws, path=None: orchestrate_instructions(ws, path, instruct_queue, speech_event),
-            '',
-            ORCHESTRATE_PORT,
-            ping_interval=None
-        )
-        speech_stream = websockets.serve(
-            lambda ws, path=None: send_stream_to_websocket(ws, path, speech_queue, speech_event),
-            '',
-            SPEECH_PORT,
-            ping_interval=None
-        )
-        
-        await asyncio.gather(orchestrate_stream, speech_stream)
-        await asyncio.Future()  # run forever
+    orchestrate_stream = websockets.serve(lambda ws, path: orchestrate_instructions(ws, path, instruct_queue, speech_event), '', ORCHESTRATE_PORT, ping_interval=None)
+    loop.run_until_complete(orchestrate_stream)
 
-    # Set uvloop as the event loop policy
-    uvloop.install()
-    asyncio.run(start_servers())
+    speech_stream = websockets.serve(lambda ws, path: send_stream_to_websocket(ws, path, speech_queue, speech_event), '', SPEECH_PORT, ping_interval=None)
+    loop.run_until_complete(speech_stream)
+
+    # if listen_queue is not None:
+    #     listen_stream = websockets.serve(lambda ws, path: transcribe_audio(ws, path, esp_ws_queue, listen_queue, listen_event), '', LISTEN_PORT, ping_interval=None)
+    #     loop.run_until_complete(listen_stream)
+
+    loop.run_forever()
 
 if __name__ == '__main__':
-    # Initialize queues and events
-    queues = {
-        "speech": asyncio.Queue(),
-        "instruct": asyncio.Queue()
-    }
-    events = {
-        "speech": asyncio.Event()
-    }
-    run_websocket_server(queues, events)
+    run_websocket_server()
 
 # async def switch_modes(agents):
 #     global FILE

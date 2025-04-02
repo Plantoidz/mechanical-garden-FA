@@ -1,0 +1,49 @@
+{
+  "conversation_stimuli": {
+    "Everything": {
+      "stimulus": "In a world where all senses collide, what would be your ultimate sensory experience?"
+    },
+    "Who": {
+      "stimulus": "In a festival of senses, whooooooo arrrrrrrre youuuuuuuuuuu?"
+    },
+    "Tea": {
+      "stimulus": "If you could share a sensory experience over a cup of tea, who would be your companion?"
+    },
+    "Unbirthday": {
+      "stimulus": "Today is your unbirthday in the Garden of Synesthesia! How will you celebrate this sensory feast?"
+    },
+    "Cat": {
+      "stimulus": "If you could blend into the sensory tapestry of this festival and reappear anywhere, where would it be and why?"
+    },
+    "Dream": {
+      "stimulus": "In the immersive dreams of Synesthesia, where does your mind wander?"
+    },
+    "Flavor": {
+      "stimulus": "If your essence were a flavor experienced at Synesthesia, what would it taste like?"
+    },
+    "Rabbit": {
+      "stimulus": "If you were always late for one sensory experience here, which one would it be?"
+    },
+    "Cards": {
+      "stimulus": "If you could command the elements of Synesthesia like a deck of cards, which sense would you choose to master?"
+    },
+    "Potion": {
+      "stimulus": "If a potion could heighten one of your senses for this festival, which would you choose, and what would you explore first?"
+    },
+    "Adventure": {
+      "stimulus": "What sensory adventure awaits you at the next installation in the Garden of Synesthesia?"
+    },
+    "Royal": {
+      "stimulus": "If you were the ruler of this sensory kingdom, what would your first decree be?"
+    },
+    "Creatures": {
+      "stimulus": "Which sensory experience here would guide you through the wonders of Synesthesia, and why?"
+    },
+    "Guest": {
+      "stimulus": "If you could invite any artist or creator to this festival, who would it be and why?"
+    },
+    "Teacup": {
+      "stimulus": "If your senses could speak after this experience, what stories would they tell?"
+    }
+  }
+}

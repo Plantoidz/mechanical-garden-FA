@@ -11,8 +11,6 @@ pyserial
 toml
 pygame
 keyboard
-torch
-openai-whisper
 langchain
 langchain-community
 huggingface_hub

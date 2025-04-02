@@ -16,7 +16,7 @@ import numpy as np
 import whisper
 import torch
 import threading
-# import pygame.mixer as mixer
+import pygame.mixer as mixer
 from dotenv import load_dotenv
 from elevenlabs import stream
 from utils.util import load_config, str_to_bool
@@ -25,14 +25,16 @@ from contextlib import contextmanager
 from collections import deque
 
 from utils.config_util import read_services_config
-from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
-import pygame.mixer as mixer
-# from plantoid_agents.lib.esp32_comms import XYZ
+from plantoid_agents.modules.deepgram.DeepgramTranscription import DeepgramTranscription
+from plantoid_agents.modules.whisper.transcriber import WhisperTranscriber
 
 # from whisper_mic.whisper_mic import WhisperMic
 
+from RealtimeSTT import AudioToTextRecorder
+
+
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(override=True)
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 ELEVENLABS_API_KEY = os.environ.get("ELEVENLABS_API_KEY")
@@ -99,8 +101,9 @@ class Listen:
         speech_indicator_path = os.getcwd()+"/media/beep_start16.wav"
         
         # playsound(speech_indicator_path, block=False)
-        print("calling PLAY BEEP on non_human agent.........")
-        non_human_agent.play(speech_indicator_path, streaming=True)
+        # print("calling PLAY BEEP on non_human agent.........")
+        if non_human_agent is not None:
+            non_human_agent.play(speech_indicator_path, streaming=True)
 
         # mixer.init()
         # mixer.music.load(speech_indicator_path)
@@ -110,7 +113,8 @@ class Listen:
         
         speech_acknowledgement_path = os.getcwd()+"/media/beep_stop16.wav"
         #playsound(speech_acknowledgement_path, block=False)
-        non_human_agent.play(speech_acknowledgement_path, streaming=True)
+        if non_human_agent is not None:
+            non_human_agent.play(speech_acknowledgement_path, streaming=True)
 
     def play_speech_acknowledgement(self, voice_id: str) -> None:
         random_effect = random.choice([
@@ -501,7 +505,21 @@ class Listen:
         utterance = self.recognize_whisper()
 
 
+    #     return utterance
+
+    def recognize_speech_whisper(self, timeout_override: str = None):
+        print("Wait until it says 'speak now'")
+        transcriber = WhisperTranscriber(input_device_index=self.device_index)
+        utterance = transcriber.transcribe()
         return utterance
+    
+        # recorder = AudioToTextRecorder(
+        #     # input_device_index=7,
+        #     enable_realtime_transcription=True,
+        #     use_main_model_for_realtime=True,
+        #     print_transcription_time=True,
+        #     on_realtime_transcription_update=process_text,
+        # )
     
     def recognize_speech_whisper_google(self, timeout_override: str = None):
         try:
@@ -537,16 +555,7 @@ class Listen:
             return self.recognize_speech_whisper_google(timeout_override)
         
         if self.tts_model_type == "whisper":
-            return self.recognize_speech_whisper_manual(non_human_agent, timeout_override)
+            return self.recognize_speech_whisper(timeout_override)
 
         if self.tts_model_type == "deepgram":
             return self.recognize_speech_deepgram(step=step)
-
-    # def runtime_ack_sound(self):
-    #     try:
-    #         random_effect = random.choice([
-    #     'oh', 'oh.', 'oh?', 'um', 'hrm', 'hrmmmmm', 'interesting!', 'okay', 'i see', 'right', 'really?', 'really.', 'oh, really?', 'ah', 'mhm.', 'ooh', 'ahh', 'hmm', 'huh.', 'huh!', 'huh??', 'kay.'])
-    #         file_path = os.path.join(os.getcwd(), "media", "runtime_effects", f"{self.voice_id}_{random_effect}.mp3")
-    #         playsound(file_path, block=False)
-    #     except FileNotFoundError:
-    #         print("\033[90m\nThis effect wasn't generated at runtime.\033[0m")

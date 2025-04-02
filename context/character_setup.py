@@ -155,6 +155,7 @@ def generate_character_header(
             You may take the responses of other conversation participants into account when responding to the human.
             The human's answer in the conversation history will be of the format, in angle brackets: << Human: HUMAN_ANSWER >>.
             Always reply directly to the human!
+            Keep in mind you are speaking! So Do not use hashtags (#), asterisk (*) or angle brackets (<<, >>) in your response!!!
             Build upon the specific content contained in the human's answer, be specific and offer an insightful analysis.
             You must keep all of your responses to strictly {word_limit} words!!!
         """
@@ -254,12 +255,22 @@ def generate_character_system_message(
         # """
     
         #PROMPT_TEMPLATE —> 
-        content = f"""{character_header}
-            Always respond directly, from the perspective of a single participant. 
-            Return only dialogue, never describe unspoken sounds or actions.
-            Do not use hashtags (#), asterik (*) or angle brackets (<<, >>)!!!
+        content = f"""
+            Here is your character description in angle brackets: << {character_header} >>
+            Always respond directly, from the perspective of your character. 
+            You may respond with a question!
+            You are speaking verbally, so you must avoid using emotes, action tags, or any descriptive cues in your responses. Stick to plain text!
+            Return only spoken dialogue, never describe unspoken sounds or actions!!!
+            Do not use hashtags (#), asterisk (*) or angle brackets (<<, >>)!!!
             Stop speaking the moment you finish speaking from your perspective.
-            Never forget to keep your response to {word_limit} words!!!
+            Disagree if you are presented with an argument which goes against your point of view.
+            Be poignant and use swear words if you need to get a point across!
+            Do not be shy to be controversial.
+            Share your inner monologue and stresses.
+            Use your inner monologue and grow from your stresses to be proactive in driving towards positive outcomes.
+            Do not change roles!
+            Vary your response length between a few words (exclamations, interjections, etc) and {word_limit} words!!!
+            Never forget the maximum response length {word_limit} words!!!
         """
 
     return content

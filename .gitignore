@@ -136,3 +136,5 @@ config/files/working/current_characters.json
 config/files/working/current_services.json
 config/files/working/current_characters.json
 config/files/working/current_services.json
+
+models/

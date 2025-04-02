@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Type
+from typing import Any, Dict, List, Type, Generator
 import pyaudio
 import wave
 # import audioop
@@ -15,33 +15,33 @@ import threading
 import asyncio
 
 from utils.config_util import read_services_config
-# from plantoid_agents.lib.MultichannelRouter import (
-#     magicstream,
-#     magicstream_MPV,
-#     setup_magicstream
-# )
+from plantoid_agents.lib.MultichannelRouter import magicstream, magicstream_MPV, setup_magicstream
 from plantoid_agents.lib.esp32_comms import simplestream_websocket, magicstream_websocket, magicstream_local_websocket
-# from plantoid_agents.lib.esp32_comms import XYZ
-from plantoid_agents.events.listen import Listen
+from plantoid_agents.tools.listen import Listen
 
 from dotenv import load_dotenv
 from elevenlabs.client import ElevenLabs, AsyncElevenLabs
 from elevenlabs import stream, Voice, VoiceSettings, play
 from utils.util import str_to_bool
 
+from litellm.utils import CustomStreamWrapper
+
+
 # https://elevenlabs.io/docs/api-reference/edit-voice
 
-from plantoid_agents.lib.DeepgramTranscription import DeepgramTranscription
+from plantoid_agents.modules.deepgram.DeepgramTranscription import DeepgramTranscription
 
 from RealtimeTTS import TextToAudioStream, SystemEngine, CoquiEngine, AzureEngine, ElevenlabsEngine
 import logging
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(override=True)
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 ELEVENLABS_API_KEY = os.environ.get("ELEVENLABS_API_KEY")
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
+
+print("ELEVENLABS API KEY:", ELEVENLABS_API_KEY)
 
 client = ElevenLabs(
   api_key=ELEVENLABS_API_KEY
@@ -86,6 +86,9 @@ class Speak:
         self.listen_module = Listen()
         self.local_engine = local_engine
         # self.coqui_engine = initialize_coqui_engine()
+        self.processed_files = set()  # Track which files have been processed
+
+        print("INIT SPEAK MODULE")
 
 
     def get_text_to_speech_response(self, text, eleven_voice_id, callback=None):
@@ -134,23 +137,26 @@ class Speak:
 
             raise Exception("Error: " + str(status) + ": "+ str(message))
         
-        
-    def gather_response(self, response_stream, agent):
-        full_text = ""
-
+    def capture_and_stream_text(self, response_stream, agent):
+        """
+        Capture the full text from a response stream while yielding chunks for streaming.
+        """
         if isinstance(response_stream, str):
-            agent.stream_transcript = response_stream  # Append to the buffer
-            return response_stream
-    
+            agent.stream_transcript = response_stream
+            yield response_stream
+            return
+        
+        # self.clear_full_text()
+
         for chunk in response_stream:
             if chunk.choices[0].delta and chunk.choices[0].delta.content:
                 delta = chunk.choices[0].delta
                 text_chunk = delta.content
-                full_text += text_chunk
                 agent.stream_transcript += text_chunk  # Append to the buffer
+                yield text_chunk  # Yield the current chunk
                 print(text_chunk, end='', flush=True)
                 
-        return full_text
+        # return full_text
     
     # def stream_text(self, response_stream):
 
@@ -167,25 +173,10 @@ class Speak:
     # def format_response_type(self, response: Any) -> Any:
     #     return self.stream_text(response) if isinstance(response, types.GeneratorType) else response
 
-
-    # def play_background_music(self, loops=-1) -> None:
-
-    #     # get the path to the background music
-    #     background_music_path = os.getcwd()+"/media/ambient3.mp3"
-
-    #     mixer.init()
-    #     mixer.music.load(background_music_path)
-    #     mixer.music.play(loops)
-
-    # #todo: rename function and make this more general — cue sounds not just background music
-    # def stop_background_music(self) -> None:
-
-    #     if mixer.get_init() is not None:
-    #         print('stop background music')
-    #         mixer.music.stop()
-
     def get_voice_clone_files(self):
-
+        """
+        Get all voice clone files from the temp directory.
+        """
         # Define the directory path where you want to list the files
         directory_path = os.getcwd()+"/media/user_audio/temp"
 
@@ -197,18 +188,25 @@ class Speak:
 
         return files_full_path
 
+    def get_new_voice_files(self):
+        """
+        Get only the new voice files that haven't been processed yet.
+        """
+        all_files = self.get_voice_clone_files()
+        new_files = [f for f in all_files if f not in self.processed_files]
+        return new_files
+
     def clone_voice(
         self,
         voice_set_callback: Any,
         cloned_voice_id: str = None,
         create_clone: bool = False
     ):
-
-        voice_file_paths = self.get_voice_clone_files() #[os.getcwd()+"/media/user_audio/temp_reco.wav"]
-        voice_files = [open(file_, 'rb') for file_ in voice_file_paths]
-        print("Using voice files: ", voice_file_paths)
-
         if create_clone:
+            # For initial clone, use all files
+            voice_file_paths = self.get_voice_clone_files()
+            voice_files = [open(file_, 'rb') for file_ in voice_file_paths]
+            print("Using voice files for initial clone: ", voice_file_paths)
             
             print('Creating a clone of the user voice...')
 
@@ -224,19 +222,31 @@ class Speak:
                 print("Cloned voice ID: ", cloned_voice_id)
                 voice_set_callback(cloned_voice_id)
 
-
+            # Mark all files as processed after initial clone
+            self.processed_files.update(voice_file_paths)
         else:
-            print('Using the previously cloned voice...')
+            # For subsequent edits, only use new files
+            new_files = self.get_new_voice_files()
+            if new_files:
+                voice_files = [open(file_, 'rb') for file_ in new_files]
+                print("Using new voice files for edit: ", new_files)
+                
+                print('Updating the voice clone with new samples...')
 
-            client.voices.edit(
-                name="You",
-                description="A clone of the user's voice",
-                voice_id=cloned_voice_id,
-                files=voice_files,
-            )
+                client.voices.edit(
+                    name="You",
+                    description="A clone of the user's voice",
+                    voice_id=cloned_voice_id,
+                    files=voice_files,
+                )
+                
+                # Mark new files as processed
+                self.processed_files.update(new_files)
+            else:
+                print('No new voice files to process')
 
         voice = Voice(
-            voice_id=cloned_voice_id, #'NE1ZIqHDl04rAu3fkYQH',
+            voice_id=cloned_voice_id,
             settings=VoiceSettings(
                 stability=0.61,
                 similarity_boost=0.85,
@@ -244,13 +254,6 @@ class Speak:
                 use_speaker_boost=True,
             )
         )
-
-        # voice = client.clone(
-        #     # api_key=os.getenv("ELEVENLABS_API_KEY"),
-        #     name="You",
-        #     description="A clone of the user's voice", # Optional
-        #     files=voice_file_paths,
-        # )
 
         return voice
     
@@ -405,7 +408,7 @@ class Speak:
                             # logging.info("Engine is: ", self.local_engine)
                             # print("Engine is: ", self.local_engine)
                             audio_stream = TextToAudioStream(self.local_engine)
-                            audio_stream.feed(self.gather_response(response, agent))
+                            audio_stream.feed(self.capture_and_stream_text(response, agent))
 
                             magicstream_local_websocket(audio_stream, agent.instruct_queue, agent.speech_queue, agent.speech_event, esp_id=agent.esp_id)
 
@@ -416,7 +419,7 @@ class Speak:
                         # # generate ElevenLabs audio stream   
                         audio_stream = client.generate(
                             # text=self.stream_text(response),
-                            text=self.gather_response(response, agent),
+                            text=self.capture_and_stream_text(response, agent),
                             # text = "hello i'm alive. Number 95",
                             model=self.elevenlabs_model_type,
                             voice=voice_id,
@@ -448,12 +451,21 @@ class Speak:
 
                 else:
                     stream(audio_stream)
+                    # self.clear_full_text()
             
             else:
                 audio = client.generate(
                     text=response,
                     model=self.elevenlabs_model_type,
-                    voice=voice_id,
+                    voice=Voice(
+                        voice_id=voice_id,
+                        settings=VoiceSettings(
+                            stability=0.55,
+                            similarity_boost=1.0,
+                            style=0.25,
+                            use_speaker_boost=True,
+                        )
+                    ),
                     stream=False
                 )
                 #todo: implement magicplay
@@ -507,7 +519,7 @@ class Speak:
             self.stream_audio_response(
                 agent,
                 response,
-                voice,
+                voice.voice_id if isinstance(voice, Voice) else voice_id,
                 channel_id,
                 bg_callback=bg_callback,
                 interruption_callback=interruption_callback,
@@ -526,3 +538,51 @@ class Speak:
                 use_streaming=use_streaming,
                 use_local_tts=self.use_local_tts,
             )
+
+    # def select_random_runtime_effect(self, voice_id):
+    #     """
+    #     Selects a random file from the specified directory.
+    #     """
+    #     directory = os.getcwd() + "/media/runtime_effects"
+    #     prefix = f"{voice_id}_"
+        
+    #     # List all files that start with the given voice ID
+    #     files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f)) and f.startswith(prefix)]
+        
+    #     # Check if there are any matching files
+    #     if not files:
+    #         return None  # Return None or raise an Exception if no matching files are found
+
+    #     # Randomly select a file
+    #     random_file = random.choice(files)
+    #     return os.path.join(directory, random_file)
+
+        # def format_response_type(self, response: Any) -> Any:
+    #     return self.stream_text(response) if isinstance(response, types.GeneratorType) else response
+
+    # def play_background_music(self, loops=-1) -> None:
+
+    #     # get the path to the background music
+    #     background_music_path = os.getcwd()+"/media/ambient3.mp3"
+
+    #     mixer.init()
+    #     mixer.music.load(background_music_path)
+    #     mixer.music.play(loops)
+
+    # #todo: rename function and make this more general — cue sounds not just background music
+    # def stop_background_music(self) -> None:
+
+    #     if mixer.get_init() is not None:
+    #         print('stop background music')
+    #         mixer.music.stop()
+
+        # def format_response_type(self, response: Any) -> Any:
+
+        # if isinstance(response, CustomStreamWrapper):
+        #     # print("Formatting response type - Custom Stream Wrapper", response.response_uptil_now)
+        #     return response.response_uptil_now
+        # if isinstance(response, Generator):
+        #     # print("Formatting response type - Generator")
+        #     return "Hello i am plantoid"
+        # else:
+        #     return response

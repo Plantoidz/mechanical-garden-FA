@@ -43,22 +43,24 @@ class ModeConfigurator:
             return []
 
         with open(stimuli_path, 'r') as file:
-            stimuli = json.load(file)
+            stimuli_list = json.load(file)
         
         print("\nSpecify:\n")
-        for idx, item in enumerate(stimuli, start=1):
+        for idx, item in enumerate(stimuli_list, start=1):
             print(f"{idx}: {item['description']}")
         
-        return stimuli
+        return stimuli_list
 
-    def configure_stimuli(self, stimuli, mode_directory):
-        total_stimuli = len(stimuli)
+    def configure_stimuli(self, stimuli_list, mode_directory):
+        total_stimuli = len(stimuli_list)
         selection = int(input(f"\nEnter a number (1-{total_stimuli}): "))
         
         if 1 <= selection <= total_stimuli:
-            selected_stimuli = stimuli[selection-1]
+            selected_stimuli = stimuli_list[selection-1]
             source_path = os.path.join(mode_directory, selected_stimuli['stimuli'])
             destination_path = os.path.join(self.working_directory, 'current_stimuli.json')
+            
+            # Copy the selected stimuli file to the working directory
             shutil.copy(source_path, destination_path)
             print(f"'{selected_stimuli['description']}' has been set.")
         else:
