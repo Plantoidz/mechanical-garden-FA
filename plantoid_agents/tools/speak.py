@@ -196,12 +196,52 @@ class Speak:
         new_files = [f for f in all_files if f not in self.processed_files]
         return new_files
 
+    def cleanup_previous_voice_clone(self):
+        """
+        Reads the voice_clone_id.txt file and deletes the previous voice clone if found.
+        Also deletes all WAV files in the temp directory.
+        This prevents accumulating too many voice clones and audio files.
+        """
+        try:
+            # Clean up previous voice clone
+            voice_clone_file_path = os.path.join(os.getcwd(), "media", "user_audio", "voice_clone_id.txt")
+            
+            if os.path.exists(voice_clone_file_path):
+                with open(voice_clone_file_path, 'r') as f:
+                    previous_voice_id = f.read().strip()
+                
+                if previous_voice_id:
+                    print(f"Deleting previous voice clone with ID: {previous_voice_id}")
+                    try:
+                        client.voices.delete(voice_id=previous_voice_id)
+                        print(f"Successfully deleted voice clone with ID: {previous_voice_id}")
+                    except Exception as e:
+                        print(f"Error deleting voice clone: {e}")
+
+            # Clean up WAV files in temp directory
+            temp_dir = os.path.join(os.getcwd(), "media", "user_audio", "temp")
+            if os.path.exists(temp_dir):
+                print("Cleaning up WAV files in temp directory...")
+                for file in os.listdir(temp_dir):
+                    if file.endswith('.wav'):
+                        file_path = os.path.join(temp_dir, file)
+                        try:
+                            os.remove(file_path)
+                            print(f"Deleted WAV file: {file}")
+                        except Exception as e:
+                            print(f"Error deleting WAV file {file}: {e}")
+                print("Finished cleaning up WAV files")
+        except Exception as e:
+            print(f"Error in cleanup_previous_voice_clone: {e}")
+
     def clone_voice(
         self,
         voice_set_callback: Any,
         cloned_voice_id: str = None,
         create_clone: bool = False
     ):
+
+        print("CLONE VOICE - crete clone", create_clone)
         if create_clone:
             # For initial clone, use all files
             voice_file_paths = self.get_voice_clone_files()
@@ -414,6 +454,14 @@ class Speak:
 
                         else:
                             print("Local TTS streaming not started. No engine selected.")
+                            # Create a default audio stream when local engine is not available
+                            audio_stream = client.generate(
+                                text=self.capture_and_stream_text(response, agent),
+                                model=self.elevenlabs_model_type,
+                                voice=voice_id,
+                                stream=True,
+                                output_format="pcm_16000"
+                            )
                 else:
                     
                         # # generate ElevenLabs audio stream   
@@ -507,8 +555,14 @@ class Speak:
 
         if(agent.callback): agent.callback("<speaking>")
 
+        print("DEBUG SPEAK")
+        print("clone voice", clone_voice)
+        print("create clone", create_clone)
+
 
         if clone_voice:
+
+            print("cloning voice...")
 
             voice = self.clone_voice(
                 create_clone=create_clone,

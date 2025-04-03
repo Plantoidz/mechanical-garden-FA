@@ -2,6 +2,7 @@ from typing import Callable, List, Union, Any
 from multiprocessing import Queue, Event
 from langchain.prompts import PromptTemplate
 from plantoid_agents.dialogue_agent import PlantoidDialogueAgent
+import os
 
 class PlantoidCloneAgent(PlantoidDialogueAgent):
     def __init__(
@@ -42,8 +43,9 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
             local_engine=local_engine,
         )
         self.bidding_template = bidding_template
-        self.clone_voice = False
-        self.create_clone = False
+        self.clone_voice = True  # Start with cloning disabled
+        self.create_clone = True  # Start with clone creation disabled
+        self.has_spoken = False  # Track if agent has spoken
         self.timeout_override_seconds = 5
         self.clone_clip_limit = 5
         self.clone_clip_index = 0
@@ -55,7 +57,10 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
         print("CREATE CLONE: ", self.create_clone)
         print("VOICE ID: ", self.get_voice_id())
         
-        # self.speak_module.stop_background_music()
+        # # Enable voice cloning after first speech
+        # if self.has_spoken:
+        #     self.clone_voice = True
+        #     self.create_clone = True
 
         self.speak_module.speak(
             agents,
@@ -69,16 +74,28 @@ class PlantoidCloneAgent(PlantoidDialogueAgent):
             use_streaming = use_streaming,
         )
 
-        # if self.create_clone == False:
-        #     self.timeout_override_seconds = 5
+
+        if self.clone_clip_index > 0:
+            print("CLIP LIMIT REACHED")
+            # self.clone_voice = False
+            self.has_spoken = True
+
         self.clone_clip_index += 1
 
-        if self.clone_clip_index >= self.clone_clip_limit:
-            print("CLIP LIMIT REACHED")
-            self.clone_voice = False
 
     def set_create_clone(self, voice_id: str) -> None:
         print("CALL SET CREATE CLONE")
+
+        if self.clone_clip_index == 0:
+
+            # Clean up the previous voice clone if it exists
+            self.speak_module.cleanup_previous_voice_clone()
+
+            # Save the new voice ID to the file for future cleanup
+            voice_clone_file_path = os.path.join(os.getcwd(), "media", "user_audio", "voice_clone_id.txt")
+            os.makedirs(os.path.dirname(voice_clone_file_path), exist_ok=True)
+            with open(voice_clone_file_path, 'w') as f:
+                f.write(voice_id)
 
         self.eleven_voice_id = voice_id
         self.create_clone = False

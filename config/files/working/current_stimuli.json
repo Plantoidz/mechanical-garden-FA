@@ -1,34 +1,7 @@
 {
-  "conversation_stimuli": {
-    "Day": {
-      "stimulus": "Hey, how's your day been?"
-    },
-    "Mind": {
-      "stimulus": "What's been on your mind lately?"
-    },
-    "Life": {
-      "stimulus": "Anything interesting happening in your life?"
-    },
-    "Everything": {
-      "stimulus": "How's everything going with you?"
-    },
-    "New": {
-      "stimulus": "What's new with you?"
-    },
-    "Exciting": {
-      "stimulus": "Been up to anything exciting recently?"
-    },
-    "Week": {
-      "stimulus": "How's your week shaping up?"
-    },
-    "Busy": {
-      "stimulus": "What's been keeping you busy lately?"
-    },
-    "Share": {
-      "stimulus": "Anything you want to share or talk about?"
-    },
-    "Feeling": {
-      "stimulus": "How are you feeling today?"
+    "conversation_stimuli": {
+        "Childhood_Memories": {
+            "stimulus": "Tell me about your childhood memories and experiences that shaped who you are today."
+        }
     }
-  }
-}
+} 

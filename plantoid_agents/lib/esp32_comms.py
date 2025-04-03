@@ -70,10 +70,24 @@ def magicstream_websocket(
         
         loop = asyncio.get_event_loop()
         
+        # Process each chunk to ensure it's compatible with ESP32
         for chunk in audio_stream:
             if chunk:
+                # Ensure chunk size is a multiple of 2 (16-bit samples)
+                if len(chunk) % 2 != 0:
+                    # Pad with zeros if needed
+                    chunk = chunk + b'\x00'
                 
-                loop.run_in_executor(None, speech_queue.put_nowait, (esp_id, chunk))
+                # Ensure chunk size is not too large for ESP32 to handle
+                # ESP32 has limited memory, so we'll limit chunk size to 1024 bytes
+                max_chunk_size = 1024
+                if len(chunk) > max_chunk_size:
+                    # Split into smaller chunks
+                    for i in range(0, len(chunk), max_chunk_size):
+                        sub_chunk = chunk[i:i+max_chunk_size]
+                        loop.run_in_executor(None, speech_queue.put_nowait, (esp_id, sub_chunk))
+                else:
+                    loop.run_in_executor(None, speech_queue.put_nowait, (esp_id, chunk))
         #        logging.info(f"Queued audio stream chunk of size: {len(chunk)} bytes with ESP ID: {esp_id}")
 
         # Signal the end of the stream
@@ -156,7 +170,22 @@ def magicstream_local_websocket(
 
             # Assume `audio_chunk` is a chunk of audio in the source format
             chunk = convert_audio_chunk(chunk, src_format, src_channels, src_rate, dst_format, dst_channels, dst_rate)
-            loop.run_in_executor(None, speech_queue.put_nowait, (esp_id, chunk))  
+            
+            # Ensure chunk size is a multiple of 2 (16-bit samples)
+            if len(chunk) % 2 != 0:
+                # Pad with zeros if needed
+                chunk = chunk + b'\x00'
+            
+            # Ensure chunk size is not too large for ESP32 to handle
+            # ESP32 has limited memory, so we'll limit chunk size to 1024 bytes
+            max_chunk_size = 1024
+            if len(chunk) > max_chunk_size:
+                # Split into smaller chunks
+                for i in range(0, len(chunk), max_chunk_size):
+                    sub_chunk = chunk[i:i+max_chunk_size]
+                    loop.run_in_executor(None, speech_queue.put_nowait, (esp_id, sub_chunk))
+            else:
+                loop.run_in_executor(None, speech_queue.put_nowait, (esp_id, chunk))
     try:
         # loop.run_in_executor(None, instruct_queue.put_nowait, (esp_id, "3"))                    
 
