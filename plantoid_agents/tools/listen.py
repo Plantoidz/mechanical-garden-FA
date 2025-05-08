@@ -93,6 +93,8 @@ class Listen:
         self.device_index = device_index
         self.transcription = DeepgramTranscription(sample_rate=self.RATE, device_index=self.device_index)
         self.tts_model_type = services["speech_recognition_model"]
+        self.whisper_transcriber = WhisperTranscriber()
+
 
     #todo: revisit cue sounds and background music
     def play_speech_indicator(self) -> None:
@@ -101,6 +103,8 @@ class Listen:
         speech_indicator_path = os.getcwd()+"/media/beep_start.wav"
         mixer.init()
         mixer.music.load(speech_indicator_path)
+        # Set volume to 50% (0.5)
+        mixer.music.set_volume(0.05)
         mixer.music.play(loops=1)
 
     def play_speech_acknowledgement(self, voice_id: str) -> None:
@@ -469,8 +473,7 @@ class Listen:
 
     def recognize_speech_whisper(self, timeout_override: str = None):
         print("Wait until it says 'speak now'")
-        transcriber = WhisperTranscriber()
-        utterance = transcriber.transcribe()
+        utterance = self.whisper_transcriber.transcribe()
         return utterance
     
         # recorder = AudioToTextRecorder(

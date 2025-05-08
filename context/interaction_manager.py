@@ -1,6 +1,7 @@
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Type
+import os
 
 from interaction_modes.conversation import PlantoidConversation
 from interaction_modes.confession import PlantoidConfession
@@ -12,7 +13,7 @@ from plantoid_agents.debate_agent import PlantoidDebateAgent
 from plantoid_agents.clone_agent import PlantoidCloneAgent
 
 from utils.config_util import read_character_config, read_interaction_mode_config, read_addendum_config, read_services_config
-from utils.util import str_to_bool
+from utils.util import str_to_bool, read_additional_context, read_character_description
 import context.character_setup as character_setup # TODO: roll this into context config
 import context.speaker_selection as speaker_selection # TODO: roll this into context config
 
@@ -183,12 +184,21 @@ class InteractionManager:
         interaction_description: str,
         interaction_addendum: List[str],
         use_message_type: str = 'raw',
-        word_limit: int = 50, # TODO: move to config
+        word_limit: int = 100, # TODO: move to config
     ):
         
         character_name = character['name']
         character_system_message_input = character['system_message']
         character_description = character['description']
+        
+        # Read extra character description from file if available
+        character_description = read_character_description(character_name)
+        # if extra_description:
+        #     # Append the extra description to the existing character description
+        #     character_description = f"{character_description}\n\n{extra_description}"
+
+        # Read additional context from file using the helper function
+        additional_context = read_additional_context(character_name)
 
         if use_message_type == 'raw':
 
@@ -211,6 +221,7 @@ class InteractionManager:
                 word_limit,
                 character_name,
                 character_header,
+                additional_context,
             )
         
         return character_system_message
@@ -273,7 +284,7 @@ class InteractionManager:
         interaction_description: str,
         characters: List[Any],
         selection_function: any,
-        max_iters: int = 10
+        max_iters: int = 20
     ) -> None:
         """
         Starts the interaction simulation using the provided interaction mode and characters.

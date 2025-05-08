@@ -11,14 +11,14 @@
             "addr": null
         },
         {
-            "name": "Nisaba",
+            "name": "Inanna",
             "system_message": "",
             "description": "",
             "default_channel": 2,
             "eleven_voice_id": "O4XcDXs0NB6RHIw3ColF",
             "is_human": "False",
             "io": "wifi",
-            "addr": "192.168.1.145"
+            "addr": "10.72.2.145"
         }
     ]
 }

@@ -42,4 +42,5 @@ dependencies = [
     "wave>=0.0.2",
     "deepgram-sdk>=3.10.1",
     "realtimestt==0.3.100",
+    "python-osc>=1.9.3",
 ]

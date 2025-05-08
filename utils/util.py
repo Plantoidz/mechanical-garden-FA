@@ -55,3 +55,50 @@ def api_request(url, method="GET", data=None, headers=None, timeout=10):
         print("Failed to parse response as JSON.")
     
     return None
+
+def read_additional_context(character_name: str, context_dir: str = "config/files/additional_context") -> str:
+    """
+    Reads additional context for a character from a file.
+    
+    Parameters:
+    - character_name (str): The name of the character.
+    - context_dir (str): The directory containing additional context files. Defaults to "config/files/additional_context".
+    
+    Returns:
+    - str: The additional context as a string, or an empty string if the file doesn't exist.
+    """
+    additional_context = ""
+    additional_context_path = os.path.join(context_dir, f"{character_name.lower()}.txt")
+    
+    if os.path.exists(additional_context_path):
+        try:
+            with open(additional_context_path, 'r') as f:
+                additional_context = f.read().strip()
+        except Exception as e:
+            print(f"Error reading additional context file for {character_name}: {e}")
+    
+    return additional_context
+
+def read_character_description(character_name: str, descriptions_dir: str = "config/files/characters/extra_descriptions") -> str:
+    """
+    Reads an extra character description from a file.
+    
+    Parameters:
+    - character_name (str): The name of the character.
+    - descriptions_dir (str): The directory containing character description files. 
+                             Defaults to "config/files/characters/extra_descriptions".
+    
+    Returns:
+    - str: The character description as a string, or an empty string if the file doesn't exist.
+    """
+    description = ""
+    description_path = os.path.join(descriptions_dir, f"{character_name.lower()}.txt")
+    
+    if os.path.exists(description_path):
+        try:
+            with open(description_path, 'r') as f:
+                description = f.read().strip()
+        except Exception as e:
+            print(f"Error reading character description file for {character_name}: {e}")
+    
+    return description

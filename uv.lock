@@ -1251,6 +1251,7 @@ dependencies = [
     { name = "pygame" },
     { name = "pyserial" },
     { name = "python-dotenv" },
+    { name = "python-osc" },
     { name = "realtimestt" },
     { name = "requests" },
     { name = "sentencepiece" },
@@ -1292,6 +1293,7 @@ requires-dist = [
     { name = "pygame", specifier = ">=2.6.1" },
     { name = "pyserial", specifier = ">=3.5" },
     { name = "python-dotenv", specifier = ">=1.1.0" },
+    { name = "python-osc", specifier = ">=1.9.3" },
     { name = "realtimestt", specifier = "==0.3.100" },
     { name = "requests", specifier = ">=2.32.3" },
     { name = "sentencepiece", specifier = ">=0.2.0" },
@@ -4862,6 +4864,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/88/2c/7bb1416c5620485aa793f2de31d3df393d3686aa8a8506d11e10e13c5baf/python_dotenv-1.1.0.tar.gz", hash = "sha256:41f90bc6f5f177fb41f53e87666db362025010eb28f60a01c9143bfa33a2b2d5", size = 39920 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1e/18/98a99ad95133c6a6e2005fe89faedf294a748bd5dc803008059409ac9b1e/python_dotenv-1.1.0-py3-none-any.whl", hash = "sha256:d7c01d9e2293916c18baf562d95698754b0dbbb5e74d457c45d4f6561fb9d55d", size = 20256 },
+]
+
+[[package]]
+name = "python-osc"
+version = "1.9.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/1e/6e/770a91c92e4e8db6213764fb78531dd26a4982000d9b325881f3599835e2/python_osc-1.9.3.tar.gz", hash = "sha256:bd0fa40def43ce509894709feb0e18f02192aca192c5e6c8fe2ba69e58f21794", size = 33328 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/57/04/01b3de6a7565cfc20f3bf4fce959b099ad30a08157865436d48cc02f6c08/python_osc-1.9.3-py3-none-any.whl", hash = "sha256:7def2075be72f07bae5a4c1a55cc7d907b247f4a5d910f3159ed30ac2b1f17cc", size = 43808 },
 ]
 
 [[package]]
